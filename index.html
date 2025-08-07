@@ -1,0 +1,1561 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Задачи — парсер HTML-таблиц</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <meta name="color-scheme" content="light dark" />
+  </head>
+  <body class="min-h-dvh bg-gray-50 text-gray-900 antialiased dark:bg-gray-900 dark:text-gray-100">
+    <header class="border-b border-gray-200 bg-white/80 backdrop-blur dark:border-gray-800 dark:bg-gray-900/60">
+      <div class="mx-auto max-w-5xl px-4 py-4">
+        <h1 class="text-2xl font-semibold tracking-tight">Список задач из HTML-таблицы</h1>
+        <p class="mt-1 text-sm text-gray-600 dark:text-gray-400">Загрузите файл с HTML-таблицей — будет выведена таблица с колонками: ID, Название, Компания, Ответственный, Дата создания, Дата завершения, Затраченное время.</p>
+      </div>
+    </header>
+
+    <main class="mx-auto max-w-5xl px-4 py-6">
+      <section class="mt-2">
+        <div id="uploadCard" class="rounded-xl border border-gray-200 bg-white p-4 shadow-sm dark:border-gray-800 dark:bg-gray-950">
+          <h2 class="mb-3 text-lg font-medium">Загрузка файла</h2>
+          <div class="space-y-3">
+            <div id="dropzone" class="group relative flex flex-col items-center justify-center rounded-lg border-2 border-dashed border-gray-300 bg-gray-50/50 p-6 text-center transition hover:bg-gray-50 dark:border-gray-700 dark:bg-gray-900/50 dark:hover:bg-gray-900">
+              <svg aria-hidden="true" viewBox="0 0 24 24" class="h-10 w-10 text-gray-400 dark:text-gray-500">
+                <path fill="currentColor" d="M12 3a1 1 0 0 1 1 1v8.586l2.293-2.293a1 1 0 1 1 1.414 1.414L12 16.414l-3.707-3.707a1 1 0 1 1 1.414-1.414L11 12.586V4a1 1 0 0 1 1-1Z"/>
+                <path fill="currentColor" d="M4 18a1 1 0 0 1 1-1h14a1 1 0 1 1 0 2H5a1 1 0 0 1-1-1Z"/>
+              </svg>
+              <p class="mt-2 text-sm text-gray-700 dark:text-gray-300">
+                Перетащите HTML/.xls сюда или <label for="fileInput" class="cursor-pointer underline">выберите файл</label>
+              </p>
+              <input id="fileInput" type="file" accept=".html,.htm,.xls" class="sr-only" />
+            </div>
+            <p id="fileMeta" class="text-xs text-gray-500 dark:text-gray-400"></p>
+            <div class="flex items-center gap-2">
+              <button id="parseFileBtn" disabled class="inline-flex items-center gap-2 rounded-md bg-gray-900 px-4 py-2 text-sm font-medium text-white hover:bg-black/80 disabled:cursor-not-allowed disabled:opacity-50 dark:bg-white dark:text-gray-900 dark:hover:bg-white/90">Обработать файл</button>
+              <button id="clearFileBtn" class="inline-flex items-center gap-2 rounded-md border border-gray-300 bg-white px-3 py-2 text-sm font-medium hover:bg-gray-50 dark:border-gray-700 dark:bg-gray-900 dark:hover:bg-gray-800">Очистить</button>
+            </div>
+            <p class="text-xs text-gray-500 dark:text-gray-400">Поддерживаются HTML-файлы и старые .xls, сохранённые как HTML. Для бинарных .xls/.xlsx парсинг не сработает.</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- Dashboards chooser -->
+      <section id="dashboardsPanel" class="mt-6 hidden rounded-xl border border-gray-200 bg-white p-4 shadow-sm dark:border-gray-800 dark:bg-gray-950">
+        <div class="flex items-center justify-between gap-4">
+          <h2 class="text-lg font-medium">Выбор дашборда</h2>
+        </div>
+        <div class="mt-3 flex flex-wrap gap-2" id="dashboardsButtons">
+          <button type="button" data-dashboard="table" aria-pressed="true" class="inline-flex items-center gap-2 rounded-md border px-3 py-2 text-sm font-medium select-none transition-colors focus:outline-none focus:ring-2 focus:ring-gray-300 dark:focus:ring-gray-600 bg-white border-gray-300 hover:bg-gray-50 dark:bg-gray-900 dark:border-gray-700 dark:hover:bg-gray-800 aria-[pressed=true]:bg-gray-900 aria-[pressed=true]:text-white aria-[pressed=true]:border-transparent aria-[pressed=true]:hover:bg-gray-900 aria-[pressed=true]:dark:bg-white aria-[pressed=true]:dark:text-gray-900">Таблица задач</button>
+          <button type="button" data-dashboard="companies" aria-pressed="false" class="inline-flex items-center gap-2 rounded-md border px-3 py-2 text-sm font-medium select-none transition-colors focus:outline-none focus:ring-2 focus:ring-gray-300 dark:focus:ring-gray-600 bg-white border-gray-300 hover:bg-gray-50 dark:bg-gray-900 dark:border-gray-700 dark:hover:bg-gray-800 aria-[pressed=true]:bg-gray-900 aria-[pressed=true]:text-white aria-[pressed=true]:border-transparent aria-[pressed=true]:hover:bg-gray-900 aria-[pressed=true]:dark:bg-white aria-[pressed=true]:dark:text-gray-900">По компаниям</button>
+          <button type="button" data-dashboard="assignees" aria-pressed="false" class="inline-flex items-center gap-2 rounded-md border px-3 py-2 text-sm font-medium select-none transition-colors focus:outline-none focus:ring-2 focus:ring-gray-300 dark:focus:ring-gray-600 bg-white border-gray-300 hover:bg-gray-50 dark:bg-gray-900 dark:border-gray-700 dark:hover:bg-gray-800 aria-[pressed=true]:bg-gray-900 aria-[pressed=true]:text-white aria-[pressed=true]:border-transparent aria-[pressed=true]:hover:bg-gray-900 aria-[pressed=true]:dark:bg-white aria-[pressed=true]:dark:text-gray-900">По ответственным</button>
+          <button type="button" data-dashboard="timeline" aria-pressed="false" class="inline-flex items-center gap-2 rounded-md border px-3 py-2 text-sm font-medium select-none transition-colors focus:outline-none focus:ring-2 focus:ring-gray-300 dark:focus:ring-gray-600 bg-white border-gray-300 hover:bg-gray-50 dark:bg-gray-900 dark:border-gray-700 dark:hover:bg-gray-800 aria-[pressed=true]:bg-gray-900 aria-[pressed=true]:text-white aria-[pressed=true]:border-transparent aria-[pressed=true]:hover:bg-gray-900 aria-[pressed=true]:dark:bg-white aria-[pressed=true]:dark:text-gray-900">Динамика по датам</button>
+           <button type="button" data-dashboard="employees-tags" aria-pressed="false" class="inline-flex items-center gap-2 rounded-md border px-3 py-2 text-sm font-medium select-none transition-colors focus:outline-none focus:ring-2 focus:ring-gray-300 dark:focus:ring-gray-600 bg-white border-gray-300 hover:bg-gray-50 dark:bg-gray-900 dark:border-gray-700 dark:hover:bg-gray-800 aria-[pressed=true]:bg-gray-900 aria-[pressed=true]:text-white aria-[pressed=true]:border-transparent aria-[pressed=true]:hover:bg-gray-900 aria-[pressed=true]:dark:bg-white aria-[pressed=true]:dark:text-gray-900">По сотрудникам (теги)</button>
+          <button type="button" data-dashboard="data-quality" aria-pressed="false" class="inline-flex items-center gap-2 rounded-md border px-3 py-2 text-sm font-medium select-none transition-colors focus:outline-none focus:ring-2 focus:ring-gray-300 dark:focus:ring-gray-600 bg-white border-gray-300 hover:bg-gray-50 dark:bg-gray-900 dark:border-gray-700 dark:hover:bg-gray-800 aria-[pressed=true]:bg-gray-900 aria-[pressed=true]:text-white aria-[pressed=true]:border-transparent aria-[pressed=true]:hover:bg-gray-900 aria-[pressed=true]:dark:bg-white aria-[pressed=true]:dark:text-gray-900">Качество данных</button>
+          <button type="button" data-dashboard="tags" aria-pressed="false" class="inline-flex items-center gap-2 rounded-md border px-3 py-2 text-sm font-medium select-none transition-colors focus:outline-none focus:ring-2 focus:ring-gray-300 dark:focus:ring-gray-600 bg-white border-gray-300 hover:bg-gray-50 dark:bg-gray-900 dark:border-gray-700 dark:hover:bg-gray-800 aria-[pressed=true]:bg-gray-900 aria-[pressed=true]:text-white aria-[pressed=true]:border-transparent aria-[pressed=true]:hover:bg-gray-900 aria-[pressed=true]:dark:bg-white aria-[pressed=true]:dark:text-gray-900">Частотность тегов</button>
+          <button type="button" data-dashboard="company-duration" aria-pressed="false" class="inline-flex items-center gap-2 rounded-md border px-3 py-2 text-sm font-medium select-none transition-colors focus:outline-none focus:ring-2 focus:ring-gray-300 dark:focus:ring-gray-600 bg-white border-gray-300 hover:bg-gray-50 dark:bg-gray-900 dark:border-gray-700 dark:hover:bg-gray-800 aria-[pressed=true]:bg-gray-900 aria-[pressed=true]:text-white aria-[pressed=true]:border-transparent aria-[pressed=true]:hover:bg-gray-900 aria-[pressed=true]:dark:bg-white aria-[pressed=true]:dark:text-gray-900">Длительность по компаниям</button>
+          <button type="button" data-dashboard="assignee-duration" aria-pressed="false" class="inline-flex items-center gap-2 rounded-md border px-3 py-2 text-sm font-medium select-none transition-colors focus:outline-none focus:ring-2 focus:ring-gray-300 dark:focus:ring-gray-600 bg-white border-gray-300 hover:bg-gray-50 dark:bg-gray-900 dark:border-gray-700 dark:hover:bg-gray-800 aria-[pressed=true]:bg-gray-900 aria-[pressed=true]:text-white aria-[pressed=true]:border-transparent aria-[pressed=true]:hover:bg-gray-900 aria-[pressed=true]:dark:bg-white aria-[pressed=true]:dark:text-gray-900">Длительность по ответственным</button>
+        </div>
+        <div id="dashboardContent" class="mt-4"></div>
+      </section>
+
+      <section id="mappingSection" class="mt-6 hidden rounded-xl border border-amber-300 bg-amber-50 p-4 text-amber-900 dark:border-amber-700 dark:bg-amber-950/40 dark:text-amber-200">
+        <div class="flex items-start justify-between gap-4">
+          <div>
+            <h3 class="text-base font-semibold">Нужно подтвердить соответствие колонок</h3>
+            <p class="mt-1 text-sm opacity-90">Не удалось однозначно определить заголовки. Выберите колонки, соответствующие полям.</p>
+          </div>
+          <button id="hideMapping" class="rounded-md px-2 py-1 text-sm hover:bg-amber-100/60 dark:hover:bg-amber-900/30">Скрыть</button>
+        </div>
+        <div id="mappingControls" class="mt-3 grid gap-3 sm:grid-cols-2 lg:grid-cols-4"></div>
+        <div class="mt-3">
+          <button id="applyMappingBtn" class="rounded-md bg-amber-600 px-4 py-2 text-sm font-medium text-white hover:bg-amber-700">Применить</button>
+        </div>
+      </section>
+
+      <section id="resultsCard" class="mt-6 hidden rounded-xl border border-gray-200 bg-white p-4 shadow-sm dark:border-gray-800 dark:bg-gray-950">
+        <div class="flex items-center justify-between gap-4">
+          <h2 class="text-lg font-medium">Найденные задачи</h2>
+          <div id="stats" class="text-sm text-gray-600 dark:text-gray-400"></div>
+        </div>
+        <div id="filters" class="mt-3">
+          <div class="grid gap-3 sm:grid-cols-2 lg:grid-cols-6">
+            <div class="sm:col-span-2">
+              <label for="filterQuery" class="mb-1 block text-sm font-medium">Поиск</label>
+              <input id="filterQuery" type="text" placeholder="ID, Название или Компания" class="w-full rounded-md border border-gray-300 bg-white p-2 text-sm placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-400 dark:border-gray-700 dark:bg-gray-900" />
+            </div>
+            <div>
+              <label for="createdFrom" class="mb-1 block text-sm font-medium">Создано с</label>
+              <input id="createdFrom" type="date" class="w-full rounded-md border border-gray-300 bg-white p-2 text-sm focus:outline-none focus:ring-2 focus:ring-gray-400 dark:border-gray-700 dark:bg-gray-900" />
+            </div>
+            <div>
+              <label for="createdTo" class="mb-1 block text-sm font-medium">Создано по</label>
+              <input id="createdTo" type="date" class="w-full rounded-md border border-gray-300 bg-white p-2 text-sm focus:outline-none focus:ring-2 focus:ring-gray-400 dark:border-gray-700 dark:bg-gray-900" />
+            </div>
+            <div>
+              <label for="completedFrom" class="mb-1 block text-sm font-medium">Завершено с</label>
+              <input id="completedFrom" type="date" class="w-full rounded-md border border-gray-300 bg-white p-2 text-sm focus:outline-none focus:ring-2 focus:ring-gray-400 dark:border-gray-700 dark:bg-gray-900" />
+            </div>
+            <div>
+              <label for="completedTo" class="mb-1 block text-sm font-medium">Завершено по</label>
+              <input id="completedTo" type="date" class="w-full rounded-md border border-gray-300 bg-white p-2 text-sm focus:outline-none focus:ring-2 focus:ring-gray-400 dark:border-gray-700 dark:bg-gray-900" />
+            </div>
+          </div>
+          <div class="mt-2 flex items-center gap-2">
+            <button id="resetFilters" class="inline-flex items-center gap-2 rounded-md border border-gray-300 bg-white px-3 py-2 text-sm font-medium hover:bg-gray-50 dark:border-gray-700 dark:bg-gray-900 dark:hover:bg-gray-800">Сбросить фильтры</button>
+            <button id="openFilterSettings" class="inline-flex items-center gap-2 rounded-md border border-gray-300 bg-white px-3 py-2 text-sm font-medium hover:bg-gray-50 dark:border-gray-700 dark:bg-gray-900 dark:hover:bg-gray-800">Настройки</button>
+          </div>
+          <div class="mt-3 grid gap-3 sm:grid-cols-2 lg:grid-cols-6">
+            <div class="sm:col-span-2 lg:col-span-3">
+              <label for="bmNameInput" class="mb-1 block text-sm font-medium">Название закладки</label>
+              <div class="flex gap-2">
+                <input id="bmNameInput" type="text" placeholder="Например: Завершённые за июль" class="h-9 w-full rounded-md border border-gray-300 bg-white px-3 text-sm placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-400 dark:border-gray-700 dark:bg-gray-900" />
+                <button id="saveBookmarkBtn" class="h-9 shrink-0 rounded-md bg-gray-900 px-3 text-sm font-medium text-white hover:bg-black/80 dark:bg-white dark:text-gray-900 dark:hover:bg-white/90">Сохранить</button>
+              </div>
+            </div>
+            <div class="sm:col-span-2 lg:col-span-3">
+              <label for="bookmarksSelect" class="mb-1 block text-sm font-medium">Мои закладки</label>
+              <div class="flex gap-2">
+                <select id="bookmarksSelect" class="h-9 w-full rounded-md border border-gray-300 bg-white px-3 text-sm dark:border-gray-700 dark:bg-gray-900">
+                  <option value="">— нет закладок —</option>
+                </select>
+                <button id="deleteBookmarkBtn" class="h-9 shrink-0 rounded-md border border-gray-300 bg-white px-3 text-sm font-medium hover:bg-gray-50 disabled:opacity-50 dark:border-gray-700 dark:bg-gray-900 dark:hover:bg-gray-800">Удалить</button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="mt-3 overflow-x-auto">
+          <table class="min-w-full table-auto divide-y divide-gray-200 text-sm dark:divide-gray-800">
+            <thead class="bg-gray-50 dark:bg-gray-900">
+              <tr>
+                <th class="px-3 py-2 text-left font-semibold">ID</th>
+                <th class="px-3 py-2 text-left font-semibold">Название</th>
+                <th class="px-3 py-2 text-left font-semibold">Компания</th>
+                <th class="px-3 py-2 text-left font-semibold">Ответственный</th>
+                <th class="px-3 py-2 text-left font-semibold">Дата создания</th>
+                <th class="px-3 py-2 text-left font-semibold">Дата завершения</th>
+                <th class="px-3 py-2 text-left font-semibold">Затраченное время</th>
+              </tr>
+            </thead>
+            <tbody id="resultsBody" class="divide-y divide-gray-200 dark:divide-gray-800"></tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- Details Modal -->
+      <div id="detailsModal" class="fixed inset-0 z-50 hidden">
+        <div id="detailsBackdrop" class="absolute inset-0 bg-black/50"></div>
+        <div class="absolute inset-0 flex items-start justify-center p-4 sm:p-6">
+          <div class="mt-10 w-full max-w-3xl overflow-hidden rounded-xl border border-gray-200 bg-white shadow-lg dark:border-gray-800 dark:bg-gray-950">
+            <div class="flex items-center justify-between border-b border-gray-200 p-4 dark:border-gray-800">
+              <h3 id="detailsTitle" class="truncate text-base font-semibold">Детали задачи</h3>
+              <button id="detailsCloseBtn" class="inline-flex items-center gap-2 rounded-md border border-gray-300 bg-white px-3 py-1.5 text-sm font-medium hover:bg-gray-50 dark:border-gray-700 dark:bg-gray-900 dark:hover:bg-gray-800">
+                Закрыть
+              </button>
+            </div>
+            <div id="detailsContent" class="max-h-[70vh] overflow-y-auto p-4"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Settings Modal -->
+      <div id="settingsModal" class="fixed inset-0 z-50 hidden">
+        <div id="settingsBackdrop" class="absolute inset-0 bg-black/50"></div>
+        <div class="absolute inset-0 flex items-start justify-center p-4 sm:p-6">
+          <div class="mt-10 w-full max-w-lg overflow-hidden rounded-xl border border-gray-200 bg-white shadow-lg dark:border-gray-800 dark:bg-gray-950">
+            <div class="flex items-center justify-between border-b border-gray-200 p-4 dark:border-gray-800">
+              <h3 class="truncate text-base font-semibold">Настройки фильтра</h3>
+              <div class="flex items-center gap-2">
+                <button id="settingsSaveBtn" class="inline-flex items-center gap-2 rounded-md bg-gray-900 px-3 py-1.5 text-sm font-medium text-white hover:bg-black/80 dark:bg-white dark:text-gray-900 dark:hover:bg-white/90">Сохранить</button>
+                <button id="settingsCloseBtn" class="inline-flex items-center gap-2 rounded-md border border-gray-300 bg-white px-3 py-1.5 text-sm font-medium hover:bg-gray-50 dark:border-gray-700 dark:bg-gray-900 dark:hover:bg-gray-800">Закрыть</button>
+              </div>
+            </div>
+            <div class="max-h-[70vh] overflow-y-auto p-4">
+              <div class="space-y-3">
+                <div>
+                  <label for="tagsKeywordsInput" class="mb-1 block text-sm font-medium">Слова в тегах</label>
+                  <input id="tagsKeywordsInput" type="text" placeholder="например: баг, срочно" class="w-full rounded-md border border-gray-300 bg-white p-2 text-sm placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-400 dark:border-gray-700 dark:bg-gray-900" />
+                  <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">Перечислите слова через запятую. Будут найдены задачи, у которых в колонке «Теги» встречаются эти слова.</p>
+                </div>
+                <div>
+                  <label for="tagsModeSelect" class="mb-1 block text-sm font-medium">Совпадение</label>
+                  <select id="tagsModeSelect" class="w-full rounded-md border border-gray-300 bg-white p-2 text-sm dark:border-gray-700 dark:bg-gray-900">
+                    <option value="any">Любое из слов</option>
+                    <option value="all">Все слова</option>
+                  </select>
+                </div>
+                <hr class="my-2 border-gray-200 dark:border-gray-800" />
+                <div>
+                  <div class="mb-1 flex items-center justify-between">
+                    <label class="block text-sm font-medium">Сотрудники (фамилии)</label>
+                    <button id="applyEmployeesFilterBtn" class="rounded-md border border-gray-300 bg-white px-2 py-1 text-xs font-medium hover:bg-gray-50 dark:border-gray-700 dark:bg-gray-900 dark:hover:bg-gray-800">Фильтровать по сотрудникам</button>
+                  </div>
+                  <div class="flex gap-2">
+                    <input id="employeeInput" type="text" placeholder="например: Иванов" class="w-full rounded-md border border-gray-300 bg-white p-2 text-sm placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-400 dark:border-gray-700 dark:bg-gray-900" />
+                    <button id="addEmployeeBtn" class="shrink-0 rounded-md bg-gray-900 px-3 text-sm font-medium text-white hover:bg-black/80 dark:bg-white dark:text-gray-900 dark:hover:bg-white/90">Добавить</button>
+                  </div>
+                  <div id="employeesList" class="mt-2 flex flex-wrap gap-2"></div>
+                  <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">Добавляйте фамилии по одной. Кнопка выше применит фильтр задач, где в тегах встречается хотя бы одна из фамилий.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <section id="message" class="mt-6 hidden rounded-md border p-4 text-sm"></section>
+    </main>
+
+    <footer class="mt-10 border-t border-gray-200 py-6 text-center text-xs text-gray-500 dark:border-gray-800 dark:text-gray-400">
+      Сделано для быстрого извлечения списка задач из HTML-таблиц. Нет сторонних CSS-библиотек, только Tailwind.
+    </footer>
+
+    <script>
+      const fileInput = document.getElementById('fileInput');
+      const dropzone = document.getElementById('dropzone');
+      const fileMeta = document.getElementById('fileMeta');
+      const parseFileBtn = document.getElementById('parseFileBtn');
+      const clearFileBtn = document.getElementById('clearFileBtn');
+      const resultsCard = document.getElementById('resultsCard');
+      const resultsBody = document.getElementById('resultsBody');
+      const stats = document.getElementById('stats');
+      const message = document.getElementById('message');
+      const mappingSection = document.getElementById('mappingSection');
+      const mappingControls = document.getElementById('mappingControls');
+      const applyMappingBtn = document.getElementById('applyMappingBtn');
+      const hideMappingBtn = document.getElementById('hideMapping');
+       const uploadCard = document.getElementById('uploadCard');
+       const dashboardsPanel = document.getElementById('dashboardsPanel');
+       const dashboardContent = document.getElementById('dashboardContent');
+
+      // Details modal UI
+      const detailsModal = document.getElementById('detailsModal');
+      const detailsBackdrop = document.getElementById('detailsBackdrop');
+      const detailsCloseBtn = document.getElementById('detailsCloseBtn');
+      const detailsTitle = document.getElementById('detailsTitle');
+      const detailsContent = document.getElementById('detailsContent');
+      // Settings modal UI
+      const settingsModal = document.getElementById('settingsModal');
+      const settingsBackdrop = document.getElementById('settingsBackdrop');
+      const settingsCloseBtn = document.getElementById('settingsCloseBtn');
+      const settingsSaveBtn = document.getElementById('settingsSaveBtn');
+      const openFilterSettingsBtn = document.getElementById('openFilterSettings');
+      const tagsKeywordsInput = document.getElementById('tagsKeywordsInput');
+      const tagsModeSelect = document.getElementById('tagsModeSelect');
+      const employeeInput = document.getElementById('employeeInput');
+      const addEmployeeBtn = document.getElementById('addEmployeeBtn');
+      const employeesList = document.getElementById('employeesList');
+      const applyEmployeesFilterBtn = document.getElementById('applyEmployeesFilterBtn');
+
+      // Filters UI
+      const filterQuery = document.getElementById('filterQuery');
+      const createdFromInput = document.getElementById('createdFrom');
+      const createdToInput = document.getElementById('createdTo');
+      const completedFromInput = document.getElementById('completedFrom');
+      const completedToInput = document.getElementById('completedTo');
+      const resetFiltersBtn = document.getElementById('resetFilters');
+      // Bookmarks UI
+      const bmNameInput = document.getElementById('bmNameInput');
+      const saveBookmarkBtn = document.getElementById('saveBookmarkBtn');
+      const bookmarksSelect = document.getElementById('bookmarksSelect');
+      const deleteBookmarkBtn = document.getElementById('deleteBookmarkBtn');
+
+      let lastParsedHeaders = [];
+      let lastParsedRows = [];
+      let suggestedMapping = { id: -1, title: -1, company: -1, assignee: -1, created: -1, completed: -1, duration: -1, tags: -1 };
+      let allTasks = [];
+      let bookmarks = [];
+       let currentDashboard = 'table';
+       let lastFilteredTasks = [];
+      let filterSettings = {
+        tagsKeywords: [],
+        tagsMode: 'any',
+        employees: []
+      };
+
+       function setActiveDashboard(key) {
+         currentDashboard = key || 'table';
+         const btns = document.querySelectorAll('[data-dashboard]');
+         btns.forEach((b) => {
+           const isActive = b.getAttribute('data-dashboard') === currentDashboard;
+           b.setAttribute('aria-pressed', isActive ? 'true' : 'false');
+         });
+         const showTable = currentDashboard === 'table';
+         // Show table only for "table" dashboard and when data exists
+         const hasAny = Array.isArray(allTasks) && allTasks.length > 0;
+         resultsCard.classList.toggle('hidden', !(showTable && hasAny));
+         renderDashboardContent();
+       }
+
+       function computeGroupedCounts(items, fieldKey) {
+         const map = new Map();
+         for (const t of items) {
+           let raw = (t?.[fieldKey] ?? '').toString().trim();
+           const key = raw || '— не указано —';
+           map.set(key, (map.get(key) || 0) + 1);
+         }
+         const arr = Array.from(map.entries()).map(([label, count]) => ({ label, count }));
+         arr.sort((a, b) => b.count - a.count || a.label.localeCompare(b.label, 'ru'));
+         return arr;
+       }
+
+        function computeEmployeeCountsByTags(items) {
+          const employees = Array.isArray(filterSettings?.employees) ? filterSettings.employees.filter(Boolean) : [];
+          if (!employees.length) return [];
+          const normalizeToken = (s) => String(s || '')
+            .toLowerCase()
+            .replace(/[^A-Za-zА-Яа-яЁё0-9]+/g, '');
+          const employeeNorms = employees.map((e) => ({ original: e, norm: normalizeToken(e) }))
+            .filter((e) => e.norm);
+          const countsMap = new Map();
+          for (const e of employeeNorms) countsMap.set(e.original, 0);
+          for (const t of items) {
+            const raw = String(t?.tags || '');
+            if (!raw.trim()) continue;
+            const tokens = raw
+              .split(/[;,.|/\\#\n\r\t\s]+/g)
+              .map((s) => normalizeToken(s))
+              .filter(Boolean);
+            if (!tokens.length) continue;
+            const tokenSet = new Set(tokens);
+            for (const e of employeeNorms) {
+              if (tokenSet.has(e.norm)) {
+                countsMap.set(e.original, (countsMap.get(e.original) || 0) + 1);
+              }
+            }
+          }
+          const arr = Array.from(countsMap.entries()).map(([label, count]) => ({ label, count }));
+          arr.sort((a, b) => b.count - a.count || a.label.localeCompare(b.label, 'ru'));
+          return arr;
+        }
+
+       function renderBarList(groups, caption) {
+         const max = Math.max(1, ...groups.map((g) => g.count));
+         const rows = groups.map((g) => {
+           const pct = Math.round((g.count / max) * 100);
+           return `
+             <div class="grid grid-cols-[1fr_auto] items-center gap-3">
+               <div class="min-w-0">
+                 <div class="truncate text-sm">${escapeHtml(g.label)}</div>
+                 <div class="mt-1 h-2 w-full overflow-hidden rounded bg-gray-100 dark:bg-gray-800">
+                   <div class="h-2 rounded bg-gray-900 dark:bg-white" style="width: ${pct}%"></div>
+                 </div>
+               </div>
+               <div class="text-right text-sm tabular-nums text-gray-600 dark:text-gray-400">${g.count}</div>
+             </div>
+           `;
+         }).join('');
+         return `
+           <div class="rounded-xl border border-gray-200 bg-white p-4 dark:border-gray-800 dark:bg-gray-950">
+             ${caption ? `<div class=\"mb-3 text-sm font-medium text-gray-700 dark:text-gray-300\">${escapeHtml(caption)}</div>` : ''}
+             <div class="space-y-3">${rows || '<div class="text-sm text-gray-500 dark:text-gray-400">Нет данных</div>'}</div>
+           </div>
+         `;
+       }
+
+       function groupByMonth(items, fieldKey) {
+         const counts = new Map();
+         for (const t of items) {
+           const ts = parseDateFromCell(t?.[fieldKey]);
+           if (Number.isNaN(ts)) continue;
+           const d = new Date(ts);
+           const key = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}`;
+           counts.set(key, (counts.get(key) || 0) + 1);
+         }
+         const keys = Array.from(counts.keys()).sort();
+         return keys.map((k) => ({ label: k, count: counts.get(k) }));
+       }
+
+       function renderTimelineDashboard(items) {
+         const created = groupByMonth(items, 'created');
+         const completed = groupByMonth(items, 'completed');
+         const createdBlock = renderBarList(created, 'Создано по месяцам');
+         const completedBlock = renderBarList(completed, 'Завершено по месяцам');
+         return `
+           <div class="grid gap-4 md:grid-cols-2">
+             ${createdBlock}
+             ${completedBlock}
+           </div>
+         `;
+       }
+
+        function renderEmployeesTagsDashboard(items) {
+          const employees = Array.isArray(filterSettings?.employees) ? filterSettings.employees.filter(Boolean) : [];
+          if (!employees.length) {
+            return '<div class="rounded-xl border border-gray-200 bg-white p-4 text-sm text-gray-600 dark:border-gray-800 dark:bg-gray-950 dark:text-gray-400">Добавьте фамилии сотрудников в настройках фильтра и убедитесь, что колонка «Теги» сопоставлена.</div>';
+          }
+          const groups = computeEmployeeCountsByTags(items);
+          const totalTasks = items.length;
+          const employeesCount = employees.length;
+          const norm = employeesCount > 0 ? totalTasks / employeesCount : 0;
+          const rowsHtml = groups.map((g) => {
+            const fact = g.count;
+            const deviation = fact - norm;
+            const deviationPct = norm > 0 ? (deviation / norm) * 100 : 0;
+            const status = deviation > norm * 0.1
+              ? 'выше нормы'
+              : (deviation < -norm * 0.1 ? 'ниже нормы' : 'в норме');
+            const statusColor = status === 'выше нормы' ? 'text-emerald-600 dark:text-emerald-400' : (status === 'ниже нормы' ? 'text-rose-600 dark:text-rose-400' : 'text-gray-700 dark:text-gray-300');
+            const widthPct = groups.length ? Math.round((fact / Math.max(1, ...groups.map(x => x.count))) * 100) : 0;
+            return `
+              <div class="grid grid-cols-[1fr_auto_auto_auto_auto] items-center gap-3">
+                <div class="min-w-0">
+                  <div class="truncate text-sm">${escapeHtml(g.label)}</div>
+                  <div class="mt-1 h-2 w-full overflow-hidden rounded bg-gray-100 dark:bg-gray-800">
+                    <div class="h-2 rounded bg-gray-900 dark:bg-white" style="width: ${widthPct}%"></div>
+                  </div>
+                </div>
+                <div class="text-right text-sm tabular-nums">${fact}</div>
+                <div class="text-right text-sm tabular-nums text-gray-600 dark:text-gray-400">${norm.toFixed(2)}</div>
+                <div class="text-right text-sm tabular-nums ${deviation >= 0 ? 'text-emerald-700 dark:text-emerald-400' : 'text-rose-700 dark:text-rose-400'}">${deviation >= 0 ? '+' : ''}${deviation.toFixed(2)}</div>
+                <div class="text-right text-sm tabular-nums ${statusColor}">${deviationPct >= 0 ? '+' : ''}${deviationPct.toFixed(1)}% · ${status}</div>
+              </div>
+            `;
+          }).join('');
+          const header = `
+            <div class="mb-3 text-sm font-medium text-gray-700 dark:text-gray-300">
+              Норматив: ${totalTasks} / ${employeesCount} = <span class="tabular-nums">${norm.toFixed(2)}</span> задач на сотрудника
+            </div>
+          `;
+          const legend = `
+            <div class="mb-2 text-xs text-gray-500 dark:text-gray-400">Отклонение = факт − норматив. Статус: выше нормы / в норме / ниже нормы (±10%). Учитываются текущие фильтры.</div>
+          `;
+          const body = rowsHtml || '<div class="text-sm text-gray-500 dark:text-gray-400">Нет данных</div>';
+          return `
+            <div class="rounded-xl border border-gray-200 bg-white p-4 dark:border-gray-800 dark:bg-gray-950">
+              ${header}
+              ${legend}
+              <div class="grid grid-cols-[1fr_auto_auto_auto_auto] gap-3 px-0 pb-2 text-xs font-medium text-gray-500 dark:text-gray-400">
+                <div>Сотрудник</div>
+                <div class="text-right">Факт</div>
+                <div class="text-right">Норматив</div>
+                <div class="text-right">Отклонение</div>
+                <div class="text-right">% и статус</div>
+              </div>
+              <div class="space-y-3">${body}</div>
+            </div>
+          `;
+        }
+
+       function renderDashboardContent() {
+         if (!dashboardsPanel || !dashboardContent) return;
+         const hasAny = Array.isArray(allTasks) && allTasks.length > 0;
+         if (!hasAny) {
+           dashboardContent.innerHTML = '';
+           return;
+         }
+         if (currentDashboard === 'table') {
+           dashboardContent.innerHTML = '';
+           return;
+         }
+         const items = Array.isArray(lastFilteredTasks) && lastFilteredTasks.length ? lastFilteredTasks : allTasks;
+         let html = '';
+         if (currentDashboard === 'companies') {
+           const data = computeGroupedCounts(items, 'company');
+           html = renderBarList(data, 'Распределение по компаниям');
+         } else if (currentDashboard === 'assignees') {
+           const data = computeGroupedCounts(items, 'assignee');
+           html = renderBarList(data, 'Распределение по ответственным');
+         } else if (currentDashboard === 'timeline') {
+           html = renderTimelineDashboard(items);
+          } else if (currentDashboard === 'employees-tags') {
+            html = renderEmployeesTagsDashboard(items);
+          } else if (currentDashboard === 'data-quality') {
+            html = renderDataQualityDashboard(items);
+          } else if (currentDashboard === 'tags') {
+            html = renderTagsFrequencyDashboard(items);
+          } else if (currentDashboard === 'company-duration') {
+            html = renderCompanyDurationDashboard(items);
+          } else if (currentDashboard === 'assignee-duration') {
+            html = renderAssigneeDurationDashboard(items);
+         } else {
+           html = '<div class="text-sm text-gray-600 dark:text-gray-400">Дашборд не найден.</div>';
+         }
+         const hint = `<div class=\"mb-2 text-xs text-gray-500 dark:text-gray-400\">Учитываются текущие фильтры.</div>`;
+         dashboardContent.innerHTML = hint + html;
+       }
+
+      function showMessage(text, type = 'info') {
+        message.classList.remove('hidden');
+        const base = 'rounded-md border p-4 text-sm';
+        const m = message;
+        m.className = base;
+        if (type === 'error') {
+          m.classList.add('border-red-300', 'bg-red-50', 'text-red-900', 'dark:border-red-800', 'dark:bg-red-950/40', 'dark:text-red-200');
+        } else if (type === 'warn') {
+          m.classList.add('border-amber-300', 'bg-amber-50', 'text-amber-900', 'dark:border-amber-700', 'dark:bg-amber-950/40', 'dark:text-amber-200');
+        } else {
+          m.classList.add('border-gray-200', 'bg-white', 'text-gray-800', 'dark:border-gray-800', 'dark:bg-gray-950', 'dark:text-gray-200');
+        }
+        m.textContent = text;
+      }
+
+      function hideMessage() {
+        message.classList.add('hidden');
+      }
+
+      function normalizeHeader(text) {
+        return (text || '')
+          .toLowerCase()
+          .replace(/[\s\t\n\r]+/g, ' ')
+          .replace(/[.,;:!?()\[\]{}<>"'`]+/g, '')
+          .trim();
+      }
+
+      function extractTable(htmlString) {
+        const parser = new DOMParser();
+        const doc = parser.parseFromString(htmlString, 'text/html');
+        const table = doc.querySelector('table');
+        if (!table) throw new Error('В HTML не найдена таблица <table>.');
+
+        // Collect header cells
+        let headerRow = table.querySelector('thead tr');
+        if (!headerRow) {
+          headerRow = table.querySelector('tr');
+        }
+        if (!headerRow) throw new Error('Не найдено ни одной строки <tr> в таблице.');
+
+        const headerCells = Array.from(headerRow.querySelectorAll('th, td'));
+        const headersRaw = headerCells.map((c) => c.textContent.trim());
+        const headersNorm = headersRaw.map(normalizeHeader);
+
+        // Collect body rows
+        let bodyRows = [];
+        const tbodies = table.querySelectorAll('tbody');
+        if (tbodies.length) {
+          tbodies.forEach((tb) => {
+            bodyRows.push(...Array.from(tb.querySelectorAll('tr')));
+          });
+        } else {
+          bodyRows = Array.from(table.querySelectorAll('tr'));
+        }
+        // Remove headerRow if present in bodyRows
+        bodyRows = bodyRows.filter((r) => r !== headerRow && r.querySelectorAll('td, th').length > 0);
+
+        const rows = bodyRows.map((row) => {
+          const cells = Array.from(row.querySelectorAll('td, th'));
+          return cells.map((c) => c.textContent.replace(/\s+/g, ' ').trim());
+        });
+
+        return { headersRaw, headersNorm, rows };
+      }
+
+      function suggestMapping(headersNorm) {
+        const candidates = {
+          id: [
+            'id', 'ид', 'идентификатор', 'номер', 'task id', 'issue id', 'ticket id', 'reference', 'ref', 'код'
+          ],
+          title: [
+            'название', 'наименование', 'заголовок', 'тема', 'описание', 'title', 'summary', 'subject', 'name'
+          ],
+          company: [
+            'компания', 'организация', 'company', 'customer', 'client', 'клиент', 'заказчик', 'vendor', 'partner', 'фирма'
+          ],
+          assignee: [
+            'ответственный', 'исполнитель', 'assignee', 'owner', 'assigned to', 'executor', 'author', 'выполняющий'
+          ],
+          duration: [
+            'затраченное время', 'длительность', 'время', 'hours', 'spent', 'time spent', 'duration', 'worklog', 'spend', 'затрачено'
+          ],
+          created: [
+            'дата создания', 'создано', 'создан', 'created', 'created at', 'creation date', 'created on', 'start date', 'open date', 'opened', 'created time'
+          ],
+          completed: [
+            'дата завершения', 'завершено', 'закрыто', 'закрыт', 'completed', 'done', 'closed', 'resolved', 'resolution date', 'completed at', 'finish date'
+          ]
+        };
+
+        function findIndex(synonyms) {
+          // Exact match first
+          for (let i = 0; i < headersNorm.length; i++) {
+            if (synonyms.includes(headersNorm[i])) return i;
+          }
+          // Contains match
+          for (let i = 0; i < headersNorm.length; i++) {
+            const h = headersNorm[i];
+            if (synonyms.some((s) => h.includes(s))) return i;
+          }
+          return -1;
+        }
+
+        return {
+          id: findIndex(candidates.id),
+          title: findIndex(candidates.title),
+          company: findIndex(candidates.company),
+          assignee: findIndex(candidates.assignee),
+          created: findIndex(candidates.created),
+          completed: findIndex(candidates.completed),
+          duration: findIndex(candidates.duration),
+          tags: findIndex(['теги', 'tags', 'ярлыки', 'labels', 'метки'])
+        };
+      }
+
+       function buildTasks(rows, map) {
+        const validIdx = [map.id, map.title, map.created, map.completed].every((i) => i >= 0);
+        if (!validIdx) return [];
+        const tasks = [];
+        for (const r of rows) {
+          const id = r[map.id] ?? '';
+          const title = r[map.title] ?? '';
+          const company = map.company >= 0 ? (r[map.company] ?? '') : '';
+          const assignee = map.assignee >= 0 ? (r[map.assignee] ?? '') : '';
+          const created = r[map.created] ?? '';
+          const completed = r[map.completed] ?? '';
+          const duration = map.duration >= 0 ? (r[map.duration] ?? '') : '';
+          const tags = map.tags >= 0 ? (r[map.tags] ?? '') : '';
+          if (!id && !title && !created && !completed && !company) continue;
+          tasks.push({ id, title, company, assignee, created, completed, duration, tags, rawCells: r });
+        }
+        return tasks;
+      }
+
+       function renderTasks(tasks) {
+        resultsBody.innerHTML = '';
+        const frag = document.createDocumentFragment();
+        for (const t of tasks) {
+          const tr = document.createElement('tr');
+          tr.className = 'cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-900/60';
+          const durationText = String(t.duration || '').trim();
+          const cells = [
+            t.id,
+            t.title,
+            t.company,
+            t.assignee,
+            t.created,
+            t.completed,
+            durationText
+          ];
+          for (const c of cells) {
+            const td = document.createElement('td');
+            td.className = 'px-3 py-2 align-top';
+            const val = c ?? '';
+            if (String(val).trim() === '') {
+              td.innerHTML = '<span class="text-gray-400 dark:text-gray-500">не заполнено</span>';
+            } else {
+              td.textContent = val;
+            }
+            tr.appendChild(td);
+          }
+          tr.addEventListener('click', () => openTaskDetails(t));
+          frag.appendChild(tr);
+        }
+        resultsBody.appendChild(frag);
+        // visibility and stats handled by setTasks/applyFilters
+      }
+
+      function setTasks(tasks) {
+        allTasks = Array.isArray(tasks) ? tasks : [];
+        const hasAny = allTasks.length > 0;
+         resultsCard.classList.toggle('hidden', !hasAny);
+         // Toggle upload and dashboards visibility
+         if (dashboardsPanel) dashboardsPanel.classList.toggle('hidden', !hasAny);
+         if (uploadCard) uploadCard.classList.toggle('hidden', hasAny);
+        if (!hasAny) {
+          stats.textContent = '';
+          resultsBody.innerHTML = '';
+          return;
+        }
+         applyFilters();
+         // Ensure dashboard state is applied
+         setActiveDashboard(currentDashboard);
+      }
+
+      function debounce(fn, ms) {
+        let t;
+        return (...args) => {
+          clearTimeout(t);
+          t = setTimeout(() => fn(...args), ms);
+        };
+      }
+
+      function parseDateFromCell(value) {
+        if (!value) return NaN;
+        const trimmed = String(value).trim();
+        if (!trimmed) return NaN;
+        // Try native Date first
+        const native = new Date(trimmed);
+        if (!Number.isNaN(native.getTime()) && native.getFullYear() > 1900 && native.getFullYear() < 2100) {
+          return native.getTime();
+        }
+        // Try common DD.MM.YYYY[ HH:mm[:ss]]
+        const m = trimmed.match(/^(\d{1,2})[.\/-](\d{1,2})[.\/-](\d{2,4})(?:\s+(\d{1,2}):(\d{2})(?::(\d{2}))?)?$/);
+        if (m) {
+          let [_, dd, mm, yyyy, HH = '0', MM = '0', SS = '0'] = m;
+          const day = parseInt(dd, 10);
+          const month = parseInt(mm, 10) - 1;
+          let year = parseInt(yyyy, 10);
+          if (yyyy.length === 2) year += 2000;
+          const hours = parseInt(HH, 10);
+          const minutes = parseInt(MM, 10);
+          const seconds = parseInt(SS, 10);
+          const d = new Date(year, month, day, hours, minutes, seconds);
+          if (!Number.isNaN(d.getTime())) return d.getTime();
+        }
+        return NaN;
+      }
+
+      function parseISODateInput(value, isEndOfDay = false) {
+        if (!value) return NaN;
+        const t = isEndOfDay ? 'T23:59:59.999' : 'T00:00:00.000';
+        const d = new Date(value + t);
+        return d.getTime();
+      }
+
+      // Helpers for duration stats (lead time between created and completed)
+      function toDays(ms) {
+        return ms / (24 * 60 * 60 * 1000);
+      }
+
+      function getCompletedTasks(items) {
+        return (items || []).filter((t) => {
+          const c1 = parseDateFromCell(t.created);
+          const c2 = parseDateFromCell(t.completed);
+          return !Number.isNaN(c1) && !Number.isNaN(c2) && c2 >= c1;
+        });
+      }
+
+      function computeNumberStats(values) {
+        const arr = (values || []).filter((v) => Number.isFinite(v)).sort((a, b) => a - b);
+        const n = arr.length;
+        if (!n) return { count: 0, avg: NaN, median: NaN, p90: NaN };
+        const sum = arr.reduce((s, x) => s + x, 0);
+        const avg = sum / n;
+        const median = n % 2 ? arr[(n - 1) / 2] : (arr[n / 2 - 1] + arr[n / 2]) / 2;
+        const p90Idx = Math.max(0, Math.min(n - 1, Math.ceil(0.9 * n) - 1));
+        const p90 = arr[p90Idx];
+        return { count: n, avg, median, p90 };
+      }
+
+      function groupDurationsBy(items, fieldKey) {
+        const groups = new Map();
+        for (const t of getCompletedTasks(items)) {
+          const d1 = parseDateFromCell(t.created);
+          const d2 = parseDateFromCell(t.completed);
+          const days = toDays(d2 - d1);
+          const raw = (t?.[fieldKey] ?? '').toString().trim();
+          const label = raw || '— не указано —';
+          if (!groups.has(label)) groups.set(label, []);
+          groups.get(label).push(days);
+        }
+        const result = [];
+        for (const [label, arr] of groups.entries()) {
+          const s = computeNumberStats(arr);
+          result.push({ label, count: s.count, avg: s.avg, median: s.median, p90: s.p90 });
+        }
+        return result;
+      }
+
+      function renderStatsGrid(rows, columns, caption) {
+        const header = `
+          <div class="mb-3 text-sm font-medium text-gray-700 dark:text-gray-300">${caption ? escapeHtml(caption) : ''}</div>
+          <div class="grid grid-cols-${columns.length} gap-3 px-0 pb-2 text-xs font-medium text-gray-500 dark:text-gray-400">
+            ${columns.map((c) => `<div class=\"${c.align === 'right' ? 'text-right' : ''}\">${escapeHtml(c.title)}</div>`).join('')}
+          </div>
+        `;
+        const body = rows.map((r) => {
+          return `
+            <div class="grid grid-cols-${columns.length} items-center gap-3">
+              ${columns.map((c) => `<div class=\"${c.align === 'right' ? 'text-right tabular-nums' : 'min-w-0 truncate'}\">${c.format ? c.format(r[c.key]) : escapeHtml(String(r[c.key] ?? ''))}</div>`).join('')}
+            </div>
+          `;
+        }).join('');
+        return `
+          <div class="rounded-xl border border-gray-200 bg-white p-4 dark:border-gray-800 dark:bg-gray-950">
+            ${header}
+            <div class="space-y-3">${body || '<div class="text-sm text-gray-500 dark:text-gray-400">Нет данных</div>'}</div>
+          </div>
+        `;
+      }
+
+      function renderCompanyDurationDashboard(items) {
+        const TOP_N = 10;
+        const groups = groupDurationsBy(items, 'company')
+          .sort((a, b) => b.count - a.count || b.avg - a.avg)
+          .slice(0, TOP_N);
+        const columns = [
+          { key: 'label', title: 'Компания' },
+          { key: 'count', title: 'Кол-во', align: 'right', format: (v) => String(v) },
+          { key: 'avg', title: 'Средн., дни', align: 'right', format: (v) => Number.isFinite(v) ? v.toFixed(2) : '—' }
+        ];
+        return renderStatsGrid(groups, columns, `Средняя длительность завершённых задач по компаниям (Top ${TOP_N})`);
+      }
+
+      function renderAssigneeDurationDashboard(items) {
+        const groups = groupDurationsBy(items, 'assignee')
+          .sort((a, b) => b.count - a.count || b.avg - a.avg);
+        const columns = [
+          { key: 'label', title: 'Ответственный' },
+          { key: 'count', title: 'Кол-во', align: 'right', format: (v) => String(v) },
+          { key: 'avg', title: 'Средн., дни', align: 'right', format: (v) => Number.isFinite(v) ? v.toFixed(2) : '—' },
+          { key: 'median', title: 'Медиана, дни', align: 'right', format: (v) => Number.isFinite(v) ? v.toFixed(2) : '—' },
+          { key: 'p90', title: 'P90, дни', align: 'right', format: (v) => Number.isFinite(v) ? v.toFixed(2) : '—' }
+        ];
+        return renderStatsGrid(groups, columns, 'Длительность завершённых задач по ответственным');
+      }
+
+      function computeTagFrequency(items) {
+        const map = new Map();
+        for (const t of items) {
+          const raw = String(t?.tags || '');
+          if (!raw.trim()) continue;
+          const tokens = raw
+            .split(/[;,\|\/#\n\r\t]+|\s{2,}/g)
+            .map((s) => s.trim())
+            .filter(Boolean)
+            .map((s) => s.toLowerCase());
+          for (const tok of tokens) {
+            map.set(tok, (map.get(tok) || 0) + 1);
+          }
+        }
+        const arr = Array.from(map.entries()).map(([label, count]) => ({ label, count }));
+        arr.sort((a, b) => b.count - a.count || a.label.localeCompare(b.label, 'ru'));
+        return arr;
+      }
+
+      function renderTagsFrequencyDashboard(items) {
+        const TOP_N = 30;
+        const data = computeTagFrequency(items).slice(0, TOP_N);
+        return renderBarList(data, `Топ ${TOP_N} тегов`);
+      }
+
+      function renderDataQualityDashboard(items) {
+        const total = items.length;
+        const counts = {
+          noCompany: 0,
+          noAssignee: 0,
+          noTags: 0,
+          badCreated: 0,
+          badCompleted: 0,
+          duplicateIdTasks: 0
+        };
+        const idCounts = new Map();
+        for (const t of items) {
+          const company = String(t.company || '').trim();
+          const assignee = String(t.assignee || '').trim();
+          const tags = String(t.tags || '').trim();
+          const createdTs = parseDateFromCell(t.created);
+          const completedRaw = String(t.completed || '').trim();
+          const completedTs = parseDateFromCell(t.completed);
+          const id = String(t.id || '').trim();
+          if (!company) counts.noCompany++;
+          if (!assignee) counts.noAssignee++;
+          if (!tags) counts.noTags++;
+          if (Number.isNaN(createdTs)) counts.badCreated++;
+          if (completedRaw && Number.isNaN(completedTs)) counts.badCompleted++;
+          if (id) idCounts.set(id, (idCounts.get(id) || 0) + 1);
+        }
+        for (const [, c] of idCounts.entries()) {
+          if (c > 1) counts.duplicateIdTasks += (c - 1);
+        }
+        const groups = [
+          { label: `Всего задач`, count: total },
+          { label: `Пустая компания`, count: counts.noCompany },
+          { label: `Пустой ответственный`, count: counts.noAssignee },
+          { label: `Пустые теги`, count: counts.noTags },
+          { label: `Нераспознана дата создания`, count: counts.badCreated },
+          { label: `Нераспознана дата завершения`, count: counts.badCompleted },
+          { label: `Задачи с дублирующимся ID`, count: counts.duplicateIdTasks }
+        ];
+        return renderBarList(groups, 'Качество данных');
+      }
+
+      function formatDuration(ms) {
+        if (!Number.isFinite(ms) || ms < 0) return '';
+        const totalSeconds = Math.floor(ms / 1000);
+        const days = Math.floor(totalSeconds / (24 * 3600));
+        const hours = Math.floor((totalSeconds % (24 * 3600)) / 3600);
+        const minutes = Math.floor((totalSeconds % 3600) / 60);
+        const parts = [];
+        if (days) parts.push(days + ' д');
+        if (hours) parts.push(hours + ' ч');
+        if (minutes) parts.push(minutes + ' м');
+        return parts.join(' ');
+      }
+
+      function isEmptyValue(v) {
+        return !String(v ?? '').trim();
+      }
+
+      function isLongText(v) {
+        const s = String(v || '');
+        return s.length > 200 || s.includes('\n');
+      }
+
+      function truncateText(v, maxLen = 200) {
+        const s = String(v || '');
+        if (s.length <= maxLen) return s;
+        return s.slice(0, maxLen) + '…';
+      }
+
+      function renderValueWithToggle(value) {
+        const raw = String(value || '');
+        if (!isLongText(raw)) {
+          return `<div class="whitespace-pre-wrap break-words">${escapeHtml(raw)}</div>`;
+        }
+        const short = truncateText(raw, 200);
+        return `
+          <div class="long-text-block">
+            <div class="long-text short whitespace-pre-wrap break-words">${escapeHtml(short)}</div>
+            <div class="long-text full hidden whitespace-pre-wrap break-words">${escapeHtml(raw)}</div>
+            <button type="button" class="toggleLongText mt-1 text-xs text-gray-600 underline">Развернуть</button>
+          </div>
+        `;
+      }
+
+      function openTaskDetails(task) {
+        if (!task) return;
+        // Title
+        const idText = String(task.id || '').trim();
+        const titleText = String(task.title || '').trim();
+        detailsTitle.textContent = idText ? `${idText}${titleText ? ' — ' + titleText : ''}` : (titleText || 'Детали задачи');
+
+        // Status and durations
+        const createdTs = parseDateFromCell(task.created);
+        const completedTs = parseDateFromCell(task.completed);
+        const nowTs = Date.now();
+        const isCompleted = !Number.isNaN(completedTs);
+        const statusText = isCompleted ? 'Завершена' : 'Открыта';
+        const durationMs = !Number.isNaN(createdTs)
+          ? (isCompleted ? (completedTs - createdTs) : (nowTs - createdTs))
+          : NaN;
+        const durationText = formatDuration(durationMs);
+
+        // Overview block
+         const overviewRows = [
+          { k: 'ID', v: task.id || '' },
+          { k: 'Название', v: task.title || '' },
+          { k: 'Компания', v: task.company || '' },
+           { k: 'Ответственный', v: task.assignee || '' },
+          { k: 'Дата создания', v: task.created || '' },
+          { k: 'Дата завершения', v: task.completed || '' },
+           { k: 'Затраченное время', v: task.duration || '' },
+          { k: 'Статус', v: statusText + (durationText ? ` (${durationText})` : '') }
+        ].filter((row) => !isEmptyValue(row.v));
+
+        // Full row mapping: header -> value
+         const headers = Array.isArray(lastParsedHeaders) ? lastParsedHeaders : [];
+        const cells = Array.isArray(task.rawCells) ? task.rawCells : [];
+        const maxLen = Math.max(headers.length, cells.length);
+        let allFieldsHtml = '';
+        for (let i = 0; i < maxLen; i++) {
+          const label = headers[i] != null && String(headers[i]).trim() !== '' ? headers[i] : `Колонка ${i + 1}`;
+          const value = cells[i] != null ? cells[i] : '';
+          if (isEmptyValue(value)) continue;
+          allFieldsHtml += `
+            <div class="contents">
+              <div class="truncate px-3 py-2 font-medium">${escapeHtml(label)}</div>
+              <div class="px-3 py-2">${renderValueWithToggle(value)}</div>
+            </div>
+          `;
+        }
+
+        detailsContent.innerHTML = `
+          <div class="space-y-6">
+            <div>
+              <h4 class="mb-2 text-sm font-semibold text-gray-700 dark:text-gray-300">Основное</h4>
+              <div class="grid grid-cols-1 gap-2 sm:grid-cols-2">
+                ${overviewRows
+                  .map((row) => `
+                    <div class="rounded-lg border border-gray-200 bg-white p-3 text-sm dark:border-gray-800 dark:bg-gray-900">
+                      <div class="text-gray-500 dark:text-gray-400">${escapeHtml(row.k)}</div>
+                      <div class="mt-0.5 font-medium">${renderValueWithToggle(row.v)}</div>
+                    </div>
+                  `)
+                  .join('')}
+              </div>
+            </div>
+            <div>
+              <h4 class="mb-2 text-sm font-semibold text-gray-700 dark:text-gray-300">Все колонки строки</h4>
+              <div class="grid grid-cols-1 sm:grid-cols-2">
+                ${allFieldsHtml || '<div class="px-3 py-2 text-sm text-gray-500 dark:text-gray-400">Нет непустых значений</div>'}
+              </div>
+            </div>
+          </div>
+        `;
+
+        // Show modal
+        detailsModal.classList.remove('hidden');
+      }
+
+      function closeTaskDetails() {
+        detailsModal.classList.add('hidden');
+      }
+
+      function escapeHtml(str) {
+        return String(str)
+          .replaceAll('&', '&amp;')
+          .replaceAll('<', '&lt;')
+          .replaceAll('>', '&gt;')
+          .replaceAll('"', '&quot;')
+          .replaceAll("'", '&#039;');
+      }
+
+      function applyFilters() {
+        if (!allTasks.length) {
+          resultsBody.innerHTML = '';
+          stats.textContent = '';
+          return;
+        }
+        const q = (filterQuery?.value || '').trim().toLowerCase();
+        const createdFrom = parseISODateInput(createdFromInput?.value || '');
+        const createdTo = parseISODateInput(createdToInput?.value || '', true);
+        const completedFrom = parseISODateInput(completedFromInput?.value || '');
+        const completedTo = parseISODateInput(completedToInput?.value || '', true);
+
+        const filtered = allTasks.filter((t) => {
+          // Text search over id, title and company
+          if (q) {
+            const hay = `${t.id || ''} ${t.title || ''} ${t.company || ''}`.toLowerCase();
+            if (!hay.includes(q)) return false;
+          }
+          // Tags filter
+          if (Array.isArray(filterSettings?.tagsKeywords) && filterSettings.tagsKeywords.length) {
+            const rawTags = String(t.tags || '').toLowerCase();
+            const tokens = rawTags
+              .split(/[;,\|\/#\n\r\t]+|\s{2,}/g)
+              .map((s) => s.trim())
+              .filter(Boolean);
+            const keywords = filterSettings.tagsKeywords.map((s) => s.toLowerCase());
+            const has = (kw) => tokens.some((tok) => tok.includes(kw));
+            if (filterSettings.tagsMode === 'all') {
+              if (!keywords.every((kw) => has(kw))) return false;
+            } else {
+              if (!keywords.some((kw) => has(kw))) return false;
+            }
+          }
+          // Created date range
+          if (createdFrom || createdTo) {
+            const ts = parseDateFromCell(t.created);
+            if (Number.isNaN(ts)) return false;
+            if (createdFrom && ts < createdFrom) return false;
+            if (createdTo && ts > createdTo) return false;
+          }
+          // Completed date range
+          if (completedFrom || completedTo) {
+            const ts = parseDateFromCell(t.completed);
+            if (Number.isNaN(ts)) return false;
+            if (completedFrom && ts < completedFrom) return false;
+            if (completedTo && ts > completedTo) return false;
+          }
+          return true;
+        });
+
+        renderTasks(filtered);
+        stats.textContent = `Показано ${filtered.length} из ${allTasks.length}`;
+         lastFilteredTasks = filtered;
+         // update non-table dashboards to reflect current filters
+         if (currentDashboard !== 'table') {
+           renderDashboardContent();
+         }
+      }
+
+      // Bookmarks: storage helpers
+      const BM_STORAGE_KEY = 'task_table_filter_bookmarks_v1';
+      function loadBookmarks() {
+        try {
+          const raw = localStorage.getItem(BM_STORAGE_KEY);
+          const arr = raw ? JSON.parse(raw) : [];
+          if (Array.isArray(arr)) bookmarks = arr;
+          else bookmarks = [];
+        } catch (_) {
+          bookmarks = [];
+        }
+        renderBookmarksSelect();
+      }
+
+      function saveBookmarks() {
+        try {
+          localStorage.setItem(BM_STORAGE_KEY, JSON.stringify(bookmarks));
+        } catch (_) {}
+      }
+
+       // Last source (file/html) storage helpers
+       const LAST_SOURCE_KEY = 'task_table_last_source_v1';
+       function saveLastSource(payload) {
+         try {
+           localStorage.setItem(LAST_SOURCE_KEY, JSON.stringify(payload));
+         } catch (_) {}
+       }
+
+       function loadLastSource() {
+         try {
+           const raw = localStorage.getItem(LAST_SOURCE_KEY);
+           if (!raw) return null;
+           const obj = JSON.parse(raw);
+           if (obj && typeof obj === 'object' && typeof obj.text === 'string') return obj;
+           return null;
+         } catch (_) {
+           return null;
+         }
+       }
+
+      function getCurrentFilterConfig() {
+        return {
+          name: (bmNameInput?.value || '').trim(),
+          query: filterQuery?.value || '',
+          createdFrom: createdFromInput?.value || '',
+          createdTo: createdToInput?.value || '',
+          completedFrom: completedFromInput?.value || '',
+          completedTo: completedToInput?.value || '',
+          tagsKeywords: Array.isArray(filterSettings?.tagsKeywords) ? filterSettings.tagsKeywords : [],
+          tagsMode: filterSettings?.tagsMode || 'any',
+          employees: Array.isArray(filterSettings?.employees) ? filterSettings.employees : []
+        };
+      }
+
+      function applyFilterConfig(cfg) {
+        if (!cfg) return;
+        if (filterQuery) filterQuery.value = cfg.query || '';
+        if (createdFromInput) createdFromInput.value = cfg.createdFrom || '';
+        if (createdToInput) createdToInput.value = cfg.createdTo || '';
+        if (completedFromInput) completedFromInput.value = cfg.completedFrom || '';
+        if (completedToInput) completedToInput.value = cfg.completedTo || '';
+        // tags settings
+        filterSettings.tagsKeywords = Array.isArray(cfg.tagsKeywords)
+          ? cfg.tagsKeywords
+          : String(cfg.tagsKeywords || '')
+              .split(/[;,\n\r]+/g)
+              .map((s) => s.trim())
+              .filter(Boolean);
+        filterSettings.tagsMode = cfg.tagsMode === 'all' ? 'all' : 'any';
+        if (tagsKeywordsInput) tagsKeywordsInput.value = filterSettings.tagsKeywords.join(', ');
+        if (tagsModeSelect) tagsModeSelect.value = filterSettings.tagsMode;
+        // employees
+        filterSettings.employees = Array.isArray(cfg.employees)
+          ? cfg.employees
+          : String(cfg.employees || '')
+              .split(/[;,\n\r]+/g)
+              .map((s) => s.trim())
+              .filter(Boolean);
+        renderEmployeesChips();
+        applyFilters();
+      }
+
+      function renderBookmarksSelect() {
+        if (!bookmarksSelect) return;
+        const current = bookmarksSelect.value;
+        bookmarksSelect.innerHTML = '';
+        const def = document.createElement('option');
+        def.value = '';
+        def.textContent = '— нет закладок —';
+        bookmarksSelect.appendChild(def);
+        bookmarks.forEach((b, idx) => {
+          const opt = document.createElement('option');
+          opt.value = String(idx);
+          opt.textContent = b.name || `Закладка ${idx + 1}`;
+          bookmarksSelect.appendChild(opt);
+        });
+        // try to restore previous selection
+        if (current && Number(current) < bookmarks.length) {
+          bookmarksSelect.value = current;
+        }
+        // Enable/disable delete button
+        if (deleteBookmarkBtn) {
+          deleteBookmarkBtn.disabled = !(bookmarksSelect.value && bookmarks.length);
+        }
+      }
+
+      function showMapping(headersRaw, preset) {
+        mappingControls.innerHTML = '';
+         const fields = [
+          { key: 'id', label: 'ID' },
+          { key: 'title', label: 'Название' },
+          { key: 'company', label: 'Компания' },
+           { key: 'assignee', label: 'Ответственный' },
+          { key: 'created', label: 'Дата создания' },
+           { key: 'completed', label: 'Дата завершения' },
+           { key: 'duration', label: 'Затраченное время' },
+           { key: 'tags', label: 'Теги' }
+        ];
+        for (const f of fields) {
+          const wrap = document.createElement('div');
+          const lab = document.createElement('label');
+          lab.className = 'mb-1 block text-sm font-medium';
+          lab.textContent = f.label;
+          const sel = document.createElement('select');
+          sel.id = `map-${f.key}`;
+          sel.className = 'w-full rounded-md border border-gray-300 bg-white p-2 text-sm dark:border-gray-700 dark:bg-gray-900';
+          const none = document.createElement('option');
+          none.value = '-1';
+          none.textContent = '— не выбрано —';
+          sel.appendChild(none);
+          headersRaw.forEach((h, i) => {
+            const opt = document.createElement('option');
+            opt.value = String(i);
+            opt.textContent = `${i + 1}. ${h || '(пусто)'}`;
+            sel.appendChild(opt);
+          });
+          if (typeof preset[f.key] === 'number') {
+            sel.value = String(preset[f.key] ?? -1);
+          }
+          wrap.appendChild(lab);
+          wrap.appendChild(sel);
+          mappingControls.appendChild(wrap);
+        }
+        mappingSection.classList.remove('hidden');
+      }
+
+      function collectMappingFromUI() {
+         return {
+          id: parseInt(document.getElementById('map-id').value, 10),
+          title: parseInt(document.getElementById('map-title').value, 10),
+          company: parseInt(document.getElementById('map-company').value, 10),
+           assignee: parseInt(document.getElementById('map-assignee').value, 10),
+          created: parseInt(document.getElementById('map-created').value, 10),
+           completed: parseInt(document.getElementById('map-completed').value, 10),
+           duration: parseInt(document.getElementById('map-duration').value, 10),
+           tags: parseInt(document.getElementById('map-tags').value, 10)
+        };
+      }
+
+      function processHtml(htmlString) {
+        hideMessage();
+        try {
+          const { headersRaw, headersNorm, rows } = extractTable(htmlString);
+          lastParsedHeaders = headersRaw;
+          lastParsedRows = rows;
+          suggestedMapping = suggestMapping(headersNorm);
+
+          const tasks = buildTasks(rows, suggestedMapping);
+          if (tasks.length > 0) {
+            mappingSection.classList.add('hidden');
+            setTasks(tasks);
+            if (Object.values(suggestedMapping).some((i) => i < 0)) {
+              showMessage('Часть колонок определена неуверенно. При необходимости используйте ручное сопоставление.', 'warn');
+            }
+          } else {
+            showMessage('Не удалось автоматически сопоставить колонки. Выберите их вручную ниже.', 'warn');
+            showMapping(headersRaw, suggestedMapping);
+            resultsCard.classList.add('hidden');
+          }
+        } catch (err) {
+          console.error(err);
+          showMessage(err.message || 'Ошибка при обработке HTML.', 'error');
+          resultsCard.classList.add('hidden');
+          mappingSection.classList.add('hidden');
+        }
+      }
+
+      function setSelectedFileInfo(file) {
+        if (!file) {
+          fileMeta.textContent = '';
+          parseFileBtn.disabled = true;
+          return;
+        }
+        const sizeKb = Math.round((file.size || 0) / 1024);
+        const d = new Date(file.lastModified || Date.now());
+        const pad = (n) => String(n).padStart(2, '0');
+        const meta = `${file.name || 'файл'} • ${sizeKb} КБ • ${pad(d.getDate())}.${pad(d.getMonth() + 1)}.${d.getFullYear()} ${pad(d.getHours())}:${pad(d.getMinutes())}`;
+        fileMeta.textContent = meta;
+        parseFileBtn.disabled = false;
+      }
+
+      function handleFiles(files) {
+        if (!files || !files.length) return;
+        const file = files[0];
+        fileInput.files = files;
+        setSelectedFileInfo(file);
+      }
+
+      // Dropzone interactions
+      if (dropzone) {
+        ['dragenter', 'dragover'].forEach((ev) => {
+          dropzone.addEventListener(ev, (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            dropzone.classList.add('ring-2', 'ring-gray-400', 'dark:ring-gray-600');
+          });
+        });
+        ['dragleave', 'drop'].forEach((ev) => {
+          dropzone.addEventListener(ev, (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            dropzone.classList.remove('ring-2', 'ring-gray-400', 'dark:ring-gray-600');
+          });
+        });
+        dropzone.addEventListener('drop', (e) => {
+          const dt = e.dataTransfer;
+          if (!dt) return;
+          handleFiles(dt.files);
+        });
+      }
+
+      if (fileInput) {
+        fileInput.addEventListener('change', () => handleFiles(fileInput.files));
+      }
+
+      if (clearFileBtn) {
+        clearFileBtn.addEventListener('click', () => {
+          fileInput.value = '';
+          setSelectedFileInfo(null);
+          hideMessage();
+           // Reset views
+           setTasks([]);
+        });
+      }
+
+      parseFileBtn.addEventListener('click', async () => {
+        hideMessage();
+        const file = fileInput.files?.[0];
+        if (!file) {
+          showMessage('Выберите файл для обработки.', 'warn');
+          return;
+        }
+        try {
+          const text = await file.text();
+          if (!text || !text.trim()) {
+            showMessage('Файл пустой или не удалось прочитать содержимое.', 'error');
+            return;
+          }
+           // persist last source
+           saveLastSource({
+             type: 'file',
+             text,
+             fileName: file.name || '',
+             size: file.size || 0,
+             modified: file.lastModified || Date.now(),
+             savedAt: Date.now()
+           });
+          processHtml(text);
+        } catch (e) {
+          console.error(e);
+          showMessage('Не удалось прочитать файл. Убедитесь, что это HTML или .xls, сохранённый как HTML.', 'error');
+        }
+      });
+
+      applyMappingBtn.addEventListener('click', () => {
+        if (!lastParsedRows.length) {
+          showMessage('Нет данных для применения сопоставления. Сначала загрузите таблицу.', 'warn');
+          return;
+        }
+        const mapping = collectMappingFromUI();
+        const tasks = buildTasks(lastParsedRows, mapping);
+        if (tasks.length === 0) {
+          showMessage('По выбранным колонкам не удалось собрать строки. Проверьте выбор.', 'error');
+          resultsCard.classList.add('hidden');
+          return;
+        }
+        hideMessage();
+        setTasks(tasks);
+      });
+
+      hideMappingBtn.addEventListener('click', () => {
+        mappingSection.classList.add('hidden');
+      });
+
+      // Filters: listeners
+      const triggerFilter = debounce(applyFilters, 200);
+      if (filterQuery) filterQuery.addEventListener('input', triggerFilter);
+      if (createdFromInput) createdFromInput.addEventListener('change', triggerFilter);
+      if (createdToInput) createdToInput.addEventListener('change', triggerFilter);
+      if (completedFromInput) completedFromInput.addEventListener('change', triggerFilter);
+      if (completedToInput) completedToInput.addEventListener('change', triggerFilter);
+      if (resetFiltersBtn) {
+        resetFiltersBtn.addEventListener('click', () => {
+          if (filterQuery) filterQuery.value = '';
+          if (createdFromInput) createdFromInput.value = '';
+          if (createdToInput) createdToInput.value = '';
+          if (completedFromInput) completedFromInput.value = '';
+          if (completedToInput) completedToInput.value = '';
+          filterSettings.tagsKeywords = [];
+          filterSettings.tagsMode = 'any';
+          filterSettings.employees = [];
+          if (tagsKeywordsInput) tagsKeywordsInput.value = '';
+          if (tagsModeSelect) tagsModeSelect.value = 'any';
+          renderEmployeesChips();
+          applyFilters();
+        });
+      }
+
+      // Settings: listeners
+      function openSettings() {
+        if (settingsModal) settingsModal.classList.remove('hidden');
+        if (tagsKeywordsInput) tagsKeywordsInput.value = (filterSettings.tagsKeywords || []).join(', ');
+        if (tagsModeSelect) tagsModeSelect.value = filterSettings.tagsMode || 'any';
+      }
+      function closeSettings() {
+        if (settingsModal) settingsModal.classList.add('hidden');
+      }
+      if (openFilterSettingsBtn) openFilterSettingsBtn.addEventListener('click', openSettings);
+      if (settingsCloseBtn) settingsCloseBtn.addEventListener('click', closeSettings);
+      if (settingsBackdrop) settingsBackdrop.addEventListener('click', closeSettings);
+      if (settingsSaveBtn) settingsSaveBtn.addEventListener('click', () => {
+        const raw = (tagsKeywordsInput?.value || '').trim();
+        const kws = raw
+          ? raw.split(/[;,\n\r]+/g).map((s) => s.trim()).filter(Boolean)
+          : [];
+        filterSettings.tagsKeywords = kws;
+        filterSettings.tagsMode = (tagsModeSelect?.value === 'all') ? 'all' : 'any';
+        applyFilters();
+        closeSettings();
+      });
+
+      // Employees helpers
+      function renderEmployeesChips() {
+        if (!employeesList) return;
+        employeesList.innerHTML = '';
+        const frag = document.createDocumentFragment();
+        (filterSettings.employees || []).forEach((name, idx) => {
+          const chip = document.createElement('span');
+          chip.className = 'inline-flex items-center gap-1 rounded-full border border-gray-300 bg-white px-2 py-1 text-xs dark:border-gray-700 dark:bg-gray-900';
+          const label = document.createElement('span');
+          label.textContent = name;
+          const btn = document.createElement('button');
+          btn.className = 'rounded-full px-1 text-gray-500 hover:text-gray-800 dark:hover:text-gray-200';
+          btn.setAttribute('type', 'button');
+          btn.textContent = '×';
+          btn.addEventListener('click', () => {
+            filterSettings.employees.splice(idx, 1);
+            renderEmployeesChips();
+            applyFilters();
+          });
+          chip.appendChild(label);
+          chip.appendChild(btn);
+          frag.appendChild(chip);
+        });
+        employeesList.appendChild(frag);
+      }
+      function addEmployeeFromInput() {
+        const v = (employeeInput?.value || '').trim();
+        if (!v) return;
+        if (!Array.isArray(filterSettings.employees)) filterSettings.employees = [];
+        if (!filterSettings.employees.some((s) => s.toLowerCase() === v.toLowerCase())) {
+          filterSettings.employees.push(v);
+          renderEmployeesChips();
+          applyFilters();
+        }
+        if (employeeInput) employeeInput.value = '';
+      }
+      if (addEmployeeBtn) addEmployeeBtn.addEventListener('click', addEmployeeFromInput);
+      if (employeeInput) employeeInput.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter') {
+          e.preventDefault();
+          addEmployeeFromInput();
+        }
+      });
+      if (applyEmployeesFilterBtn) applyEmployeesFilterBtn.addEventListener('click', () => {
+        // Apply employee surnames as tag keywords with ANY mode
+        const list = Array.isArray(filterSettings.employees) ? filterSettings.employees : [];
+        filterSettings.tagsKeywords = [...list];
+        filterSettings.tagsMode = 'any';
+        if (tagsKeywordsInput) tagsKeywordsInput.value = list.join(', ');
+        if (tagsModeSelect) tagsModeSelect.value = 'any';
+        applyFilters();
+      });
+
+      // Bookmarks: listeners
+      if (saveBookmarkBtn) {
+        saveBookmarkBtn.addEventListener('click', () => {
+          const cfg = getCurrentFilterConfig();
+          if (!cfg.name) {
+            showMessage('Введите название закладки перед сохранением.', 'warn');
+            return;
+          }
+          // If name already exists, update it, else push new
+          const idx = bookmarks.findIndex((b) => (b.name || '').toLowerCase() === cfg.name.toLowerCase());
+          const payload = { ...cfg };
+          if (idx >= 0) {
+            bookmarks[idx] = payload;
+          } else {
+            bookmarks.push(payload);
+          }
+          saveBookmarks();
+          renderBookmarksSelect();
+          // Select just-saved bookmark
+          const selIdx = bookmarks.findIndex((b) => (b.name || '').toLowerCase() === cfg.name.toLowerCase());
+          if (selIdx >= 0) bookmarksSelect.value = String(selIdx);
+          showMessage('Закладка сохранена.', 'info');
+        });
+      }
+
+      if (bookmarksSelect) {
+        bookmarksSelect.addEventListener('change', () => {
+          const val = bookmarksSelect.value;
+          if (!val) {
+            if (deleteBookmarkBtn) deleteBookmarkBtn.disabled = true;
+            return;
+          }
+          const idx = Number(val);
+          const b = bookmarks[idx];
+          if (b) {
+            bmNameInput.value = b.name || '';
+            applyFilterConfig(b);
+          }
+          if (deleteBookmarkBtn) deleteBookmarkBtn.disabled = false;
+        });
+      }
+
+      if (deleteBookmarkBtn) {
+        deleteBookmarkBtn.addEventListener('click', () => {
+          const val = bookmarksSelect.value;
+          if (!val) return;
+          const idx = Number(val);
+          if (idx >= 0 && idx < bookmarks.length) {
+            bookmarks.splice(idx, 1);
+            saveBookmarks();
+            renderBookmarksSelect();
+            bookmarksSelect.value = '';
+            if (deleteBookmarkBtn) deleteBookmarkBtn.disabled = true;
+            showMessage('Закладка удалена.', 'info');
+          }
+        });
+      }
+
+      // Init bookmarks on load
+      loadBookmarks();
+
+       // Dashboards: listeners
+       document.querySelectorAll('[data-dashboard]').forEach((btn) => {
+         btn.addEventListener('click', () => {
+           const key = btn.getAttribute('data-dashboard');
+           setActiveDashboard(key);
+         });
+       });
+
+       // Restore last processed source on load
+       try {
+         const last = loadLastSource();
+         if (last && last.type === 'file' && typeof last.text === 'string' && last.text.trim()) {
+           processHtml(last.text);
+           const origin = last.fileName ? `из файла: ${last.fileName}` : 'из последнего файла';
+           showMessage(`Восстановлено ${origin}.`, 'info');
+           // Prefill meta info
+           setSelectedFileInfo({ name: last.fileName || 'файл', size: last.size || 0, lastModified: last.modified || Date.now() });
+         }
+       } catch (_) {}
+
+      // Details: listeners
+      if (detailsCloseBtn) detailsCloseBtn.addEventListener('click', closeTaskDetails);
+      if (detailsBackdrop) detailsBackdrop.addEventListener('click', closeTaskDetails);
+      window.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') closeTaskDetails();
+      });
+
+      // Toggle long text in details
+      if (detailsContent) {
+        detailsContent.addEventListener('click', (e) => {
+          const btn = e.target.closest('.toggleLongText');
+          if (!btn) return;
+          const block = btn.closest('.long-text-block');
+          if (!block) return;
+          const shortEl = block.querySelector('.long-text.short');
+          const fullEl = block.querySelector('.long-text.full');
+          const isShortHidden = shortEl?.classList.contains('hidden');
+          if (isShortHidden) {
+            // Collapse
+            shortEl.classList.remove('hidden');
+            fullEl?.classList.add('hidden');
+            btn.textContent = 'Развернуть';
+          } else {
+            // Expand
+            shortEl?.classList.add('hidden');
+            fullEl?.classList.remove('hidden');
+            btn.textContent = 'Свернуть';
+          }
+        });
+      }
+    </script>
+  </body>
+  </html>
+
+
