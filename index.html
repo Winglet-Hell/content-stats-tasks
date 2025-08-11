@@ -5,6 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Задачи — парсер HTML-таблиц</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/litepicker/dist/css/litepicker.css" />
+    <script src="https://cdn.jsdelivr.net/npm/litepicker/dist/litepicker.js"></script>
     <meta name="color-scheme" content="light dark" />
   </head>
   <body class="min-h-dvh bg-gray-50 text-gray-900 antialiased dark:bg-gray-900 dark:text-gray-100">
@@ -12,10 +14,33 @@
       <div class="mx-auto max-w-5xl px-4 py-4">
         <h1 class="text-2xl font-semibold tracking-tight">Список задач из HTML-таблицы</h1>
         <p class="mt-1 text-sm text-gray-600 dark:text-gray-400">Загрузите файл с HTML-таблицей — будет выведена таблица с колонками: ID, Название, Компания, Ответственный, Дата создания, Дата завершения, Затраченное время.</p>
+        <div class="mt-2 flex items-center justify-between gap-3">
+          <div id="authStatus" class="text-sm text-gray-600 dark:text-gray-400"></div>
+          <button id="logoutBtn" class="inline-flex items-center gap-2 rounded-md border border-gray-300 bg-white px-3 py-1.5 text-sm font-medium hover:bg-gray-50 dark:border-gray-700 dark:bg-gray-900 dark:hover:bg-gray-800 hidden">Выйти</button>
+        </div>
       </div>
     </header>
 
     <main class="mx-auto max-w-5xl px-4 py-6">
+      <section id="loginCard" class="mt-2">
+        <div class="rounded-xl border border-gray-200 bg-white p-4 shadow-sm dark:border-gray-800 dark:bg-gray-950">
+          <h2 class="mb-3 text-lg font-medium">Вход</h2>
+          <div class="grid gap-3 sm:grid-cols-2">
+            <div>
+              <label for="usernameInput" class="mb-1 block text-sm font-medium">Логин</label>
+              <input id="usernameInput" type="text" autocomplete="username" class="w-full rounded-md border border-gray-300 bg-white p-2 text-sm placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-400 dark:border-gray-700 dark:bg-gray-900" />
+            </div>
+            <div>
+              <label for="passwordInput" class="mb-1 block text-sm font-medium">Пароль</label>
+              <input id="passwordInput" type="password" autocomplete="current-password" class="w-full rounded-md border border-gray-300 bg-white p-2 text-sm placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-400 dark:border-gray-700 dark:bg-gray-900" />
+            </div>
+          </div>
+          <div class="mt-3 flex items-center gap-2">
+            <button id="loginBtn" class="inline-flex items-center gap-2 rounded-md bg-gray-900 px-4 py-2 text-sm font-medium text-white hover:bg-black/80 dark:bg-white dark:text-gray-900 dark:hover:bg-white/90">Войти</button>
+            <span class="text-xs text-gray-500 dark:text-gray-400">Логин и пароль сохраняются локально в вашем браузере.</span>
+          </div>
+        </div>
+      </section>
       <section class="mt-2">
         <div id="uploadCard" class="rounded-xl border border-gray-200 bg-white p-4 shadow-sm dark:border-gray-800 dark:bg-gray-950">
           <h2 class="mb-3 text-lg font-medium">Загрузка файла</h2>
@@ -76,29 +101,30 @@
       <section id="resultsCard" class="mt-6 hidden rounded-xl border border-gray-200 bg-white p-4 shadow-sm dark:border-gray-800 dark:bg-gray-950">
         <div class="flex items-center justify-between gap-4">
           <h2 class="text-lg font-medium">Найденные задачи</h2>
-          <div id="stats" class="text-sm text-gray-600 dark:text-gray-400"></div>
+          <div class="flex items-center gap-2">
+            <div id="stats" class="text-sm text-gray-600 dark:text-gray-400"></div>
+            <button id="openColumnsSettings" aria-label="Выбрать колонки" class="inline-flex items-center justify-center rounded-md border border-gray-300 bg-white p-1.5 text-gray-700 hover:bg-gray-50 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 dark:hover:bg-gray-800">
+              <span aria-hidden="true" class="text-[18px] leading-none">⚙︎</span>
+            </button>
+          </div>
         </div>
-        <div id="filters" class="mt-3">
+          <div id="filters" class="mt-3">
           <div class="grid gap-3 sm:grid-cols-2 lg:grid-cols-6">
             <div class="sm:col-span-2">
               <label for="filterQuery" class="mb-1 block text-sm font-medium">Поиск</label>
               <input id="filterQuery" type="text" placeholder="ID, Название или Компания" class="w-full rounded-md border border-gray-300 bg-white p-2 text-sm placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-400 dark:border-gray-700 dark:bg-gray-900" />
             </div>
-            <div>
-              <label for="createdFrom" class="mb-1 block text-sm font-medium">Создано с</label>
-              <input id="createdFrom" type="date" class="w-full rounded-md border border-gray-300 bg-white p-2 text-sm focus:outline-none focus:ring-2 focus:ring-gray-400 dark:border-gray-700 dark:bg-gray-900" />
+            <div class="lg:col-span-2">
+              <label for="createdRange" class="mb-1 block text-sm font-medium">Создано (период)</label>
+              <input id="createdRange" type="text" placeholder="дд.мм.гггг — дд.мм.гггг" class="w-full rounded-md border border-gray-300 bg-white p-2 text-sm placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-400 dark:border-gray-700 dark:bg-gray-900" />
+              <input id="createdFrom" type="date" class="hidden" />
+              <input id="createdTo" type="date" class="hidden" />
             </div>
-            <div>
-              <label for="createdTo" class="mb-1 block text-sm font-medium">Создано по</label>
-              <input id="createdTo" type="date" class="w-full rounded-md border border-gray-300 bg-white p-2 text-sm focus:outline-none focus:ring-2 focus:ring-gray-400 dark:border-gray-700 dark:bg-gray-900" />
-            </div>
-            <div>
-              <label for="completedFrom" class="mb-1 block text-sm font-medium">Завершено с</label>
-              <input id="completedFrom" type="date" class="w-full rounded-md border border-gray-300 bg-white p-2 text-sm focus:outline-none focus:ring-2 focus:ring-gray-400 dark:border-gray-700 dark:bg-gray-900" />
-            </div>
-            <div>
-              <label for="completedTo" class="mb-1 block text-sm font-medium">Завершено по</label>
-              <input id="completedTo" type="date" class="w-full rounded-md border border-gray-300 bg-white p-2 text-sm focus:outline-none focus:ring-2 focus:ring-gray-400 dark:border-gray-700 dark:bg-gray-900" />
+            <div class="lg:col-span-2">
+              <label for="completedRange" class="mb-1 block text-sm font-medium">Завершено (период)</label>
+              <input id="completedRange" type="text" placeholder="дд.мм.гггг — дд.мм.гггг" class="w-full rounded-md border border-gray-300 bg-white p-2 text-sm placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-400 dark:border-gray-700 dark:bg-gray-900" />
+              <input id="completedFrom" type="date" class="hidden" />
+              <input id="completedTo" type="date" class="hidden" />
             </div>
           </div>
           <div class="mt-2 flex items-center gap-2">
@@ -125,19 +151,12 @@
           </div>
         </div>
         <div class="mt-3 overflow-x-auto">
-          <table class="min-w-full table-auto divide-y divide-gray-200 text-sm dark:divide-gray-800">
+          <table id="resultsTable" class="min-w-full table-fixed divide-y divide-gray-200 text-sm dark:divide-gray-800">
+            <colgroup id="resultsColGroup"></colgroup>
             <thead class="bg-gray-50 dark:bg-gray-900">
-              <tr>
-                <th class="px-3 py-2 text-left font-semibold">ID</th>
-                <th class="px-3 py-2 text-left font-semibold">Название</th>
-                <th class="px-3 py-2 text-left font-semibold">Компания</th>
-                <th class="px-3 py-2 text-left font-semibold">Ответственный</th>
-                <th class="px-3 py-2 text-left font-semibold">Дата создания</th>
-                <th class="px-3 py-2 text-left font-semibold">Дата завершения</th>
-                <th class="px-3 py-2 text-left font-semibold">Затраченное время</th>
-              </tr>
+              <tr id="resultsHeadRow"></tr>
             </thead>
-            <tbody id="resultsBody" class="divide-y divide-gray-200 dark:divide-gray-800"></tbody>
+            <tbody id="resultsBody" class="divide-y divide-gray-200 dark:divide-gray-800 [word-break:break-word]"></tbody>
           </table>
         </div>
       </section>
@@ -203,6 +222,26 @@
         </div>
       </div>
 
+      <!-- Columns Settings Modal -->
+      <div id="columnsModal" class="fixed inset-0 z-50 hidden">
+        <div id="columnsBackdrop" class="absolute inset-0 bg-black/50"></div>
+        <div class="absolute inset-0 flex items-start justify-center p-4 sm:p-6">
+          <div class="mt-10 w-full max-w-md overflow-hidden rounded-xl border border-gray-200 bg-white shadow-lg dark:border-gray-800 dark:bg-gray-950">
+            <div class="flex items-center justify-between border-b border-gray-200 p-4 dark:border-gray-800">
+              <h3 class="truncate text-base font-semibold">Колонки таблицы</h3>
+              <div class="flex items-center gap-2">
+                <button id="columnsSaveBtn" class="inline-flex items-center gap-2 rounded-md bg-gray-900 px-3 py-1.5 text-sm font-medium text-white hover:bg-black/80 dark:bg-white dark:text-gray-900 dark:hover:bg-white/90">Сохранить</button>
+                <button id="columnsCloseBtn" class="inline-flex items-center gap-2 rounded-md border border-gray-300 bg-white px-3 py-1.5 text-sm font-medium hover:bg-gray-50 dark:border-gray-700 dark:bg-gray-900 dark:hover:bg-gray-800">Закрыть</button>
+              </div>
+            </div>
+            <div class="max-h-[70vh] overflow-y-auto p-4">
+              <p class="mb-2 text-xs text-gray-500 dark:text-gray-400">Отметьте, какие колонки показывать. Порядок можно менять, перетаскивая заголовки в таблице.</p>
+              <div id="columnsList" class="space-y-2"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
       <section id="message" class="mt-6 hidden rounded-md border p-4 text-sm"></section>
     </main>
 
@@ -216,8 +255,17 @@
       const fileMeta = document.getElementById('fileMeta');
       const parseFileBtn = document.getElementById('parseFileBtn');
       const clearFileBtn = document.getElementById('clearFileBtn');
+      const loginCard = document.getElementById('loginCard');
+      const usernameInput = document.getElementById('usernameInput');
+      const passwordInput = document.getElementById('passwordInput');
+      const loginBtn = document.getElementById('loginBtn');
+      const logoutBtn = document.getElementById('logoutBtn');
+      const authStatus = document.getElementById('authStatus');
       const resultsCard = document.getElementById('resultsCard');
       const resultsBody = document.getElementById('resultsBody');
+      const resultsTable = document.getElementById('resultsTable');
+      const resultsHeadRow = document.getElementById('resultsHeadRow');
+      const resultsColGroup = document.getElementById('resultsColGroup');
       const stats = document.getElementById('stats');
       const message = document.getElementById('message');
       const mappingSection = document.getElementById('mappingSection');
@@ -247,12 +295,22 @@
       const employeesList = document.getElementById('employeesList');
       const applyEmployeesFilterBtn = document.getElementById('applyEmployeesFilterBtn');
 
+      // Columns settings UI
+      const openColumnsSettingsBtn = document.getElementById('openColumnsSettings');
+      const columnsModal = document.getElementById('columnsModal');
+      const columnsBackdrop = document.getElementById('columnsBackdrop');
+      const columnsCloseBtn = document.getElementById('columnsCloseBtn');
+      const columnsSaveBtn = document.getElementById('columnsSaveBtn');
+      const columnsList = document.getElementById('columnsList');
+
       // Filters UI
       const filterQuery = document.getElementById('filterQuery');
       const createdFromInput = document.getElementById('createdFrom');
       const createdToInput = document.getElementById('createdTo');
       const completedFromInput = document.getElementById('completedFrom');
       const completedToInput = document.getElementById('completedTo');
+      const createdRangeInput = document.getElementById('createdRange');
+      const completedRangeInput = document.getElementById('completedRange');
       const resetFiltersBtn = document.getElementById('resetFilters');
       // Bookmarks UI
       const bmNameInput = document.getElementById('bmNameInput');
@@ -272,6 +330,345 @@
         tagsMode: 'any',
         employees: []
       };
+
+      // Columns state
+      const ALL_COLUMNS = [
+        { key: 'id', label: 'ID' },
+        { key: 'title', label: 'Название' },
+        { key: 'description', label: 'Описание (из исходной таблицы)' },
+        { key: 'company', label: 'Компания' },
+        { key: 'assignee', label: 'Ответственный' },
+        { key: 'created', label: 'Дата создания' },
+        { key: 'completed', label: 'Дата завершения' },
+        { key: 'duration', label: 'Затраченное время' },
+        { key: 'tags', label: 'Теги' }
+      ];
+      const DEFAULT_COLUMNS = ALL_COLUMNS.map((c) => c.key);
+      const COLS_STORAGE_KEY = 'task_table_visible_columns_v1';
+      let visibleColumns = [];
+      const COL_WIDTHS_STORAGE_KEY = 'task_table_column_widths_v1';
+      let columnWidths = {}; // { key: number(px) }
+
+      function loadVisibleColumns() {
+        try {
+          const raw = localStorage.getItem(COLS_STORAGE_KEY);
+          const arr = raw ? JSON.parse(raw) : null;
+          const valid = Array.isArray(arr) ? arr.filter((k) => ALL_COLUMNS.some((c) => c.key === k)) : [];
+          visibleColumns = valid.length ? valid : [...DEFAULT_COLUMNS];
+        } catch (_) {
+          visibleColumns = [...DEFAULT_COLUMNS];
+        }
+      }
+      function saveVisibleColumns() {
+        try { localStorage.setItem(COLS_STORAGE_KEY, JSON.stringify(visibleColumns)); } catch (_) {}
+      }
+
+      function getColumnLabel(key) {
+        if (String(key).startsWith('rawidx:')) {
+          const idx = Number(String(key).slice('rawidx:'.length));
+          const label = (lastParsedHeaders?.[idx] ?? '').toString().trim();
+          return label || `Колонка ${idx + 1}`;
+        }
+        const c = ALL_COLUMNS.find((x) => x.key === key);
+        return c ? c.label : key;
+      }
+
+      function getSelectableColumns() {
+        const base = [...ALL_COLUMNS];
+        const norm = (s) => (s || '').toString().trim().toLowerCase();
+        const baseLabelSet = new Set(base.map((c) => norm(c.label)));
+        const seen = new Map();
+        // Append all raw headers from the last parsed table with clear labels
+        if (Array.isArray(lastParsedHeaders) && lastParsedHeaders.length) {
+          lastParsedHeaders.forEach((h, i) => {
+            const raw = (h ?? '').toString().trim();
+            let display = raw || `Колонка ${i + 1}`;
+            if (baseLabelSet.has(norm(display))) {
+              display = `${display} (из исходной таблицы)`;
+            }
+            const key = `rawidx:${i}`;
+            const k = norm(display);
+            const prev = seen.get(k) || 0;
+            seen.set(k, prev + 1);
+            if (prev > 0) {
+              display = `${display} (колонка ${i + 1})`;
+            }
+            base.push({ key, label: display });
+          });
+        }
+        return base;
+      }
+
+      function renderColumnsList() {
+        if (!columnsList) return;
+        columnsList.innerHTML = '';
+        const frag = document.createDocumentFragment();
+        const items = getSelectableColumns();
+        items.forEach((c) => {
+          const row = document.createElement('label');
+          row.className = 'flex items-center gap-2';
+          const cb = document.createElement('input');
+          cb.type = 'checkbox';
+          cb.value = c.key;
+          cb.checked = visibleColumns.includes(c.key);
+          cb.className = 'h-4 w-4';
+          const span = document.createElement('span');
+          span.textContent = c.label;
+          row.appendChild(cb);
+          row.appendChild(span);
+          frag.appendChild(row);
+        });
+        columnsList.appendChild(frag);
+      }
+
+      function openColumnsSettings() {
+        renderColumnsList();
+        if (columnsModal) columnsModal.classList.remove('hidden');
+      }
+      function closeColumnsSettings() {
+        if (columnsModal) columnsModal.classList.add('hidden');
+      }
+
+      function applyColumnsSettingsFromModal() {
+        if (!columnsList) return;
+        const checked = Array.from(columnsList.querySelectorAll('input[type="checkbox"]'))
+          .filter((el) => el.checked)
+          .map((el) => el.value);
+        if (!checked.length) {
+          // Do not allow empty configuration; keep previous
+          closeColumnsSettings();
+          return;
+        }
+        // Preserve current order for kept columns, append new ones by DEFAULT order
+        const preserved = visibleColumns.filter((k) => checked.includes(k));
+        const allOrder = getSelectableColumns().map((c) => c.key);
+        const toAppend = allOrder.filter((k) => checked.includes(k) && !preserved.includes(k));
+        visibleColumns = [...preserved, ...toAppend];
+        saveVisibleColumns();
+        // Re-render table
+        applyFilters();
+        closeColumnsSettings();
+      }
+
+      function createHeaderCell(key) {
+        const th = document.createElement('th');
+        th.className = 'relative px-3 py-2 text-left font-semibold select-none cursor-move whitespace-nowrap';
+        const label = document.createElement('span');
+        label.className = 'block truncate pr-1';
+        label.textContent = getColumnLabel(key);
+        th.appendChild(label);
+        const resizer = document.createElement('div');
+        resizer.className = 'absolute right-0 top-0 h-full w-2 cursor-col-resize select-none hover:bg-gray-300/60 dark:hover:bg-gray-600/30';
+        resizer.setAttribute('data-resizer', '');
+        th.appendChild(resizer);
+        th.setAttribute('data-col-key', key);
+        th.setAttribute('draggable', 'true');
+        const w = Number(columnWidths?.[key]);
+        if (Number.isFinite(w) && w > 24) {
+          th.style.width = w + 'px';
+          th.style.minWidth = w + 'px';
+          th.style.maxWidth = w + 'px';
+        }
+        return th;
+      }
+
+      function renderTableHeader() {
+        if (!resultsHeadRow) return;
+        resultsHeadRow.innerHTML = '';
+        const frag = document.createDocumentFragment();
+        visibleColumns.forEach((k) => frag.appendChild(createHeaderCell(k)));
+        resultsHeadRow.appendChild(frag);
+        initHeaderDragAndDrop();
+        initHeaderResizers();
+        renderColGroup();
+      }
+
+      function renderColGroup() {
+        if (!resultsColGroup) return;
+        resultsColGroup.innerHTML = '';
+        const frag = document.createDocumentFragment();
+        visibleColumns.forEach((key) => {
+          const col = document.createElement('col');
+          const w = Number(columnWidths?.[key]);
+          if (Number.isFinite(w) && w > 24) {
+            col.style.width = w + 'px';
+          } else {
+            col.removeAttribute('style');
+          }
+          frag.appendChild(col);
+        });
+        resultsColGroup.appendChild(frag);
+      }
+
+      function initHeaderDragAndDrop() {
+        if (!resultsHeadRow) return;
+        const ths = Array.from(resultsHeadRow.querySelectorAll('th[data-col-key]'));
+        let dragIndex = -1;
+        ths.forEach((th, idx) => {
+          th.addEventListener('dragstart', (e) => {
+            if (e.target && e.target.getAttribute && e.target.getAttribute('data-resizer') !== null) {
+              e.preventDefault();
+              return;
+            }
+            dragIndex = idx;
+            e.dataTransfer?.setData('text/plain', String(idx));
+            th.classList.add('opacity-60');
+          });
+          th.addEventListener('dragend', () => {
+            th.classList.remove('opacity-60');
+            dragIndex = -1;
+          });
+          th.addEventListener('dragover', (e) => {
+            e.preventDefault();
+          });
+          th.addEventListener('drop', (e) => {
+            e.preventDefault();
+            const targetTh = e.currentTarget;
+            const toIndex = ths.indexOf(targetTh);
+            const fromIndex = dragIndex;
+            if (fromIndex === -1 || toIndex === -1 || fromIndex === toIndex) return;
+            const moved = visibleColumns.splice(fromIndex, 1)[0];
+            visibleColumns.splice(toIndex, 0, moved);
+            saveVisibleColumns();
+            renderTableHeader();
+            // re-render rows to match order
+            applyFilters();
+          });
+        });
+      }
+
+      function loadColumnWidths() {
+        try {
+          const raw = localStorage.getItem(COL_WIDTHS_STORAGE_KEY);
+          const obj = raw ? JSON.parse(raw) : {};
+          columnWidths = obj && typeof obj === 'object' ? obj : {};
+        } catch (_) {
+          columnWidths = {};
+        }
+      }
+      function saveColumnWidths() {
+        try { localStorage.setItem(COL_WIDTHS_STORAGE_KEY, JSON.stringify(columnWidths)); } catch (_) {}
+      }
+
+      function updateTableColumnWidth(colKey, widthPx) {
+        if (!resultsHeadRow) return;
+        // header
+        const th = resultsHeadRow.querySelector(`th[data-col-key="${colKey}"]`);
+        if (th) {
+          th.style.width = widthPx + 'px';
+          th.style.minWidth = widthPx + 'px';
+          th.style.maxWidth = widthPx + 'px';
+        }
+        // colgroup
+        if (resultsColGroup) {
+          const idx = visibleColumns.indexOf(colKey);
+          const col = resultsColGroup.children?.[idx];
+          if (col) col.style.width = widthPx + 'px';
+        }
+        // body cells by index
+        const idx = visibleColumns.indexOf(colKey);
+        if (idx >= 0) {
+          const rows = resultsBody?.children ? Array.from(resultsBody.children) : [];
+          for (const tr of rows) {
+            const td = tr.children?.[idx];
+            if (td) {
+              td.style.width = widthPx + 'px';
+              td.style.minWidth = widthPx + 'px';
+              td.style.maxWidth = widthPx + 'px';
+            }
+          }
+        }
+      }
+
+      function initHeaderResizers() {
+        if (!resultsHeadRow) return;
+        const ths = Array.from(resultsHeadRow.querySelectorAll('th[data-col-key]'));
+        ths.forEach((th) => {
+          const key = th.getAttribute('data-col-key');
+          const handle = th.querySelector('[data-resizer]');
+          if (!handle) return;
+          let startX = 0;
+          let startWidth = 0;
+          const onMouseMove = (e) => {
+            const dx = e.clientX - startX;
+            const w = Math.max(60, startWidth + dx);
+            updateTableColumnWidth(key, w);
+          };
+          const onMouseUp = (e) => {
+            document.removeEventListener('mousemove', onMouseMove);
+            document.removeEventListener('mouseup', onMouseUp);
+            const thWidth = th.getBoundingClientRect().width;
+            const w = Math.max(60, Math.round(thWidth));
+            columnWidths[key] = w;
+            saveColumnWidths();
+          };
+          handle.addEventListener('mousedown', (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            startX = e.clientX;
+            startWidth = th.getBoundingClientRect().width;
+            document.addEventListener('mousemove', onMouseMove);
+            document.addEventListener('mouseup', onMouseUp);
+          });
+        });
+      }
+
+      // Auth helpers
+      const AUTH_STORAGE_KEY = 'task_table_auth_v1';
+      let currentAuth = null;
+
+      function loadAuth() {
+        try {
+          const raw = localStorage.getItem(AUTH_STORAGE_KEY);
+          const obj = raw ? JSON.parse(raw) : null;
+          if (obj && typeof obj === 'object' && obj.username && obj.password) {
+            currentAuth = obj;
+          } else {
+            currentAuth = null;
+          }
+        } catch (_) {
+          currentAuth = null;
+        }
+      }
+
+      function saveAuth(auth) {
+        try {
+          localStorage.setItem(AUTH_STORAGE_KEY, JSON.stringify(auth));
+        } catch (_) {}
+      }
+
+      function clearAuth() {
+        try { localStorage.removeItem(AUTH_STORAGE_KEY); } catch (_) {}
+        currentAuth = null;
+      }
+
+      function isAuthenticated() {
+        return !!(currentAuth && currentAuth.username && currentAuth.password);
+      }
+
+      function updateAuthStatus() {
+        const loggedIn = isAuthenticated();
+        if (authStatus) {
+          authStatus.textContent = loggedIn ? `Выполнен вход: ${currentAuth.username}` : 'Вход не выполнен';
+        }
+        if (logoutBtn) logoutBtn.classList.toggle('hidden', !loggedIn);
+        if (loginCard) loginCard.classList.toggle('hidden', loggedIn);
+      }
+
+      function applyAuthGate() {
+        const loggedIn = isAuthenticated();
+        if (!loggedIn) {
+          if (uploadCard) uploadCard.classList.add('hidden');
+          if (dashboardsPanel) dashboardsPanel.classList.add('hidden');
+          if (resultsCard) resultsCard.classList.add('hidden');
+          if (mappingSection) mappingSection.classList.add('hidden');
+        } else {
+          // Show upload when no data; other views controlled elsewhere
+          const hasAny = Array.isArray(allTasks) && allTasks.length > 0;
+          if (uploadCard) uploadCard.classList.toggle('hidden', hasAny);
+          if (dashboardsPanel) dashboardsPanel.classList.toggle('hidden', !hasAny);
+        }
+      }
 
        function setActiveDashboard(key) {
          currentDashboard = key || 'table';
@@ -609,33 +1006,40 @@
         return tasks;
       }
 
-       function renderTasks(tasks) {
+      function renderTasks(tasks) {
+        // Ensure header reflects current columns
+        renderTableHeader();
         resultsBody.innerHTML = '';
         const frag = document.createDocumentFragment();
         for (const t of tasks) {
           const tr = document.createElement('tr');
           tr.className = 'cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-900/60';
-          const durationText = String(t.duration || '').trim();
-          const cells = [
-            t.id,
-            t.title,
-            t.company,
-            t.assignee,
-            t.created,
-            t.completed,
-            durationText
-          ];
-          for (const c of cells) {
+          const rowValues = visibleColumns.map((key) => {
+            if (String(key).startsWith('rawidx:')) {
+              const idx = Number(String(key).slice('rawidx:'.length));
+              return Array.isArray(t.rawCells) ? (t.rawCells[idx] ?? '') : '';
+            }
+            if (key === 'duration') return String(t.duration || '').trim();
+            return t[key];
+          });
+          visibleColumns.forEach((key, i) => {
+            const val = rowValues[i];
             const td = document.createElement('td');
-            td.className = 'px-3 py-2 align-top';
-            const val = c ?? '';
-            if (String(val).trim() === '') {
+            td.className = 'px-3 py-2 align-top truncate';
+            const w = Number(columnWidths?.[key]);
+            if (Number.isFinite(w) && w > 24) {
+              td.style.width = w + 'px';
+              td.style.minWidth = w + 'px';
+              td.style.maxWidth = w + 'px';
+            }
+            const v = val ?? '';
+            if (String(v).trim() === '') {
               td.innerHTML = '<span class="text-gray-400 dark:text-gray-500">не заполнено</span>';
             } else {
-              td.textContent = val;
+              td.textContent = v;
             }
             tr.appendChild(td);
-          }
+          });
           tr.addEventListener('click', () => openTaskDetails(t));
           frag.appendChild(tr);
         }
@@ -647,7 +1051,7 @@
         allTasks = Array.isArray(tasks) ? tasks : [];
         const hasAny = allTasks.length > 0;
          resultsCard.classList.toggle('hidden', !hasAny);
-         // Toggle upload and dashboards visibility
+         // Toggle upload and dashboards visibility (auth gate may override)
          if (dashboardsPanel) dashboardsPanel.classList.toggle('hidden', !hasAny);
          if (uploadCard) uploadCard.classList.toggle('hidden', hasAny);
         if (!hasAny) {
@@ -658,6 +1062,8 @@
          applyFilters();
          // Ensure dashboard state is applied
          setActiveDashboard(currentDashboard);
+         // Enforce auth gate
+         applyAuthGate();
       }
 
       function debounce(fn, ms) {
@@ -1097,6 +1503,8 @@
           createdTo: createdToInput?.value || '',
           completedFrom: completedFromInput?.value || '',
           completedTo: completedToInput?.value || '',
+          createdRange: createdRangeInput?.value || '',
+          completedRange: completedRangeInput?.value || '',
           tagsKeywords: Array.isArray(filterSettings?.tagsKeywords) ? filterSettings.tagsKeywords : [],
           tagsMode: filterSettings?.tagsMode || 'any',
           employees: Array.isArray(filterSettings?.employees) ? filterSettings.employees : []
@@ -1110,6 +1518,8 @@
         if (createdToInput) createdToInput.value = cfg.createdTo || '';
         if (completedFromInput) completedFromInput.value = cfg.completedFrom || '';
         if (completedToInput) completedToInput.value = cfg.completedTo || '';
+        if (createdRangeInput) createdRangeInput.value = cfg.createdRange || formatDisplayRange(cfg.createdFrom, cfg.createdTo);
+        if (completedRangeInput) completedRangeInput.value = cfg.completedRange || formatDisplayRange(cfg.completedFrom, cfg.completedTo);
         // tags settings
         filterSettings.tagsKeywords = Array.isArray(cfg.tagsKeywords)
           ? cfg.tagsKeywords
@@ -1350,6 +1760,54 @@
       if (createdToInput) createdToInput.addEventListener('change', triggerFilter);
       if (completedFromInput) completedFromInput.addEventListener('change', triggerFilter);
       if (completedToInput) completedToInput.addEventListener('change', triggerFilter);
+
+      // Date range pickers (Litepicker)
+      function formatDisplayRange(fromISO, toISO) {
+        const fmt = (s) => {
+          if (!s) return '';
+          const d = new Date(s);
+          const dd = String(d.getDate()).padStart(2, '0');
+          const mm = String(d.getMonth() + 1).padStart(2, '0');
+          const yyyy = d.getFullYear();
+          return `${dd}.${mm}.${yyyy}`;
+        };
+        if (!fromISO && !toISO) return '';
+        return `${fmt(fromISO)} — ${fmt(toISO)}`.trim();
+      }
+
+      function initRangePicker(inputEl, fromHidden, toHidden) {
+        if (!inputEl) return null;
+        const picker = new Litepicker({
+          element: inputEl,
+          singleMode: false,
+          autoApply: true,
+          format: 'DD.MM.YYYY',
+          lang: 'ru-RU',
+          tooltipText: { one: 'день', other: 'дней' },
+        });
+        picker.on('selected', (date1, date2) => {
+          const toISO = (d) => d ? `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}` : '';
+          const from = date1 ? new Date(date1.getTime()) : null;
+          const to = date2 ? new Date(date2.getTime()) : null;
+          if (fromHidden) fromHidden.value = from ? toISO(from) : '';
+          if (toHidden) toHidden.value = to ? toISO(to) : '';
+          inputEl.value = formatDisplayRange(fromHidden.value, toHidden.value);
+          triggerFilter();
+        });
+        // Clear on backspace/delete
+        inputEl.addEventListener('input', () => {
+          const val = inputEl.value.trim();
+          if (!val) {
+            if (fromHidden) fromHidden.value = '';
+            if (toHidden) toHidden.value = '';
+            triggerFilter();
+          }
+        });
+        return picker;
+      }
+
+      const createdPicker = initRangePicker(createdRangeInput, createdFromInput, createdToInput);
+      const completedPicker = initRangePicker(completedRangeInput, completedFromInput, completedToInput);
       if (resetFiltersBtn) {
         resetFiltersBtn.addEventListener('click', () => {
           if (filterQuery) filterQuery.value = '';
@@ -1357,6 +1815,8 @@
           if (createdToInput) createdToInput.value = '';
           if (completedFromInput) completedFromInput.value = '';
           if (completedToInput) completedToInput.value = '';
+          if (createdRangeInput) createdRangeInput.value = '';
+          if (completedRangeInput) completedRangeInput.value = '';
           filterSettings.tagsKeywords = [];
           filterSettings.tagsMode = 'any';
           filterSettings.employees = [];
@@ -1501,8 +1961,54 @@
         });
       }
 
-      // Init bookmarks on load
+       // Init bookmarks on load
       loadBookmarks();
+
+      // Init auth on load
+      loadAuth();
+      if (currentAuth?.username && usernameInput) usernameInput.value = currentAuth.username;
+      if (currentAuth?.password && passwordInput) passwordInput.value = currentAuth.password;
+      updateAuthStatus();
+      applyAuthGate();
+
+      // Auth listeners
+      if (loginBtn) {
+        loginBtn.addEventListener('click', () => {
+          const username = (usernameInput?.value || '').trim();
+          const password = (passwordInput?.value || '').trim();
+          if (!username || !password) {
+            showMessage('Введите логин и пароль.', 'warn');
+            return;
+          }
+          const payload = { username, password, savedAt: Date.now() };
+          saveAuth(payload);
+          currentAuth = payload;
+          updateAuthStatus();
+          applyAuthGate();
+          showMessage('Вы вошли в систему.', 'info');
+        });
+      }
+      if (logoutBtn) {
+        logoutBtn.addEventListener('click', () => {
+          clearAuth();
+          if (usernameInput) usernameInput.value = '';
+          if (passwordInput) passwordInput.value = '';
+          setTasks([]);
+          updateAuthStatus();
+          applyAuthGate();
+          showMessage('Вы вышли из системы.', 'info');
+        });
+      }
+
+       // Columns settings: listeners
+       if (openColumnsSettingsBtn) openColumnsSettingsBtn.addEventListener('click', openColumnsSettings);
+       if (columnsCloseBtn) columnsCloseBtn.addEventListener('click', closeColumnsSettings);
+       if (columnsBackdrop) columnsBackdrop.addEventListener('click', closeColumnsSettings);
+       if (columnsSaveBtn) columnsSaveBtn.addEventListener('click', applyColumnsSettingsFromModal);
+
+       // Load columns config
+       loadVisibleColumns();
+       loadColumnWidths();
 
        // Dashboards: listeners
        document.querySelectorAll('[data-dashboard]').forEach((btn) => {
