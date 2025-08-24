@@ -3,46 +3,95 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Задачи — парсер HTML-таблиц</title>
+    <title>Статистика задач Битрикс 24</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/litepicker/dist/css/litepicker.css" />
     <script src="https://cdn.jsdelivr.net/npm/litepicker/dist/litepicker.js"></script>
     <meta name="color-scheme" content="light dark" />
   </head>
   <body class="min-h-dvh bg-gray-50 text-gray-900 antialiased dark:bg-gray-900 dark:text-gray-100">
-    <header class="border-b border-gray-200 bg-white/80 backdrop-blur dark:border-gray-800 dark:bg-gray-900/60">
-      <div class="mx-auto max-w-5xl px-4 py-4">
-        <h1 class="text-2xl font-semibold tracking-tight">Список задач из HTML-таблицы</h1>
-        <p class="mt-1 text-sm text-gray-600 dark:text-gray-400">Загрузите файл с HTML-таблицей — будет выведена таблица с колонками: ID, Название, Компания, Ответственный, Дата создания, Дата завершения, Затраченное время.</p>
-        <div class="mt-2 flex items-center justify-between gap-3">
-          <div id="authStatus" class="text-sm text-gray-600 dark:text-gray-400"></div>
-          <button id="logoutBtn" class="inline-flex items-center gap-2 rounded-md border border-gray-300 bg-white px-3 py-1.5 text-sm font-medium hover:bg-gray-50 dark:border-gray-700 dark:bg-gray-900 dark:hover:bg-gray-800 hidden">Выйти</button>
+    <header class="border-b border-gray-200 bg-white/90 backdrop-blur supports-[backdrop-filter]:bg-white/70 dark:border-gray-800 dark:bg-gray-900/60">
+      <div class="mx-auto max-w-5xl px-4 py-6">
+        <div class="flex items-center gap-3">
+          <div>
+            <h1 class="text-2xl font-semibold tracking-tight">Статистика задач Битрикс 24.</h1>
+            <p class="mt-1 text-sm text-gray-600 dark:text-gray-400">Загрузите файл с отчётом — покажем статистику</p>
+          </div>
+          <div class="ml-auto flex items-center gap-3">
+            <div id="authStatus" class="text-sm text-gray-600 dark:text-gray-400"></div>
+            <button id="logoutBtn" class="inline-flex items-center gap-2 rounded-md border border-gray-300 bg-white px-3 py-1.5 text-sm font-medium hover:bg-gray-50 dark:border-gray-700 dark:bg-gray-900 dark:hover:bg-gray-800 hidden">Выйти</button>
+          </div>
         </div>
       </div>
     </header>
 
     <main class="mx-auto max-w-5xl px-4 py-6">
       <section id="loginCard" class="mt-2">
-        <div class="rounded-xl border border-gray-200 bg-white p-4 shadow-sm dark:border-gray-800 dark:bg-gray-950">
-          <h2 class="mb-3 text-lg font-medium">Вход</h2>
-          <div class="grid gap-3 sm:grid-cols-2">
+        <div class="grid gap-4 md:grid-cols-2">
+          <div class="max-w-md rounded-xl border border-gray-200 bg-white p-4 shadow-md dark:border-gray-800 dark:bg-gray-950">
+          <h2 class="mb-3 text-lg font-medium">Аккаунт</h2>
+          <div class="mb-2 flex gap-2">
+            <button id="authTabLogin" type="button" aria-pressed="true" class="inline-flex items-center rounded-md border px-3 py-1.5 text-sm font-medium bg-white border-gray-300 hover:bg-gray-50 aria-[pressed=true]:bg-gray-900 aria-[pressed=true]:text-white aria-[pressed=true]:border-transparent dark:bg-gray-900 dark:border-gray-700 dark:hover:bg-gray-800 aria-[pressed=true]:dark:bg-white aria-[pressed=true]:dark:text-gray-900">Вход</button>
+            <button id="authTabRegister" type="button" aria-pressed="false" class="inline-flex items-center rounded-md border px-3 py-1.5 text-sm font-medium bg-white border-gray-300 hover:bg-gray-50 aria-[pressed=true]:bg-gray-900 aria-[pressed=true]:text-white aria-[pressed=true]:border-transparent dark:bg-gray-900 dark:border-gray-700 dark:hover:bg-gray-800 aria-[pressed=true]:dark:bg-white aria-[pressed=true]:dark:text-gray-900">Регистрация</button>
+          </div>
+          <div id="loginPanel" class="grid gap-3 w-full max-w-md">
             <div>
               <label for="usernameInput" class="mb-1 block text-sm font-medium">Логин</label>
-              <input id="usernameInput" type="text" autocomplete="username" class="w-full rounded-md border border-gray-300 bg-white p-2 text-sm placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-400 dark:border-gray-700 dark:bg-gray-900" />
+              <input id="usernameInput" type="text" autocomplete="username" placeholder="Введите логин" class="w-full rounded-md border border-gray-300 bg-white p-2 text-sm placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-400 dark:border-gray-700 dark:bg-gray-900" />
             </div>
             <div>
               <label for="passwordInput" class="mb-1 block text-sm font-medium">Пароль</label>
-              <input id="passwordInput" type="password" autocomplete="current-password" class="w-full rounded-md border border-gray-300 bg-white p-2 text-sm placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-400 dark:border-gray-700 dark:bg-gray-900" />
+              <div class="relative">
+                <input id="passwordInput" type="password" autocomplete="current-password" placeholder="Введите пароль" class="w-full rounded-md border border-gray-300 bg-white p-2 pr-9 text-sm placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-400 dark:border-gray-700 dark:bg-gray-900" />
+                <button type="button" data-toggle-password="passwordInput" aria-label="Показать пароль" class="absolute inset-y-0 right-0 flex items-center pr-2 text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200">
+                  <span class="text-[18px]" aria-hidden="true">👁️</span>
+                </button>
+              </div>
             </div>
           </div>
-          <div class="mt-3 flex items-center gap-2">
-            <button id="loginBtn" class="inline-flex items-center gap-2 rounded-md bg-gray-900 px-4 py-2 text-sm font-medium text-white hover:bg-black/80 dark:bg-white dark:text-gray-900 dark:hover:bg-white/90">Войти</button>
-            <span class="text-xs text-gray-500 dark:text-gray-400">Логин и пароль сохраняются локально в вашем браузере.</span>
+          <div id="loginActions" class="mt-3 flex flex-wrap items-center gap-2">
+            <button id="loginBtn" class="inline-flex items-center gap-2 rounded-md bg-gray-900 px-3 py-1.5 text-sm font-medium text-white hover:bg-black/80 dark:bg-white dark:text-gray-900 dark:hover:bg-white/90">Войти</button>
+            <span class="text-xs text-gray-500 dark:text-gray-400">Данные сохраняются локально.</span>
+          </div>
+          <div id="registerPanel" class="mt-4 hidden">
+            <div class="grid gap-3 w-full max-w-md">
+              <div>
+                <label for="regUsernameInput" class="mb-1 block text-sm font-medium">Логин (новый)</label>
+                <input id="regUsernameInput" type="text" autocomplete="username" placeholder="Введите логин" class="w-full rounded-md border border-gray-300 bg-white p-2 text-sm placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-400 dark:border-gray-700 dark:bg-gray-900" />
+              </div>
+              <div>
+                <label for="regPasswordInput" class="mb-1 block text-sm font-medium">Пароль (новый)</label>
+                <div class="relative">
+                  <input id="regPasswordInput" type="password" autocomplete="new-password" placeholder="Введите пароль" class="w-full rounded-md border border-gray-300 bg-white p-2 pr-9 text-sm placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-400 dark:border-gray-700 dark:bg-gray-900" />
+                  <button type="button" data-toggle-password="regPasswordInput" aria-label="Показать пароль" class="absolute inset-y-0 right-0 flex items-center pr-2 text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200">
+                    <span class="text-[18px]" aria-hidden="true">👁️</span>
+                  </button>
+                </div>
+              </div>
+              <div id="regPassword2Row" class="hidden">
+                <label for="regPassword2Input" class="mb-1 block text-sm font-medium">Повторите пароль</label>
+                <div class="relative">
+                  <input id="regPassword2Input" type="password" autocomplete="new-password" placeholder="Повторите пароль" class="w-full rounded-md border border-gray-300 bg-white p-2 pr-9 text-sm placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-400 dark:border-gray-700 dark:bg-gray-900" />
+                  <button type="button" data-toggle-password="regPassword2Input" aria-label="Показать пароль" class="absolute inset-y-0 right-0 flex items-center pr-2 text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200">
+                    <span class="text-[18px]" aria-hidden="true">👁️</span>
+                  </button>
+                </div>
+              </div>
+            </div>
+            <div class="mt-3">
+              <button id="registerBtn" class="inline-flex items-center gap-2 rounded-md bg-gray-900 px-3 py-1.5 text-sm font-medium text-white hover:bg-black/80 dark:bg-white dark:text-gray-900 dark:hover:bg-white/90">Зарегистрироваться и войти</button>
+            </div>
+          </div>
+          </div>
+          <div class="rounded-xl border border-gray-200 bg-white p-4 shadow-md dark:border-gray-800 dark:bg-gray-950">
+            <h2 class="mb-3 text-lg font-medium">Описание</h2>
+            <p class="text-sm text-gray-700 dark:text-gray-300">Загрузите файл с отчётом из Битрикс 24 — мы посчитаем сводную статистику и покажем дашборды. Данные об аккаунте хранятся локально в вашем браузере.</p>
+            <div class="mt-3 rounded-lg border border-dashed border-gray-300 bg-gray-50 p-4 text-center text-xs text-gray-500 dark:border-gray-700 dark:bg-gray-900/40 dark:text-gray-400">Заглушка под изображение/скриншот</div>
           </div>
         </div>
       </section>
       <section class="mt-2">
-        <div id="uploadCard" class="rounded-xl border border-gray-200 bg-white p-4 shadow-sm dark:border-gray-800 dark:bg-gray-950">
+        <div id="uploadCard" class="rounded-xl border border-gray-200 bg-white p-4 shadow-md dark:border-gray-800 dark:bg-gray-950">
           <h2 class="mb-3 text-lg font-medium">Загрузка файла</h2>
           <div class="space-y-3">
             <div id="dropzone" class="group relative flex flex-col items-center justify-center rounded-lg border-2 border-dashed border-gray-300 bg-gray-50/50 p-6 text-center transition hover:bg-gray-50 dark:border-gray-700 dark:bg-gray-900/50 dark:hover:bg-gray-900">
@@ -55,7 +104,7 @@
               </p>
               <input id="fileInput" type="file" accept=".html,.htm,.xls" class="sr-only" />
             </div>
-            <p id="fileMeta" class="text-xs text-gray-500 dark:text-gray-400"></p>
+            <div id="fileMeta" class="text-sm text-gray-600 dark:text-gray-400 bg-gray-50 dark:bg-gray-900/50 p-2 rounded"></div>
             <div class="flex items-center gap-2">
               <button id="parseFileBtn" disabled class="inline-flex items-center gap-2 rounded-md bg-gray-900 px-4 py-2 text-sm font-medium text-white hover:bg-black/80 disabled:cursor-not-allowed disabled:opacity-50 dark:bg-white dark:text-gray-900 dark:hover:bg-white/90">Обработать файл</button>
               <button id="clearFileBtn" class="inline-flex items-center gap-2 rounded-md border border-gray-300 bg-white px-3 py-2 text-sm font-medium hover:bg-gray-50 dark:border-gray-700 dark:bg-gray-900 dark:hover:bg-gray-800">Очистить</button>
@@ -245,8 +294,16 @@
       <section id="message" class="mt-6 hidden rounded-md border p-4 text-sm"></section>
     </main>
 
-    <footer class="mt-10 border-t border-gray-200 py-6 text-center text-xs text-gray-500 dark:border-gray-800 dark:text-gray-400">
-      Сделано для быстрого извлечения списка задач из HTML-таблиц. Нет сторонних CSS-библиотек, только Tailwind.
+    <footer class="mt-10 border-t border-gray-200 py-8 text-center text-xs text-gray-600 dark:border-gray-800 dark:text-gray-400">
+      <div class="mx-auto max-w-5xl px-4">
+        <div class="mx-auto flex max-w-md items-center gap-3 rounded-lg border border-dashed border-gray-300 bg-gray-50 p-4 dark:border-gray-700 dark:bg-gray-900/40">
+          <div class="h-10 w-10 shrink-0 rounded bg-gray-200 dark:bg-gray-800"></div>
+          <div class="text-left">
+            <div class="font-medium">Тестовый блок-заглушка</div>
+            <div class="mt-0.5 text-[13px] text-gray-500 dark:text-gray-400">Здесь появится описание сервиса или ссылки на документацию.</div>
+          </div>
+        </div>
+      </div>
     </footer>
 
     <script>
@@ -615,7 +672,9 @@
 
       // Auth helpers
       const AUTH_STORAGE_KEY = 'task_table_auth_v1';
+      const ACCOUNTS_STORAGE_KEY = 'task_table_accounts_v1';
       let currentAuth = null;
+      let accounts = [];
 
       function loadAuth() {
         try {
@@ -629,6 +688,17 @@
         } catch (_) {
           currentAuth = null;
         }
+        // Load accounts and migrate single saved auth if needed
+        try {
+          const rawAcc = localStorage.getItem(ACCOUNTS_STORAGE_KEY);
+          const arr = rawAcc ? JSON.parse(rawAcc) : [];
+          accounts = Array.isArray(arr) ? arr.filter(a => a && a.username && a.password) : [];
+        } catch (_) { accounts = []; }
+        if (accounts.length === 0 && currentAuth && currentAuth.username && currentAuth.password) {
+          // migrate
+          accounts = [{ username: currentAuth.username, password: currentAuth.password, createdAt: Date.now() }];
+          try { localStorage.setItem(ACCOUNTS_STORAGE_KEY, JSON.stringify(accounts)); } catch (_) {}
+        }
       }
 
       function saveAuth(auth) {
@@ -640,6 +710,14 @@
       function clearAuth() {
         try { localStorage.removeItem(AUTH_STORAGE_KEY); } catch (_) {}
         currentAuth = null;
+      }
+
+      function saveAccounts() {
+        try { localStorage.setItem(ACCOUNTS_STORAGE_KEY, JSON.stringify(accounts)); } catch (_) {}
+      }
+
+      function findAccount(username) {
+        return accounts.find(a => String(a.username).toLowerCase() === String(username).toLowerCase());
       }
 
       function isAuthenticated() {
@@ -889,6 +967,21 @@
 
       function hideMessage() {
         message.classList.add('hidden');
+      }
+
+      // Password visibility toggles
+      function setupPasswordToggles() {
+        document.querySelectorAll('[data-toggle-password]').forEach((btn) => {
+          btn.addEventListener('click', () => {
+            const id = btn.getAttribute('data-toggle-password');
+            const input = document.getElementById(id);
+            if (!input) return;
+            const isPassword = input.getAttribute('type') === 'password';
+            input.setAttribute('type', isPassword ? 'text' : 'password');
+            const span = btn.querySelector('span');
+            if (span) span.textContent = isPassword ? '🙈' : '👁️';
+          });
+        });
       }
 
       function normalizeHeader(text) {
@@ -1970,6 +2063,7 @@
       if (currentAuth?.password && passwordInput) passwordInput.value = currentAuth.password;
       updateAuthStatus();
       applyAuthGate();
+      setupPasswordToggles();
 
       // Auth listeners
       if (loginBtn) {
@@ -1980,7 +2074,12 @@
             showMessage('Введите логин и пароль.', 'warn');
             return;
           }
-          const payload = { username, password, savedAt: Date.now() };
+          const acc = findAccount(username);
+          if (!acc || acc.password !== password) {
+            showMessage('Неверный логин или пароль. Создайте аккаунт, если у вас его ещё нет.', 'error');
+            return;
+          }
+          const payload = { username: acc.username, password: acc.password, savedAt: Date.now() };
           saveAuth(payload);
           currentAuth = payload;
           updateAuthStatus();
@@ -1998,6 +2097,77 @@
           applyAuthGate();
           showMessage('Вы вышли из системы.', 'info');
         });
+      }
+
+      // Registration handlers
+      const authTabLogin = document.getElementById('authTabLogin');
+      const authTabRegister = document.getElementById('authTabRegister');
+      const loginPanel = document.getElementById('loginPanel');
+      const registerPanel = document.getElementById('registerPanel');
+      const regUsernameInput = document.getElementById('regUsernameInput');
+      const regPasswordInput = document.getElementById('regPasswordInput');
+      const regPassword2Input = document.getElementById('regPassword2Input');
+      const registerBtn = document.getElementById('registerBtn');
+
+      function setAuthTab(tab) {
+        const isLogin = tab === 'login';
+        if (authTabLogin) authTabLogin.setAttribute('aria-pressed', isLogin ? 'true' : 'false');
+        if (authTabRegister) authTabRegister.setAttribute('aria-pressed', !isLogin ? 'true' : 'false');
+        if (loginPanel) loginPanel.classList.toggle('hidden', !isLogin);
+        if (registerPanel) registerPanel.classList.toggle('hidden', isLogin);
+        const loginActions = document.getElementById('loginActions');
+        if (loginActions) loginActions.classList.toggle('hidden', !isLogin);
+      }
+
+      if (authTabLogin && authTabRegister) {
+        authTabLogin.addEventListener('click', () => setAuthTab('login'));
+        authTabRegister.addEventListener('click', () => setAuthTab('register'));
+      }
+      // default to login
+      setAuthTab('login');
+      // ensure correct visibility on load
+      updateRepeatVisibility?.();
+
+      if (registerBtn) {
+        registerBtn.addEventListener('click', () => {
+          const username = (regUsernameInput?.value || '').trim();
+          const p1 = (regPasswordInput?.value || '').trim();
+          const p2 = (regPassword2Input?.value || '').trim();
+          if (!username || !p1 || !p2) {
+            showMessage('Заполните логин и оба поля пароля.', 'warn');
+            return;
+          }
+          if (p1 !== p2) {
+            showMessage('Пароли не совпадают.', 'error');
+            return;
+          }
+          if (findAccount(username)) {
+            showMessage('Пользователь с таким логином уже существует.', 'error');
+            return;
+          }
+          accounts.push({ username, password: p1, createdAt: Date.now() });
+          saveAccounts();
+          const payload = { username, password: p1, savedAt: Date.now() };
+          saveAuth(payload);
+          currentAuth = payload;
+          if (usernameInput) usernameInput.value = username;
+          if (passwordInput) passwordInput.value = p1;
+          updateAuthStatus();
+          applyAuthGate();
+          showMessage('Аккаунт создан и выполнен вход.', 'info');
+          setAuthTab('login');
+        });
+      }
+
+      // Show repeat password only when first password has content
+      function updateRepeatVisibility() {
+        const row = document.getElementById('regPassword2Row');
+        if (!row || !regPasswordInput) return;
+        const has = (regPasswordInput.value || '').trim().length > 0;
+        row.classList.toggle('hidden', !has);
+      }
+      if (regPasswordInput) {
+        regPasswordInput.addEventListener('input', updateRepeatVisibility);
       }
 
        // Columns settings: listeners
@@ -2023,9 +2193,7 @@
          const last = loadLastSource();
          if (last && last.type === 'file' && typeof last.text === 'string' && last.text.trim()) {
            processHtml(last.text);
-           const origin = last.fileName ? `из файла: ${last.fileName}` : 'из последнего файла';
-           showMessage(`Восстановлено ${origin}.`, 'info');
-           // Prefill meta info
+           // Prefill meta info only (show which file is loaded)
            setSelectedFileInfo({ name: last.fileName || 'файл', size: last.size || 0, lastModified: last.modified || Date.now() });
          }
        } catch (_) {}
