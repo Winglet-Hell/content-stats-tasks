@@ -9,40 +9,41 @@
     <script src="https://cdn.jsdelivr.net/npm/litepicker/dist/litepicker.js"></script>
     <meta name="color-scheme" content="light dark" />
   </head>
-  <body class="min-h-dvh bg-gray-50 text-gray-900 antialiased dark:bg-gray-900 dark:text-gray-100">
+  <body class="min-h-dvh overflow-y-scroll bg-gray-50 text-gray-900 antialiased dark:bg-gray-900 dark:text-gray-100">
     <header class="border-b border-gray-200 bg-white/90 backdrop-blur supports-[backdrop-filter]:bg-white/70 dark:border-gray-800 dark:bg-gray-900/60">
-      <div class="mx-auto max-w-5xl px-4 py-6">
+      <div class="mx-auto max-w-4xl px-4 py-4">
         <div class="flex items-center gap-3">
           <div>
-            <h1 class="text-2xl font-semibold tracking-tight">Статистика задач Битрикс 24.</h1>
+            <h1 class="text-2xl font-semibold tracking-tight">Статистика задач Битрикс 24</h1>
             <p class="mt-1 text-sm text-gray-600 dark:text-gray-400">Загрузите файл с отчётом — покажем статистику</p>
           </div>
           <div class="ml-auto flex items-center gap-3">
             <div id="authStatus" class="text-sm text-gray-600 dark:text-gray-400"></div>
-            <button id="logoutBtn" class="inline-flex items-center gap-2 rounded-md border border-gray-300 bg-white px-3 py-1.5 text-sm font-medium hover:bg-gray-50 dark:border-gray-700 dark:bg-gray-900 dark:hover:bg-gray-800 hidden">Выйти</button>
+            <button id="logoutBtn" class="inline-flex items-center gap-2 rounded-md border border-gray-300 bg-white px-2 py-1.5 text-sm font-medium hover:bg-gray-50 dark:border-gray-700 dark:bg-gray-900 dark:hover:bg-gray-800 hidden">Выйти</button>
           </div>
         </div>
       </div>
     </header>
 
-    <main class="mx-auto max-w-5xl px-4 py-6">
+    <main class="mx-auto max-w-4xl px-4 py-4">
       <section id="loginCard" class="mt-2">
         <div class="grid gap-4 md:grid-cols-2">
-          <div class="max-w-md rounded-xl border border-gray-200 bg-white p-4 shadow-md dark:border-gray-800 dark:bg-gray-950">
+          <div class="max-w-md rounded-xl border border-gray-200 bg-white p-3 shadow-md dark:border-gray-800 dark:bg-gray-950">
           <h2 class="mb-3 text-lg font-medium">Аккаунт</h2>
-          <div class="mb-2 flex gap-2">
-            <button id="authTabLogin" type="button" aria-pressed="true" class="inline-flex items-center rounded-md border px-3 py-1.5 text-sm font-medium bg-white border-gray-300 hover:bg-gray-50 aria-[pressed=true]:bg-gray-900 aria-[pressed=true]:text-white aria-[pressed=true]:border-transparent dark:bg-gray-900 dark:border-gray-700 dark:hover:bg-gray-800 aria-[pressed=true]:dark:bg-white aria-[pressed=true]:dark:text-gray-900">Вход</button>
-            <button id="authTabRegister" type="button" aria-pressed="false" class="inline-flex items-center rounded-md border px-3 py-1.5 text-sm font-medium bg-white border-gray-300 hover:bg-gray-50 aria-[pressed=true]:bg-gray-900 aria-[pressed=true]:text-white aria-[pressed=true]:border-transparent dark:bg-gray-900 dark:border-gray-700 dark:hover:bg-gray-800 aria-[pressed=true]:dark:bg-white aria-[pressed=true]:dark:text-gray-900">Регистрация</button>
+          <div class="mb-2 inline-flex items-center gap-1 rounded-md bg-gray-100 p-1 dark:bg-gray-800/50">
+            <button id="authTabLogin" type="button" aria-pressed="true" class="inline-flex items-center rounded-md px-3 py-1.5 text-sm font-medium text-gray-700 hover:text-gray-900 aria-[pressed=true]:bg-gray-900 aria-[pressed=true]:text-white dark:text-gray-300 aria-[pressed=true]:dark:bg-white aria-[pressed=true]:dark:text-gray-900">Вход</button>
+            <button id="authTabRegister" type="button" aria-pressed="false" class="inline-flex items-center rounded-md px-3 py-1.5 text-sm font-medium text-gray-700 hover:text-gray-900 aria-[pressed=true]:bg-gray-900 aria-[pressed=true]:text-white dark:text-gray-300 aria-[pressed=true]:dark:bg-white aria-[pressed=true]:dark:text-gray-900">Регистрация</button>
           </div>
+          <div id="authPanels" class="mt-2 min-h-[280px]">
           <div id="loginPanel" class="grid gap-3 w-full max-w-md">
             <div>
-              <label for="usernameInput" class="mb-1 block text-sm font-medium">Логин</label>
-              <input id="usernameInput" type="text" autocomplete="username" placeholder="Введите логин" class="w-full rounded-md border border-gray-300 bg-white p-2 text-sm placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-400 dark:border-gray-700 dark:bg-gray-900" />
+              <label for="usernameInput" class="mb-0.5 block text-sm font-medium">Логин</label>
+              <input id="usernameInput" type="text" autocomplete="username" placeholder="Введите логин" class="w-full h-8 rounded-md border border-gray-300 bg-white px-2 text-[13px] placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-400 transition dark:border-gray-700 dark:bg-gray-900" />
             </div>
             <div>
-              <label for="passwordInput" class="mb-1 block text-sm font-medium">Пароль</label>
+              <label for="passwordInput" class="mb-0.5 block text-sm font-medium">Пароль</label>
               <div class="relative">
-                <input id="passwordInput" type="password" autocomplete="current-password" placeholder="Введите пароль" class="w-full rounded-md border border-gray-300 bg-white p-2 pr-9 text-sm placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-400 dark:border-gray-700 dark:bg-gray-900" />
+                <input id="passwordInput" type="password" autocomplete="current-password" placeholder="Введите пароль" class="w-full h-8 rounded-md border border-gray-300 bg-white pr-9 px-2 text-[13px] placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-400 transition dark:border-gray-700 dark:bg-gray-900" />
                 <button type="button" data-toggle-password="passwordInput" aria-label="Показать пароль" class="absolute inset-y-0 right-0 flex items-center pr-2 text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200">
                   <span class="text-[18px]" aria-hidden="true">👁️</span>
                 </button>
@@ -50,28 +51,27 @@
             </div>
           </div>
           <div id="loginActions" class="mt-3 flex flex-wrap items-center gap-2">
-            <button id="loginBtn" class="inline-flex items-center gap-2 rounded-md bg-gray-900 px-3 py-1.5 text-sm font-medium text-white hover:bg-black/80 dark:bg-white dark:text-gray-900 dark:hover:bg-white/90">Войти</button>
-            <span class="text-xs text-gray-500 dark:text-gray-400">Данные сохраняются локально.</span>
+            <button id="loginBtn" class="inline-flex items-center gap-2 rounded-md bg-gray-900 px-2 py-1.5 text-sm font-medium text-white hover:bg-black/80 dark:bg-white dark:text-gray-900 dark:hover:bg-white/90">Войти</button>
           </div>
-          <div id="registerPanel" class="mt-4 hidden">
+          <div id="registerPanel" class="hidden">
             <div class="grid gap-3 w-full max-w-md">
               <div>
-                <label for="regUsernameInput" class="mb-1 block text-sm font-medium">Логин (новый)</label>
-                <input id="regUsernameInput" type="text" autocomplete="username" placeholder="Введите логин" class="w-full rounded-md border border-gray-300 bg-white p-2 text-sm placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-400 dark:border-gray-700 dark:bg-gray-900" />
+                <label for="regUsernameInput" class="mb-0.5 block text-sm font-medium">Логин</label>
+                <input id="regUsernameInput" type="text" autocomplete="username" placeholder="Введите логин" class="w-full h-8 rounded-md border border-gray-300 bg-white px-2 text-[13px] placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-400 transition dark:border-gray-700 dark:bg-gray-900" />
               </div>
               <div>
-                <label for="regPasswordInput" class="mb-1 block text-sm font-medium">Пароль (новый)</label>
+                <label for="regPasswordInput" class="mb-0.5 block text-sm font-medium">Пароль</label>
                 <div class="relative">
-                  <input id="regPasswordInput" type="password" autocomplete="new-password" placeholder="Введите пароль" class="w-full rounded-md border border-gray-300 bg-white p-2 pr-9 text-sm placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-400 dark:border-gray-700 dark:bg-gray-900" />
+                  <input id="regPasswordInput" type="password" autocomplete="new-password" placeholder="Введите пароль" class="w-full h-8 rounded-md border border-gray-300 bg-white pr-9 px-2 text-[13px] placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-400 transition dark:border-gray-700 dark:bg-gray-900" />
                   <button type="button" data-toggle-password="regPasswordInput" aria-label="Показать пароль" class="absolute inset-y-0 right-0 flex items-center pr-2 text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200">
                     <span class="text-[18px]" aria-hidden="true">👁️</span>
                   </button>
                 </div>
               </div>
               <div id="regPassword2Row" class="hidden">
-                <label for="regPassword2Input" class="mb-1 block text-sm font-medium">Повторите пароль</label>
+                <label for="regPassword2Input" class="mb-0.5 block text-sm font-medium">Повторите пароль</label>
                 <div class="relative">
-                  <input id="regPassword2Input" type="password" autocomplete="new-password" placeholder="Повторите пароль" class="w-full rounded-md border border-gray-300 bg-white p-2 pr-9 text-sm placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-400 dark:border-gray-700 dark:bg-gray-900" />
+                  <input id="regPassword2Input" type="password" autocomplete="new-password" placeholder="Повторите пароль" class="w-full h-8 rounded-md border border-gray-300 bg-white pr-9 px-2 text-[13px] placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-400 transition dark:border-gray-700 dark:bg-gray-900" />
                   <button type="button" data-toggle-password="regPassword2Input" aria-label="Показать пароль" class="absolute inset-y-0 right-0 flex items-center pr-2 text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200">
                     <span class="text-[18px]" aria-hidden="true">👁️</span>
                   </button>
@@ -79,19 +79,20 @@
               </div>
             </div>
             <div class="mt-3">
-              <button id="registerBtn" class="inline-flex items-center gap-2 rounded-md bg-gray-900 px-3 py-1.5 text-sm font-medium text-white hover:bg-black/80 dark:bg-white dark:text-gray-900 dark:hover:bg-white/90">Зарегистрироваться и войти</button>
+              <button id="registerBtn" class="inline-flex items-center gap-2 rounded-md bg-gray-900 px-2 py-1.5 text-sm font-medium text-white hover:bg-black/80 dark:bg-white dark:text-gray-900 dark:hover:bg-white/90">Зарегистрироваться</button>
             </div>
           </div>
           </div>
-          <div class="rounded-xl border border-gray-200 bg-white p-4 shadow-md dark:border-gray-800 dark:bg-gray-950">
+          </div>
+          <div class="rounded-xl border border-gray-200 bg-white p-3 shadow-md dark:border-gray-800 dark:bg-gray-950">
             <h2 class="mb-3 text-lg font-medium">Описание</h2>
             <p class="text-sm text-gray-700 dark:text-gray-300">Загрузите файл с отчётом из Битрикс 24 — мы посчитаем сводную статистику и покажем дашборды. Данные об аккаунте хранятся локально в вашем браузере.</p>
-            <div class="mt-3 rounded-lg border border-dashed border-gray-300 bg-gray-50 p-4 text-center text-xs text-gray-500 dark:border-gray-700 dark:bg-gray-900/40 dark:text-gray-400">Заглушка под изображение/скриншот</div>
+            <div class="mt-3 rounded-lg border border-dashed border-gray-300 bg-gray-50 p-3 text-center text-xs text-gray-500 dark:border-gray-700 dark:bg-gray-900/40 dark:text-gray-400">Заглушка под изображение/скриншот</div>
           </div>
         </div>
       </section>
       <section class="mt-2">
-        <div id="uploadCard" class="rounded-xl border border-gray-200 bg-white p-4 shadow-md dark:border-gray-800 dark:bg-gray-950">
+        <div id="uploadCard" class="rounded-xl border border-gray-200 bg-white p-3 shadow-md dark:border-gray-800 dark:bg-gray-950">
           <h2 class="mb-3 text-lg font-medium">Загрузка файла</h2>
           <div class="space-y-3">
             <div id="dropzone" class="group relative flex flex-col items-center justify-center rounded-lg border-2 border-dashed border-gray-300 bg-gray-50/50 p-6 text-center transition hover:bg-gray-50 dark:border-gray-700 dark:bg-gray-900/50 dark:hover:bg-gray-900">
@@ -106,16 +107,30 @@
             </div>
             <div id="fileMeta" class="text-sm text-gray-600 dark:text-gray-400 bg-gray-50 dark:bg-gray-900/50 p-2 rounded"></div>
             <div class="flex items-center gap-2">
-              <button id="parseFileBtn" disabled class="inline-flex items-center gap-2 rounded-md bg-gray-900 px-4 py-2 text-sm font-medium text-white hover:bg-black/80 disabled:cursor-not-allowed disabled:opacity-50 dark:bg-white dark:text-gray-900 dark:hover:bg-white/90">Обработать файл</button>
-              <button id="clearFileBtn" class="inline-flex items-center gap-2 rounded-md border border-gray-300 bg-white px-3 py-2 text-sm font-medium hover:bg-gray-50 dark:border-gray-700 dark:bg-gray-900 dark:hover:bg-gray-800">Очистить</button>
+              <button id="parseFileBtn" disabled class="inline-flex items-center gap-2 rounded-md bg-gray-900 px-3 py-1.5 text-sm font-medium text-white hover:bg-black/80 disabled:cursor-not-allowed disabled:opacity-50 dark:bg-white dark:text-gray-900 dark:hover:bg-white/90">Обработать</button>
+              <button id="clearFileBtn" class="inline-flex items-center gap-2 rounded-md border border-gray-300 bg-white px-2 py-1.5 text-sm font-medium hover:bg-gray-50 dark:border-gray-700 dark:bg-gray-900 dark:hover:bg-gray-800">Очистить</button>
             </div>
-            <p class="text-xs text-gray-500 dark:text-gray-400">Поддерживаются HTML-файлы и старые .xls, сохранённые как HTML. Для бинарных .xls/.xlsx парсинг не сработает.</p>
+            <p class="text-xs text-gray-500 dark:text-gray-400">Загрузите отчёт из Битрикс 24.</p>
           </div>
         </div>
       </section>
 
+      <!-- Filters first -->
+      <section id="filtersTopCard" class="mt-6 hidden rounded-xl border border-gray-200 bg-white p-4 shadow-sm dark:border-gray-800 dark:bg-gray-950">
+        <div class="flex items-center justify-between">
+          <h2 class="text-lg font-medium">Фильтры</h2>
+          <div class="flex items-center gap-2">
+            <button id="resetFilters" class="text-sm text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-200">Сбросить</button>
+            <button id="filtersToggle" title="Свернуть" aria-label="Свернуть" class="inline-flex h-6 w-6 items-center justify-center rounded-md border border-gray-300 bg-white text-xs font-medium hover:bg-gray-50 dark:border-gray-700 dark:bg-gray-900">▼</button>
+          </div>
+        </div>
+        <div class="mt-3" id="filtersBody">
+          <div id="filtersCloneMount"></div>
+        </div>
+      </section>
+
       <!-- Dashboards chooser -->
-      <section id="dashboardsPanel" class="mt-6 hidden rounded-xl border border-gray-200 bg-white p-4 shadow-sm dark:border-gray-800 dark:bg-gray-950">
+      <section id="dashboardsPanel" class="mt-4 hidden rounded-xl border border-gray-200 bg-white p-4 shadow-sm dark:border-gray-800 dark:bg-gray-950">
         <div class="flex items-center justify-between gap-4">
           <h2 class="text-lg font-medium">Выбор дашборда</h2>
         </div>
@@ -139,11 +154,11 @@
             <h3 class="text-base font-semibold">Нужно подтвердить соответствие колонок</h3>
             <p class="mt-1 text-sm opacity-90">Не удалось однозначно определить заголовки. Выберите колонки, соответствующие полям.</p>
           </div>
-          <button id="hideMapping" class="rounded-md px-2 py-1 text-sm hover:bg-amber-100/60 dark:hover:bg-amber-900/30">Скрыть</button>
+          <button id="hideMapping" class="rounded-md px-2 py-1 text-sm hover:bg-amber-100/60 dark:hover:bg-amber-900/30">✕</button>
         </div>
         <div id="mappingControls" class="mt-3 grid gap-3 sm:grid-cols-2 lg:grid-cols-4"></div>
         <div class="mt-3">
-          <button id="applyMappingBtn" class="rounded-md bg-amber-600 px-4 py-2 text-sm font-medium text-white hover:bg-amber-700">Применить</button>
+          <button id="applyMappingBtn" class="rounded-md bg-amber-600 px-3 py-1.5 text-sm font-medium text-white hover:bg-amber-700">Применить</button>
         </div>
       </section>
 
@@ -157,46 +172,66 @@
             </button>
           </div>
         </div>
-          <div id="filters" class="mt-3">
-          <div class="grid gap-3 sm:grid-cols-2 lg:grid-cols-6">
-            <div class="sm:col-span-2">
-              <label for="filterQuery" class="mb-1 block text-sm font-medium">Поиск</label>
-              <input id="filterQuery" type="text" placeholder="ID, Название или Компания" class="w-full rounded-md border border-gray-300 bg-white p-2 text-sm placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-400 dark:border-gray-700 dark:bg-gray-900" />
-            </div>
-            <div class="lg:col-span-2">
+        <div id="filtersCard" class="hidden">
+          <div id="filters">
+          <div class="grid gap-3 sm:grid-cols-2">
+            <div>
               <label for="createdRange" class="mb-1 block text-sm font-medium">Создано (период)</label>
-              <input id="createdRange" type="text" placeholder="дд.мм.гггг — дд.мм.гггг" class="w-full rounded-md border border-gray-300 bg-white p-2 text-sm placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-400 dark:border-gray-700 dark:bg-gray-900" />
+              <input id="createdRange" type="text" placeholder="дд.мм.гггг — дд.мм.гггг" class="w-full rounded-md border border-gray-300 bg-white p-1.5 text-sm placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-400 dark:border-gray-700 dark:bg-gray-900" />
               <input id="createdFrom" type="date" class="hidden" />
               <input id="createdTo" type="date" class="hidden" />
             </div>
-            <div class="lg:col-span-2">
+            <div>
               <label for="completedRange" class="mb-1 block text-sm font-medium">Завершено (период)</label>
-              <input id="completedRange" type="text" placeholder="дд.мм.гггг — дд.мм.гггг" class="w-full rounded-md border border-gray-300 bg-white p-2 text-sm placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-400 dark:border-gray-700 dark:bg-gray-900" />
+              <input id="completedRange" type="text" placeholder="дд.мм.гггг — дд.мм.гггг" class="w-full rounded-md border border-gray-300 bg-white p-1.5 text-sm placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-400 dark:border-gray-700 dark:bg-gray-900" />
               <input id="completedFrom" type="date" class="hidden" />
               <input id="completedTo" type="date" class="hidden" />
             </div>
           </div>
-          <div class="mt-2 flex items-center gap-2">
-            <button id="resetFilters" class="inline-flex items-center gap-2 rounded-md border border-gray-300 bg-white px-3 py-2 text-sm font-medium hover:bg-gray-50 dark:border-gray-700 dark:bg-gray-900 dark:hover:bg-gray-800">Сбросить фильтры</button>
-            <button id="openFilterSettings" class="inline-flex items-center gap-2 rounded-md border border-gray-300 bg-white px-3 py-2 text-sm font-medium hover:bg-gray-50 dark:border-gray-700 dark:bg-gray-900 dark:hover:bg-gray-800">Настройки</button>
+          <div class="mt-3 grid gap-3 sm:grid-cols-2">
+            <div>
+              <div class="mb-2 flex items-center gap-2">
+                <label class="text-sm font-medium">Исключить</label>
+                <button id="excludeEditBtn" title="Редактировать" aria-label="Редактировать" class="ml-auto inline-flex h-6 w-6 items-center justify-center rounded-md border border-gray-300 bg-white text-xs font-medium hover:bg-gray-50 dark:border-gray-700 dark:bg-gray-900">✎</button>
+                <button id="addExcludeTerm" class="inline-flex h-6 w-6 items-center justify-center rounded-full border border-gray-300 bg-white text-sm font-medium leading-none hover:bg-gray-50 dark:border-gray-700 dark:bg-gray-900">+</button>
+              </div>
+              <div id="excludeChips" class="flex w-full flex-wrap items-center gap-2 rounded-md border border-gray-300 bg-gray-50 p-1.5 min-h-[32px] max-h-32 overflow-y-auto cursor-default select-none dark:border-gray-700 dark:bg-gray-900"></div>
+              <input id="filterExclude" type="text" placeholder="Исключить: термины" class="hidden w-full rounded-md border border-gray-300 bg-white p-1.5 text-sm placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-400 dark:border-gray-700 dark:bg-gray-900" />
+            </div>
+            <div>
+              <div class="mb-2 flex items-center gap-2">
+                <label class="text-sm font-medium">Включить</label>
+                <button id="includeEditBtn" title="Редактировать" aria-label="Редактировать" class="ml-auto inline-flex h-6 w-6 items-center justify-center rounded-md border border-gray-300 bg-white text-xs font-medium hover:bg-gray-50 dark:border-gray-700 dark:bg-gray-900">✎</button>
+                <button id="addIncludeTerm" class="inline-flex h-6 w-6 items-center justify-center rounded-full border border-gray-300 bg-white text-sm font-medium leading-none hover:bg-gray-50 dark:border-gray-700 dark:bg-gray-900">+</button>
+              </div>
+              <div id="includeChips" class="flex w-full flex-wrap items-center gap-2 rounded-md border border-gray-300 bg-gray-50 p-1.5 min-h-[32px] max-h-32 overflow-y-auto cursor-default select-none dark:border-gray-700 dark:bg-gray-900"></div>
+              <input id="filterQuery" type="text" placeholder="Включить: слова, \"точные фразы\", префиксы*" class="hidden w-full rounded-md border border-gray-300 bg-white p-1.5 text-sm placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-400 dark:border-gray-700 dark:bg-gray-900" />
+            </div>
           </div>
-          <div class="mt-3 grid gap-3 sm:grid-cols-2 lg:grid-cols-6">
-            <div class="sm:col-span-2 lg:col-span-3">
-              <label for="bmNameInput" class="mb-1 block text-sm font-medium">Название закладки</label>
-              <div class="flex gap-2">
-                <input id="bmNameInput" type="text" placeholder="Например: Завершённые за июль" class="h-9 w-full rounded-md border border-gray-300 bg-white px-3 text-sm placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-400 dark:border-gray-700 dark:bg-gray-900" />
-                <button id="saveBookmarkBtn" class="h-9 shrink-0 rounded-md bg-gray-900 px-3 text-sm font-medium text-white hover:bg-black/80 dark:bg-white dark:text-gray-900 dark:hover:bg-white/90">Сохранить</button>
+          <div class="mt-3 grid gap-3 sm:grid-cols-2">
+            <div>
+              <div class="mb-2 flex items-center gap-2">
+                <label class="text-sm font-medium">Мои закладки</label>
+                <button id="personalBookmarkEditBtn" title="Редактировать" aria-label="Редактировать" class="ml-auto inline-flex h-6 w-6 items-center justify-center rounded-md border border-gray-300 bg-white text-xs font-medium hover:bg-gray-50 dark:border-gray-700 dark:bg-gray-900">✎</button>
+                <button id="personalBookmarkAddBtn" class="inline-flex h-6 w-6 items-center justify-center rounded-full border border-gray-300 bg-white text-sm font-medium leading-none hover:bg-gray-50 dark:border-gray-700 dark:bg-gray-900">+</button>
               </div>
+              <div id="personalBookmarksChips" class="flex w-full flex-wrap items-center gap-2 rounded-md border border-gray-300 bg-gray-50 p-1.5 min-h-[32px] max-h-32 overflow-y-auto cursor-default select-none dark:border-gray-700 dark:bg-gray-900"></div>
             </div>
-            <div class="sm:col-span-2 lg:col-span-3">
-              <label for="bookmarksSelect" class="mb-1 block text-sm font-medium">Мои закладки</label>
-              <div class="flex gap-2">
-                <select id="bookmarksSelect" class="h-9 w-full rounded-md border border-gray-300 bg-white px-3 text-sm dark:border-gray-700 dark:bg-gray-900">
-                  <option value="">— нет закладок —</option>
-                </select>
-                <button id="deleteBookmarkBtn" class="h-9 shrink-0 rounded-md border border-gray-300 bg-white px-3 text-sm font-medium hover:bg-gray-50 disabled:opacity-50 dark:border-gray-700 dark:bg-gray-900 dark:hover:bg-gray-800">Удалить</button>
+            <div>
+              <div class="mb-2 flex items-center gap-2">
+                <label class="text-sm font-medium">Общие закладки</label>
+                <button id="sharedBookmarkEditBtn" title="Редактировать" aria-label="Редактировать" class="ml-auto inline-flex h-6 w-6 items-center justify-center rounded-md border border-gray-300 bg-white text-xs font-medium hover:bg-gray-50 dark:border-gray-700 dark:bg-gray-900">✎</button>
+                <button id="sharedBookmarkAddBtn" class="inline-flex h-6 w-6 items-center justify-center rounded-full border border-gray-300 bg-white text-sm font-medium leading-none hover:bg-gray-50 dark:border-gray-700 dark:bg-gray-900">+</button>
               </div>
+              <div id="sharedBookmarksChips" class="flex w-full flex-wrap items-center gap-2 rounded-md border border-gray-300 bg-gray-50 p-1.5 min-h-[32px] max-h-32 overflow-y-auto cursor-default select-none dark:border-gray-700 dark:bg-gray-900"></div>
             </div>
+            <div class="sm:col-span-2 lg:col-span-3 hidden">
+              <input id="bmNameInput" type="text" class="hidden" />
+              <button id="saveBookmarkBtn" class="hidden">save</button>
+              <select id="bookmarksSelect" class="hidden"></select>
+              <button id="deleteBookmarkBtn" class="hidden">del</button>
+            </div>
+          </div>
           </div>
         </div>
         <div class="mt-3 overflow-x-auto">
@@ -217,7 +252,7 @@
           <div class="mt-10 w-full max-w-3xl overflow-hidden rounded-xl border border-gray-200 bg-white shadow-lg dark:border-gray-800 dark:bg-gray-950">
             <div class="flex items-center justify-between border-b border-gray-200 p-4 dark:border-gray-800">
               <h3 id="detailsTitle" class="truncate text-base font-semibold">Детали задачи</h3>
-              <button id="detailsCloseBtn" class="inline-flex items-center gap-2 rounded-md border border-gray-300 bg-white px-3 py-1.5 text-sm font-medium hover:bg-gray-50 dark:border-gray-700 dark:bg-gray-900 dark:hover:bg-gray-800">
+              <button id="detailsCloseBtn" class="inline-flex items-center gap-2 rounded-md border border-gray-300 bg-white px-2 py-1.5 text-sm font-medium hover:bg-gray-50 dark:border-gray-700 dark:bg-gray-900 dark:hover:bg-gray-800">
                 Закрыть
               </button>
             </div>
@@ -234,20 +269,20 @@
             <div class="flex items-center justify-between border-b border-gray-200 p-4 dark:border-gray-800">
               <h3 class="truncate text-base font-semibold">Настройки фильтра</h3>
               <div class="flex items-center gap-2">
-                <button id="settingsSaveBtn" class="inline-flex items-center gap-2 rounded-md bg-gray-900 px-3 py-1.5 text-sm font-medium text-white hover:bg-black/80 dark:bg-white dark:text-gray-900 dark:hover:bg-white/90">Сохранить</button>
-                <button id="settingsCloseBtn" class="inline-flex items-center gap-2 rounded-md border border-gray-300 bg-white px-3 py-1.5 text-sm font-medium hover:bg-gray-50 dark:border-gray-700 dark:bg-gray-900 dark:hover:bg-gray-800">Закрыть</button>
+                <button id="settingsSaveBtn" class="inline-flex items-center gap-2 rounded-md bg-gray-900 px-2 py-1.5 text-sm font-medium text-white hover:bg-black/80 dark:bg-white dark:text-gray-900 dark:hover:bg-white/90">Сохранить</button>
+                <button id="settingsCloseBtn" class="inline-flex items-center gap-2 rounded-md border border-gray-300 bg-white px-2 py-1.5 text-sm font-medium hover:bg-gray-50 dark:border-gray-700 dark:bg-gray-900 dark:hover:bg-gray-800">Закрыть</button>
               </div>
             </div>
             <div class="max-h-[70vh] overflow-y-auto p-4">
               <div class="space-y-3">
                 <div>
                   <label for="tagsKeywordsInput" class="mb-1 block text-sm font-medium">Слова в тегах</label>
-                  <input id="tagsKeywordsInput" type="text" placeholder="например: баг, срочно" class="w-full rounded-md border border-gray-300 bg-white p-2 text-sm placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-400 dark:border-gray-700 dark:bg-gray-900" />
+                  <input id="tagsKeywordsInput" type="text" placeholder="например: баг, срочно" class="w-full rounded-md border border-gray-300 bg-white p-1.5 text-sm placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-400 dark:border-gray-700 dark:bg-gray-900" />
                   <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">Перечислите слова через запятую. Будут найдены задачи, у которых в колонке «Теги» встречаются эти слова.</p>
                 </div>
                 <div>
                   <label for="tagsModeSelect" class="mb-1 block text-sm font-medium">Совпадение</label>
-                  <select id="tagsModeSelect" class="w-full rounded-md border border-gray-300 bg-white p-2 text-sm dark:border-gray-700 dark:bg-gray-900">
+                  <select id="tagsModeSelect" class="w-full rounded-md border border-gray-300 bg-white p-1.5 text-sm dark:border-gray-700 dark:bg-gray-900">
                     <option value="any">Любое из слов</option>
                     <option value="all">Все слова</option>
                   </select>
@@ -256,11 +291,11 @@
                 <div>
                   <div class="mb-1 flex items-center justify-between">
                     <label class="block text-sm font-medium">Сотрудники (фамилии)</label>
-                    <button id="applyEmployeesFilterBtn" class="rounded-md border border-gray-300 bg-white px-2 py-1 text-xs font-medium hover:bg-gray-50 dark:border-gray-700 dark:bg-gray-900 dark:hover:bg-gray-800">Фильтровать по сотрудникам</button>
+                    <button id="applyEmployeesFilterBtn" class="rounded-md border border-gray-300 bg-white px-2 py-1 text-xs font-medium hover:bg-gray-50 dark:border-gray-700 dark:bg-gray-900 dark:hover:bg-gray-800">Применить</button>
                   </div>
                   <div class="flex gap-2">
-                    <input id="employeeInput" type="text" placeholder="например: Иванов" class="w-full rounded-md border border-gray-300 bg-white p-2 text-sm placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-400 dark:border-gray-700 dark:bg-gray-900" />
-                    <button id="addEmployeeBtn" class="shrink-0 rounded-md bg-gray-900 px-3 text-sm font-medium text-white hover:bg-black/80 dark:bg-white dark:text-gray-900 dark:hover:bg-white/90">Добавить</button>
+                    <input id="employeeInput" type="text" placeholder="например: Иванов" class="w-full rounded-md border border-gray-300 bg-white p-1.5 text-sm placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-400 dark:border-gray-700 dark:bg-gray-900" />
+                    <button id="addEmployeeBtn" class="shrink-0 rounded-md bg-gray-900 px-2 py-1.5 text-sm font-medium text-white hover:bg-black/80 dark:bg-white dark:text-gray-900 dark:hover:bg-white/90">+</button>
                   </div>
                   <div id="employeesList" class="mt-2 flex flex-wrap gap-2"></div>
                   <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">Добавляйте фамилии по одной. Кнопка выше применит фильтр задач, где в тегах встречается хотя бы одна из фамилий.</p>
@@ -279,8 +314,8 @@
             <div class="flex items-center justify-between border-b border-gray-200 p-4 dark:border-gray-800">
               <h3 class="truncate text-base font-semibold">Колонки таблицы</h3>
               <div class="flex items-center gap-2">
-                <button id="columnsSaveBtn" class="inline-flex items-center gap-2 rounded-md bg-gray-900 px-3 py-1.5 text-sm font-medium text-white hover:bg-black/80 dark:bg-white dark:text-gray-900 dark:hover:bg-white/90">Сохранить</button>
-                <button id="columnsCloseBtn" class="inline-flex items-center gap-2 rounded-md border border-gray-300 bg-white px-3 py-1.5 text-sm font-medium hover:bg-gray-50 dark:border-gray-700 dark:bg-gray-900 dark:hover:bg-gray-800">Закрыть</button>
+                <button id="columnsSaveBtn" class="inline-flex items-center gap-2 rounded-md bg-gray-900 px-2 py-1.5 text-sm font-medium text-white hover:bg-black/80 dark:bg-white dark:text-gray-900 dark:hover:bg-white/90">Сохранить</button>
+                <button id="columnsCloseBtn" class="inline-flex items-center gap-2 rounded-md border border-gray-300 bg-white px-2 py-1.5 text-sm font-medium hover:bg-gray-50 dark:border-gray-700 dark:bg-gray-900 dark:hover:bg-gray-800">Закрыть</button>
               </div>
             </div>
             <div class="max-h-[70vh] overflow-y-auto p-4">
@@ -382,6 +417,7 @@
       let bookmarks = [];
        let currentDashboard = 'table';
        let lastFilteredTasks = [];
+      let personalBookmarks = [];
       let filterSettings = {
         tagsKeywords: [],
         tagsMode: 'any',
@@ -672,15 +708,19 @@
 
       // Auth helpers
       const AUTH_STORAGE_KEY = 'task_table_auth_v1';
-      const ACCOUNTS_STORAGE_KEY = 'task_table_accounts_v1';
+      const ACCOUNTS_STORAGE_KEY = 'task_table_accounts_v1'; // legacy (migration only)
+      const IDB_DB_NAME = 'task_table_auth_db_v1';
+      const IDB_STORE = 'accounts';
+      const PBKDF2_ITERATIONS = 150000;
+      const PBKDF2_SALT_BYTES = 16;
+      const PBKDF2_HASH_BYTES = 32;
       let currentAuth = null;
-      let accounts = [];
 
       function loadAuth() {
         try {
           const raw = localStorage.getItem(AUTH_STORAGE_KEY);
           const obj = raw ? JSON.parse(raw) : null;
-          if (obj && typeof obj === 'object' && obj.username && obj.password) {
+          if (obj && typeof obj === 'object' && obj.username) {
             currentAuth = obj;
           } else {
             currentAuth = null;
@@ -688,17 +728,48 @@
         } catch (_) {
           currentAuth = null;
         }
-        // Load accounts and migrate single saved auth if needed
+      }
+      async function refreshAuthFromServer() {
         try {
-          const rawAcc = localStorage.getItem(ACCOUNTS_STORAGE_KEY);
-          const arr = rawAcc ? JSON.parse(rawAcc) : [];
-          accounts = Array.isArray(arr) ? arr.filter(a => a && a.username && a.password) : [];
-        } catch (_) { accounts = []; }
-        if (accounts.length === 0 && currentAuth && currentAuth.username && currentAuth.password) {
-          // migrate
-          accounts = [{ username: currentAuth.username, password: currentAuth.password, createdAt: Date.now() }];
-          try { localStorage.setItem(ACCOUNTS_STORAGE_KEY, JSON.stringify(accounts)); } catch (_) {}
+          const res = await fetch('/api/auth/me', { credentials: 'same-origin' });
+          if (res.ok) {
+            const data = await res.json();
+            currentAuth = { username: data?.username, savedAt: Date.now() };
+            saveAuth(currentAuth);
+          } else {
+            clearAuth();
+          }
+        } catch (_) {
+          // Network error: keep local state as-is
         }
+      }
+
+      async function serverLogin(username, password) {
+        const res = await fetch('/api/auth/login', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ username, password }),
+          credentials: 'same-origin'
+        });
+        if (!res.ok) throw new Error(await res.text() || 'Ошибка входа');
+        const data = await res.json();
+        return data;
+      }
+
+      async function serverRegister(username, password) {
+        const res = await fetch('/api/auth/register', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ username, password }),
+          credentials: 'same-origin'
+        });
+        if (!res.ok) throw new Error(await res.text() || 'Ошибка регистрации');
+        const data = await res.json();
+        return data;
+      }
+
+      async function serverLogout() {
+        try { await fetch('/api/auth/logout', { method: 'POST', credentials: 'same-origin' }); } catch (_) {}
       }
 
       function saveAuth(auth) {
@@ -712,16 +783,110 @@
         currentAuth = null;
       }
 
-      function saveAccounts() {
-        try { localStorage.setItem(ACCOUNTS_STORAGE_KEY, JSON.stringify(accounts)); } catch (_) {}
+      // IndexedDB helpers
+      function openAuthDB() {
+        return new Promise((resolve, reject) => {
+          const req = indexedDB.open(IDB_DB_NAME, 1);
+          req.onerror = () => reject(req.error);
+          req.onupgradeneeded = () => {
+            const db = req.result;
+            if (!db.objectStoreNames.contains(IDB_STORE)) {
+              const store = db.createObjectStore(IDB_STORE, { keyPath: 'usernameLower' });
+              store.createIndex('usernameLower', 'usernameLower', { unique: true });
+            }
+          };
+          req.onsuccess = () => resolve(req.result);
+        });
       }
 
-      function findAccount(username) {
-        return accounts.find(a => String(a.username).toLowerCase() === String(username).toLowerCase());
+      async function idbGetAccount(username) {
+        const db = await openAuthDB();
+        return new Promise((resolve, reject) => {
+          const tx = db.transaction(IDB_STORE, 'readonly');
+          const store = tx.objectStore(IDB_STORE);
+          const req = store.get(String(username).toLowerCase());
+          req.onsuccess = () => resolve(req.result || null);
+          req.onerror = () => reject(req.error);
+        });
+      }
+
+      async function idbPutAccount(record) {
+        const db = await openAuthDB();
+        return new Promise((resolve, reject) => {
+          const tx = db.transaction(IDB_STORE, 'readwrite');
+          const store = tx.objectStore(IDB_STORE);
+          const req = store.put(record);
+          req.onsuccess = () => resolve(true);
+          req.onerror = () => reject(req.error);
+        });
+      }
+
+      function bytesToBase64(bytes) {
+        let binary = '';
+        const arr = new Uint8Array(bytes);
+        for (let i = 0; i < arr.byteLength; i++) binary += String.fromCharCode(arr[i]);
+        return btoa(binary);
+      }
+      function base64ToBytes(b64) {
+        const binary = atob(b64);
+        const len = binary.length;
+        const bytes = new Uint8Array(len);
+        for (let i = 0; i < len; i++) bytes[i] = binary.charCodeAt(i);
+        return bytes;
+      }
+
+      async function derivePasswordHash(password, saltB64, iterations = PBKDF2_ITERATIONS) {
+        const enc = new TextEncoder();
+        const pwKey = await crypto.subtle.importKey('raw', enc.encode(password), 'PBKDF2', false, ['deriveBits']);
+        let salt;
+        if (saltB64) {
+          salt = base64ToBytes(saltB64);
+        } else {
+          salt = new Uint8Array(PBKDF2_SALT_BYTES);
+          crypto.getRandomValues(salt);
+        }
+        const bits = await crypto.subtle.deriveBits({ name: 'PBKDF2', salt, iterations, hash: 'SHA-256' }, pwKey, PBKDF2_HASH_BYTES * 8);
+        const hashB64 = bytesToBase64(new Uint8Array(bits));
+        return { saltB64: bytesToBase64(salt), hashB64, iterations };
+      }
+
+      async function verifyPassword(password, account) {
+        if (!account || !account?.hashB64 || !account?.saltB64) return false;
+        const { hashB64 } = await derivePasswordHash(password, account.saltB64, account.iterations || PBKDF2_ITERATIONS);
+        return hashB64 === account.hashB64;
+      }
+
+      async function migrateLegacyAccountsIfAny() {
+        try {
+          const rawAcc = localStorage.getItem(ACCOUNTS_STORAGE_KEY);
+          const arr = rawAcc ? JSON.parse(rawAcc) : [];
+          if (Array.isArray(arr) && arr.length) {
+            for (const a of arr) {
+              const username = a?.username;
+              const password = a?.password;
+              if (!username || !password) continue;
+              const existing = await idbGetAccount(username);
+              if (existing) continue;
+              const { saltB64, hashB64, iterations } = await derivePasswordHash(password);
+              await idbPutAccount({ username, usernameLower: String(username).toLowerCase(), saltB64, hashB64, iterations, createdAt: Date.now() });
+            }
+          }
+          // Cleanup legacy storage
+          try { localStorage.removeItem(ACCOUNTS_STORAGE_KEY); } catch (_) {}
+          // If legacy auth had password, drop it; keep username only
+          try {
+            const raw = localStorage.getItem(AUTH_STORAGE_KEY);
+            const obj = raw ? JSON.parse(raw) : null;
+            if (obj && obj.password) {
+              delete obj.password;
+              localStorage.setItem(AUTH_STORAGE_KEY, JSON.stringify(obj));
+            }
+          } catch (_) {}
+        } catch (_) {}
       }
 
       function isAuthenticated() {
-        return !!(currentAuth && currentAuth.username && currentAuth.password);
+        return !!(currentAuth && currentAuth.username);
       }
 
       function updateAuthStatus() {
@@ -738,13 +903,17 @@
         if (!loggedIn) {
           if (uploadCard) uploadCard.classList.add('hidden');
           if (dashboardsPanel) dashboardsPanel.classList.add('hidden');
+          const top = document.getElementById('filtersTopCard');
+          if (top) top.classList.add('hidden');
           if (resultsCard) resultsCard.classList.add('hidden');
           if (mappingSection) mappingSection.classList.add('hidden');
         } else {
-          // Show upload when no data; other views controlled elsewhere
+          // Show dashboards only when data is present; show upload otherwise
           const hasAny = Array.isArray(allTasks) && allTasks.length > 0;
           if (uploadCard) uploadCard.classList.toggle('hidden', hasAny);
           if (dashboardsPanel) dashboardsPanel.classList.toggle('hidden', !hasAny);
+          const top = document.getElementById('filtersTopCard');
+          if (top) top.classList.toggle('hidden', !hasAny);
         }
       }
 
@@ -759,6 +928,8 @@
          // Show table only for "table" dashboard and when data exists
          const hasAny = Array.isArray(allTasks) && allTasks.length > 0;
          resultsCard.classList.toggle('hidden', !(showTable && hasAny));
+         const top = document.getElementById('filtersTopCard');
+         if (top) top.classList.toggle('hidden', !hasAny);
          renderDashboardContent();
        }
 
@@ -950,19 +1121,33 @@
          dashboardContent.innerHTML = hint + html;
        }
 
-      function showMessage(text, type = 'info') {
-        message.classList.remove('hidden');
-        const base = 'rounded-md border p-4 text-sm';
-        const m = message;
-        m.className = base;
-        if (type === 'error') {
-          m.classList.add('border-red-300', 'bg-red-50', 'text-red-900', 'dark:border-red-800', 'dark:bg-red-950/40', 'dark:text-red-200');
-        } else if (type === 'warn') {
-          m.classList.add('border-amber-300', 'bg-amber-50', 'text-amber-900', 'dark:border-amber-700', 'dark:bg-amber-950/40', 'dark:text-amber-200');
-        } else {
-          m.classList.add('border-gray-200', 'bg-white', 'text-gray-800', 'dark:border-gray-800', 'dark:bg-gray-950', 'dark:text-gray-200');
+      // Toast-style notifications
+      (function ensureToastRoot(){
+        if (!document.getElementById('toastRoot')) {
+          const el = document.createElement('div');
+          el.id = 'toastRoot';
+          el.className = 'pointer-events-none fixed inset-0 z-50 flex flex-col items-end gap-2 p-4';
+          document.body.appendChild(el);
         }
-        m.textContent = text;
+      })();
+
+      function showMessage(text, type = 'info') {
+        const root = document.getElementById('toastRoot');
+        if (!root) return;
+        const toast = document.createElement('div');
+        const base = 'pointer-events-auto rounded-md border px-3 py-2 text-sm shadow-sm animate-[fadein_.2s_ease]';
+        toast.className = base + ' ' + (type === 'error'
+          ? 'border-red-300 bg-red-50 text-red-900 dark:border-red-800 dark:bg-red-950/40 dark:text-red-200'
+          : type === 'warn'
+            ? 'border-amber-300 bg-amber-50 text-amber-900 dark:border-amber-700 dark:bg-amber-950/40 dark:text-amber-200'
+            : 'border-gray-200 bg-white text-gray-800 dark:border-gray-800 dark:bg-gray-950 dark:text-gray-200');
+        toast.textContent = text;
+        root.appendChild(toast);
+        setTimeout(() => {
+          toast.style.opacity = '0';
+          toast.style.transition = 'opacity .2s ease';
+          setTimeout(() => toast.remove(), 200);
+        }, 2500);
       }
 
       function hideMessage() {
@@ -1495,32 +1680,51 @@
           stats.textContent = '';
           return;
         }
-        const q = (filterQuery?.value || '').trim().toLowerCase();
+        // New include/exclude search over Title and Tags
+        const includeInput = document.getElementById('filterQuery');
+        const excludeInput = document.getElementById('filterExclude');
+        const includeAllCheckbox = null;
+        const includeRaw = (includeInput?.value || '').trim();
+        const excludeRaw = (excludeInput?.value || '').trim();
+        const includeAll = (filterSettings?.tagsMode === 'all');
+        const normalize = (s) => String(s || '').toLowerCase().replace(/ё/g, 'е');
+        const splitTerms = (s) => normalize(s).split(/[;,\n]+/g).map(t => t.trim()).filter(Boolean);
+        const readChips = (hostId) => Array.from(document.getElementById(hostId)?.querySelectorAll('span[data-term]') || []).map(el => normalize(el.dataset.term || ''));
+        const includeChipTerms = readChips('includeChips');
+        const excludeChipTerms = readChips('excludeChips');
+        // primary source is chips
+        const buildMatchers = (terms) => terms.map(term => {
+          const isQuoted = term.startsWith('"') && term.endsWith('"') && term.length >= 2;
+          const isPrefix = term.endsWith('*') && !isQuoted;
+          const raw = isQuoted ? term.slice(1, -1) : (isPrefix ? term.slice(0, -1) : term);
+          if (isQuoted) return (text) => text.includes(raw);
+          if (isPrefix) {
+            const re = new RegExp(`(?:^|[^A-Za-zА-Яа-яЁё0-9])${raw}[A-Za-zА-Яа-яЁё0-9]*`, 'i');
+            return (text) => re.test(text);
+          }
+          const re = new RegExp(`(?:^|[^A-Za-zА-Яа-яЁё0-9])${raw}(?:[^A-Za-zА-Яа-яЁё0-9]|$)`, 'i');
+          return (text) => re.test(text);
+        });
+        const includeTerms = buildMatchers([
+          ...includeChipTerms,
+          ...splitTerms(includeRaw)
+        ]);
+        const excludeTerms = buildMatchers([
+          ...excludeChipTerms,
+          ...splitTerms(excludeRaw)
+        ]);
+
         const createdFrom = parseISODateInput(createdFromInput?.value || '');
         const createdTo = parseISODateInput(createdToInput?.value || '', true);
         const completedFrom = parseISODateInput(completedFromInput?.value || '');
         const completedTo = parseISODateInput(completedToInput?.value || '', true);
 
         const filtered = allTasks.filter((t) => {
-          // Text search over id, title and company
-          if (q) {
-            const hay = `${t.id || ''} ${t.title || ''} ${t.company || ''}`.toLowerCase();
-            if (!hay.includes(q)) return false;
-          }
-          // Tags filter
-          if (Array.isArray(filterSettings?.tagsKeywords) && filterSettings.tagsKeywords.length) {
-            const rawTags = String(t.tags || '').toLowerCase();
-            const tokens = rawTags
-              .split(/[;,\|\/#\n\r\t]+|\s{2,}/g)
-              .map((s) => s.trim())
-              .filter(Boolean);
-            const keywords = filterSettings.tagsKeywords.map((s) => s.toLowerCase());
-            const has = (kw) => tokens.some((tok) => tok.includes(kw));
-            if (filterSettings.tagsMode === 'all') {
-              if (!keywords.every((kw) => has(kw))) return false;
-            } else {
-              if (!keywords.some((kw) => has(kw))) return false;
-            }
+          const text = `${normalize(t.title)} ${normalize(t.tags)}`;
+          if (excludeTerms.length && excludeTerms.some(fn => fn(text))) return false;
+          if (includeTerms.length) {
+            if (includeAll && !includeTerms.every(fn => fn(text))) return false;
+            if (!includeAll && !includeTerms.some(fn => fn(text))) return false;
           }
           // Created date range
           if (createdFrom || createdTo) {
@@ -1541,32 +1745,90 @@
 
         renderTasks(filtered);
         stats.textContent = `Показано ${filtered.length} из ${allTasks.length}`;
-         lastFilteredTasks = filtered;
-         // update non-table dashboards to reflect current filters
-         if (currentDashboard !== 'table') {
-           renderDashboardContent();
-         }
+        lastFilteredTasks = filtered;
+        if (currentDashboard !== 'table') {
+          renderDashboardContent();
+        }
       }
 
       // Bookmarks: storage helpers
-      const BM_STORAGE_KEY = 'task_table_filter_bookmarks_v1';
-      function loadBookmarks() {
-        try {
-          const raw = localStorage.getItem(BM_STORAGE_KEY);
-          const arr = raw ? JSON.parse(raw) : [];
-          if (Array.isArray(arr)) bookmarks = arr;
-          else bookmarks = [];
-        } catch (_) {
-          bookmarks = [];
-        }
-        renderBookmarksSelect();
-      }
+       const BM_STORAGE_KEY = 'task_table_filter_bookmarks_v1';
+       async function loadBookmarksShared() {
+         try {
+           const res = await fetch('/api/bookmarks/shared', { credentials: 'same-origin' });
+           if (res.ok) {
+             const data = await res.json();
+             bookmarks = Array.isArray(data?.bookmarks) ? data.bookmarks : [];
+           } else {
+             bookmarks = [];
+           }
+         } catch (_) { bookmarks = []; }
+         renderBookmarksSelect();
+       }
 
-      function saveBookmarks() {
-        try {
-          localStorage.setItem(BM_STORAGE_KEY, JSON.stringify(bookmarks));
-        } catch (_) {}
-      }
+       async function loadBookmarksPersonal() {
+         try {
+           const res = await fetch('/api/bookmarks/personal', { credentials: 'same-origin' });
+           if (res.ok) {
+             const data = await res.json();
+             personalBookmarks = Array.isArray(data?.bookmarks) ? data.bookmarks : [];
+           } else {
+             personalBookmarks = [];
+           }
+         } catch (_) { personalBookmarks = []; }
+         renderBookmarksSelect();
+       }
+
+       async function loadBookmarksBoth() {
+         await Promise.all([loadBookmarksShared(), loadBookmarksPersonal()].map(p => p.catch(() => {})));
+         renderBookmarksSelect();
+       }
+
+       async function saveBookmarkToServerShared(bm) {
+         const res = await fetch('/api/bookmarks/shared', {
+           method: 'POST',
+           headers: { 'Content-Type': 'application/json' },
+           credentials: 'same-origin',
+           body: JSON.stringify({ name: bm.name, config: bm })
+         });
+         if (res.ok) {
+           try { const data = await res.json(); return data?.id ?? null; } catch (_) { return null; }
+         }
+         return null;
+       }
+
+       async function saveBookmarkToServerPersonal(bm) {
+         const res = await fetch('/api/bookmarks/personal', {
+           method: 'POST',
+           headers: { 'Content-Type': 'application/json' },
+           credentials: 'same-origin',
+           body: JSON.stringify({ name: bm.name, config: bm })
+         });
+         if (res.ok) {
+           try { const data = await res.json(); return data?.id ?? null; } catch (_) { return null; }
+         }
+         return null;
+       }
+
+       async function updateBookmarkOnServerShared(id, payload) {
+         await fetch(`/api/bookmarks/shared/${id}`, {
+           method: 'PUT', headers: { 'Content-Type': 'application/json' }, credentials: 'same-origin', body: JSON.stringify(payload)
+         });
+       }
+
+       async function updateBookmarkOnServerPersonal(id, payload) {
+         await fetch(`/api/bookmarks/personal/${id}`, {
+           method: 'PUT', headers: { 'Content-Type': 'application/json' }, credentials: 'same-origin', body: JSON.stringify(payload)
+         });
+       }
+
+       async function deleteBookmarkOnServerShared(id) {
+         await fetch(`/api/bookmarks/shared/${id}`, { method: 'DELETE', credentials: 'same-origin' });
+       }
+
+       async function deleteBookmarkOnServerPersonal(id) {
+         await fetch(`/api/bookmarks/personal/${id}`, { method: 'DELETE', credentials: 'same-origin' });
+       }
 
        // Last source (file/html) storage helpers
        const LAST_SOURCE_KEY = 'task_table_last_source_v1';
@@ -1589,6 +1851,7 @@
        }
 
       function getCurrentFilterConfig() {
+        const readChips = (hostId) => Array.from(document.getElementById(hostId)?.querySelectorAll('span[data-term]')||[]).map(n=>n.dataset.term);
         return {
           name: (bmNameInput?.value || '').trim(),
           query: filterQuery?.value || '',
@@ -1598,6 +1861,10 @@
           completedTo: completedToInput?.value || '',
           createdRange: createdRangeInput?.value || '',
           completedRange: completedRangeInput?.value || '',
+          // bookmark stores chip-based filters
+          include: readChips('includeChips'),
+          exclude: readChips('excludeChips'),
+          // keep these for future but chips are primary
           tagsKeywords: Array.isArray(filterSettings?.tagsKeywords) ? filterSettings.tagsKeywords : [],
           tagsMode: filterSettings?.tagsMode || 'any',
           employees: Array.isArray(filterSettings?.employees) ? filterSettings.employees : []
@@ -1613,6 +1880,29 @@
         if (completedToInput) completedToInput.value = cfg.completedTo || '';
         if (createdRangeInput) createdRangeInput.value = cfg.createdRange || formatDisplayRange(cfg.createdFrom, cfg.createdTo);
         if (completedRangeInput) completedRangeInput.value = cfg.completedRange || formatDisplayRange(cfg.completedFrom, cfg.completedTo);
+        // apply include/exclude chips from bookmark
+        const incHost = document.getElementById('includeChips');
+        const excHost = document.getElementById('excludeChips');
+        if (incHost) {
+          incHost.replaceChildren();
+          (Array.isArray(cfg.include) ? cfg.include : []).forEach((t) => {
+            const s = document.createElement('span');
+            s.className = 'inline-flex items-center gap-1 rounded-full border border-green-300 bg-green-50 px-2 py-0.5 text-xs text-green-700 dark:border-green-600 dark:bg-green-900/20 dark:text-green-300';
+            s.dataset.term = t;
+            s.textContent = t;
+            incHost.appendChild(s);
+          });
+        }
+        if (excHost) {
+          excHost.replaceChildren();
+          (Array.isArray(cfg.exclude) ? cfg.exclude : []).forEach((t) => {
+            const s = document.createElement('span');
+            s.className = 'inline-flex items-center gap-1 rounded-full border border-red-300 bg-red-50 px-2 py-0.5 text-xs text-red-700 dark:border-red-600 dark:bg-red-900/20 dark:text-red-300';
+            s.dataset.term = t;
+            s.textContent = t;
+            excHost.appendChild(s);
+          });
+        }
         // tags settings
         filterSettings.tagsKeywords = Array.isArray(cfg.tagsKeywords)
           ? cfg.tagsKeywords
@@ -1648,15 +1938,185 @@
           opt.textContent = b.name || `Закладка ${idx + 1}`;
           bookmarksSelect.appendChild(opt);
         });
-        // try to restore previous selection
         if (current && Number(current) < bookmarks.length) {
           bookmarksSelect.value = current;
         }
-        // Enable/disable delete button
         if (deleteBookmarkBtn) {
           deleteBookmarkBtn.disabled = !(bookmarksSelect.value && bookmarks.length);
         }
+        // Also render chips
+        const renderScope = async (list, hostId, addId, scope) => {
+          const host = document.getElementById(hostId);
+          const addBtn = document.getElementById(addId);
+          if (!host || !addBtn) return;
+          host.querySelectorAll('button[data-bm]').forEach((n) => n.remove());
+          const activeIdx = (typeof window.__activeBmIdx === 'number') ? window.__activeBmIdx : -1;
+          const activeId = (typeof window.__activeBmId !== 'undefined' && window.__activeBmId !== null)
+            ? Number(window.__activeBmId)
+            : null;
+          list.forEach((b, idx) => {
+            const btn = document.createElement('button');
+            btn.type = 'button';
+            btn.dataset.bm = `${scope}:${idx}`;
+            const base = 'inline-flex items-center gap-1 rounded-full border px-2 py-0.5 text-xs';
+            const isActive = (activeId !== null && typeof b.id !== 'undefined')
+              ? Number(b.id) === activeId
+              : idx === activeIdx;
+            btn.className = isActive
+              ? `${base} border-transparent bg-gray-900 text-white dark:bg-white dark:text-gray-900`
+              : `${base} border-gray-300 bg-white hover:bg-gray-50 dark:border-gray-700 dark:bg-gray-900`;
+            const span = document.createElement('span');
+            span.textContent = b.name || `Закладка ${idx + 1}`;
+            btn.appendChild(span);
+            btn.addEventListener('click', () => {
+              const isActiveNow = (
+                (typeof b.id !== 'undefined' && window.__activeBmId !== null && Number(b.id) === Number(window.__activeBmId)) ||
+                (window.__activeBmId == null && typeof window.__activeBmIdx === 'number' && window.__activeBmIdx === idx)
+              );
+              if (isActiveNow) {
+                if (filterQuery) filterQuery.value = '';
+                if (createdFromInput) createdFromInput.value = '';
+                if (createdToInput) createdToInput.value = '';
+                if (completedFromInput) completedFromInput.value = '';
+                if (completedToInput) completedToInput.value = '';
+                if (createdRangeInput) createdRangeInput.value = '';
+                if (completedRangeInput) completedRangeInput.value = '';
+                filterSettings.tagsKeywords = [];
+                filterSettings.tagsMode = 'any';
+                filterSettings.employees = [];
+                if (tagsKeywordsInput) tagsKeywordsInput.value = '';
+                if (tagsModeSelect) tagsModeSelect.value = 'any';
+                renderEmployeesChips();
+                const incHost = document.getElementById('includeChips');
+                const excHost = document.getElementById('excludeChips');
+                if (incHost) incHost.replaceChildren();
+                if (excHost) excHost.replaceChildren();
+                window.__activeBmId = null;
+                window.__activeBmIdx = -1;
+                renderBookmarksSelect();
+                applyFilters();
+              } else {
+                const cfg = (b && b.config) ? b.config : b;
+                applyFilterConfig(cfg);
+                bmNameInput.value = b.name || '';
+                if (typeof b.id !== 'undefined') window.__activeBmId = b.id;
+                window.__activeBmIdx = idx;
+                showMessage(`Применена закладка: ${b.name || `#${idx+1}`}`, 'info');
+                renderBookmarksSelect();
+              }
+            });
+            host.appendChild(btn);
+          });
+        };
+        renderScope((personalBookmarks||[]), 'personalBookmarksChips', 'personalBookmarkAddBtn', 'personal');
+        renderScope((bookmarks||[]), 'sharedBookmarksChips', 'sharedBookmarkAddBtn', 'shared');
       }
+
+      // Chip-based add flow
+      (function initBookmarkChips() {
+        const personalHost = document.getElementById('personalBookmarksChips');
+        const personalAddBtn = document.getElementById('personalBookmarkAddBtn');
+        const sharedHost = document.getElementById('sharedBookmarksChips');
+        const sharedAddBtn = document.getElementById('sharedBookmarkAddBtn');
+        if (!personalHost || !personalAddBtn || !sharedHost || !sharedAddBtn) return;
+        const personalEditBtn = document.getElementById('personalBookmarkEditBtn');
+        const sharedEditBtn = document.getElementById('sharedBookmarkEditBtn');
+        let personalEditMode = false;
+        let sharedEditMode = false;
+        
+        if (personalEditBtn) {
+          personalEditBtn.addEventListener('click', () => {
+            personalEditMode = !personalEditMode;
+            personalEditBtn.textContent = '✎';
+            personalHost.classList.toggle('ring-1', personalEditMode);
+            personalHost.classList.toggle('ring-amber-400', personalEditMode);
+            // Add/remove delete buttons on chips
+            personalHost.querySelectorAll('button[data-bm]').forEach((chip) => {
+              const hasDel = chip.querySelector('button[data-delete]');
+              if (personalEditMode && !hasDel) {
+                const del = document.createElement('button');
+                del.type = 'button';
+                del.dataset.delete = 'true';
+                del.className = 'text-gray-500 hover:text-rose-600 dark:text-gray-400 dark:hover:text-rose-400';
+                del.textContent = '×';
+                del.addEventListener('click', (e) => {
+                  e.stopPropagation();
+                  const bmData = chip.dataset.bm;
+                  const [scope, idx] = bmData.split(':');
+                  if (scope === 'personal' && personalBookmarks && personalBookmarks[idx]) {
+                    personalBookmarks.splice(idx, 1);
+                    renderBookmarksSelect();
+                    showMessage('Закладка удалена.', 'info');
+                  }
+                });
+                chip.appendChild(del);
+              }
+              if (!personalEditMode && hasDel) hasDel.remove();
+            });
+          });
+        }
+        
+        if (sharedEditBtn) {
+          sharedEditBtn.addEventListener('click', () => {
+            sharedEditMode = !sharedEditMode;
+            sharedEditBtn.textContent = '✎';
+            sharedHost.classList.toggle('ring-1', sharedEditMode);
+            sharedHost.classList.toggle('ring-amber-400', sharedEditMode);
+            // Add/remove delete buttons on chips
+            sharedHost.querySelectorAll('button[data-bm]').forEach((chip) => {
+              const hasDel = chip.querySelector('button[data-delete]');
+              if (sharedEditMode && !hasDel) {
+                const del = document.createElement('button');
+                del.type = 'button';
+                del.dataset.delete = 'true';
+                del.className = 'text-gray-500 hover:text-rose-600 dark:text-gray-400 dark:hover:text-rose-400';
+                del.textContent = '×';
+                del.addEventListener('click', (e) => {
+                  e.stopPropagation();
+                  const bmData = chip.dataset.bm;
+                  const [scope, idx] = bmData.split(':');
+                  if (scope === 'shared' && bookmarks && bookmarks[idx]) {
+                    bookmarks.splice(idx, 1);
+                    renderBookmarksSelect();
+                    showMessage('Общая закладка удалена.', 'info');
+                  }
+                });
+                chip.appendChild(del);
+              }
+              if (!sharedEditMode && hasDel) hasDel.remove();
+            });
+          });
+        }
+
+        personalAddBtn.addEventListener('click', async () => {
+          const name = prompt('Название закладки');
+          if (!name) return;
+          bmNameInput.value = name;
+          const cfg = getCurrentFilterConfig();
+          if (!cfg.name) return;
+          let newId = null;
+          try { newId = await saveBookmarkToServerPersonal(cfg); } catch (_) {}
+          await loadBookmarksBoth();
+          if (newId !== null) window.__activeBmId = newId;
+          renderBookmarksSelect();
+          showMessage('Закладка сохранена.', 'info');
+        });
+        sharedAddBtn.addEventListener('click', async () => {
+          const name = prompt('Название общей закладки');
+          if (!name) return;
+          bmNameInput.value = name;
+          const cfg = getCurrentFilterConfig();
+          if (!cfg.name) return;
+          let newId = null;
+          try { newId = await saveBookmarkToServerShared(cfg); } catch (_) {}
+          await loadBookmarksBoth();
+          if (newId !== null) window.__activeBmId = newId;
+          renderBookmarksSelect();
+          showMessage('Общая закладка сохранена.', 'info');
+        });
+        // expose editMode to renderer
+        window.__isBmEditMode = () => personalEditMode || sharedEditMode;
+      })();
 
       function showMapping(headersRaw, preset) {
         mappingControls.innerHTML = '';
@@ -1916,6 +2376,15 @@
           if (tagsKeywordsInput) tagsKeywordsInput.value = '';
           if (tagsModeSelect) tagsModeSelect.value = 'any';
           renderEmployeesChips();
+          // clear chips as well
+          const incHost = document.getElementById('includeChips');
+          const excHost = document.getElementById('excludeChips');
+          if (incHost) incHost.replaceChildren();
+          if (excHost) excHost.replaceChildren();
+          // also clear active bookmark highlight
+          window.__activeBmId = null;
+          window.__activeBmIdx = -1;
+          renderBookmarksSelect();
           applyFilters();
         });
       }
@@ -1998,25 +2467,18 @@
 
       // Bookmarks: listeners
       if (saveBookmarkBtn) {
-        saveBookmarkBtn.addEventListener('click', () => {
+        saveBookmarkBtn.addEventListener('click', async () => {
           const cfg = getCurrentFilterConfig();
           if (!cfg.name) {
             showMessage('Введите название закладки перед сохранением.', 'warn');
             return;
           }
           // If name already exists, update it, else push new
-          const idx = bookmarks.findIndex((b) => (b.name || '').toLowerCase() === cfg.name.toLowerCase());
-          const payload = { ...cfg };
-          if (idx >= 0) {
-            bookmarks[idx] = payload;
-          } else {
-            bookmarks.push(payload);
-          }
-          saveBookmarks();
+          let newId = null;
+          try { newId = await saveBookmarkToServerPersonal(cfg); } catch (_) {}
+          await loadBookmarksBoth();
+          if (newId !== null) window.__activeBmId = newId;
           renderBookmarksSelect();
-          // Select just-saved bookmark
-          const selIdx = bookmarks.findIndex((b) => (b.name || '').toLowerCase() === cfg.name.toLowerCase());
-          if (selIdx >= 0) bookmarksSelect.value = String(selIdx);
           showMessage('Закладка сохранена.', 'info');
         });
       }
@@ -2032,20 +2494,20 @@
           const b = bookmarks[idx];
           if (b) {
             bmNameInput.value = b.name || '';
-            applyFilterConfig(b);
+            applyFilterConfig(b && b.config ? b.config : b);
           }
           if (deleteBookmarkBtn) deleteBookmarkBtn.disabled = false;
         });
       }
 
       if (deleteBookmarkBtn) {
-        deleteBookmarkBtn.addEventListener('click', () => {
+        deleteBookmarkBtn.addEventListener('click', async () => {
           const val = bookmarksSelect.value;
           if (!val) return;
           const idx = Number(val);
           if (idx >= 0 && idx < bookmarks.length) {
-            bookmarks.splice(idx, 1);
-            saveBookmarks();
+            try { await deleteBookmarkOnServerShared(bookmarks[idx]?.id); } catch (_) {}
+            await loadBookmarksBoth();
             renderBookmarksSelect();
             bookmarksSelect.value = '';
             if (deleteBookmarkBtn) deleteBookmarkBtn.disabled = true;
@@ -2055,31 +2517,38 @@
       }
 
        // Init bookmarks on load
-      loadBookmarks();
+      loadBookmarksBoth();
 
       // Init auth on load
       loadAuth();
-      if (currentAuth?.username && usernameInput) usernameInput.value = currentAuth.username;
-      if (currentAuth?.password && passwordInput) passwordInput.value = currentAuth.password;
-      updateAuthStatus();
-      applyAuthGate();
-      setupPasswordToggles();
+      migrateLegacyAccountsIfAny();
+      // Ensure IDB is initialized on first load
+      try { openAuthDB().catch(() => {}); } catch (_) {}
+      (async () => {
+        try { await refreshAuthFromServer(); } catch (_) {}
+        if (currentAuth?.username && usernameInput) usernameInput.value = currentAuth.username;
+        if (passwordInput) passwordInput.value = '';
+        updateAuthStatus();
+        applyAuthGate();
+        setupPasswordToggles();
+      })();
 
       // Auth listeners
       if (loginBtn) {
-        loginBtn.addEventListener('click', () => {
+        loginBtn.addEventListener('click', async () => {
           const username = (usernameInput?.value || '').trim();
           const password = (passwordInput?.value || '').trim();
           if (!username || !password) {
             showMessage('Введите логин и пароль.', 'warn');
             return;
           }
-          const acc = findAccount(username);
-          if (!acc || acc.password !== password) {
-            showMessage('Неверный логин или пароль. Создайте аккаунт, если у вас его ещё нет.', 'error');
+          try {
+            await serverLogin(username, password);
+          } catch (e) {
+            showMessage('Неверный логин или пароль.', 'error');
             return;
           }
-          const payload = { username: acc.username, password: acc.password, savedAt: Date.now() };
+          const payload = { username, savedAt: Date.now() };
           saveAuth(payload);
           currentAuth = payload;
           updateAuthStatus();
@@ -2088,7 +2557,8 @@
         });
       }
       if (logoutBtn) {
-        logoutBtn.addEventListener('click', () => {
+        logoutBtn.addEventListener('click', async () => {
+          await serverLogout();
           clearAuth();
           if (usernameInput) usernameInput.value = '';
           if (passwordInput) passwordInput.value = '';
@@ -2129,7 +2599,7 @@
       updateRepeatVisibility?.();
 
       if (registerBtn) {
-        registerBtn.addEventListener('click', () => {
+        registerBtn.addEventListener('click', async () => {
           const username = (regUsernameInput?.value || '').trim();
           const p1 = (regPasswordInput?.value || '').trim();
           const p2 = (regPassword2Input?.value || '').trim();
@@ -2141,17 +2611,17 @@
             showMessage('Пароли не совпадают.', 'error');
             return;
           }
-          if (findAccount(username)) {
+          try {
+            await serverRegister(username, p1);
+          } catch (e) {
             showMessage('Пользователь с таким логином уже существует.', 'error');
             return;
           }
-          accounts.push({ username, password: p1, createdAt: Date.now() });
-          saveAccounts();
-          const payload = { username, password: p1, savedAt: Date.now() };
+          const payload = { username, savedAt: Date.now() };
           saveAuth(payload);
           currentAuth = payload;
           if (usernameInput) usernameInput.value = username;
-          if (passwordInput) passwordInput.value = p1;
+          if (passwordInput) passwordInput.value = '';
           updateAuthStatus();
           applyAuthGate();
           showMessage('Аккаунт создан и выполнен вход.', 'info');
@@ -2187,6 +2657,18 @@
            setActiveDashboard(key);
          });
        });
+
+       // Move filters block into top filters card so it appears before dashboards
+       (function mountFiltersIntoTopCard() {
+         const topCard = document.getElementById('filtersTopCard');
+         const mount = document.getElementById('filtersCloneMount');
+         const filters = document.getElementById('filters');
+         if (topCard && mount && filters) {
+           mount.innerHTML = '';
+           mount.appendChild(filters);
+           topCard.classList.remove('hidden');
+         }
+       })();
 
        // Restore last processed source on load
        try {
@@ -2228,8 +2710,186 @@
           }
         });
       }
+
+      // Dashboards: listeners
+      document.querySelectorAll('[data-dashboard]').forEach((btn) => {
+        btn.addEventListener('click', () => {
+          const key = btn.getAttribute('data-dashboard');
+          setActiveDashboard(key);
+        });
+      });
+
+      // Debounced real-time filtering
+      (function initLiveFiltering() {
+        const inc = document.getElementById('filterQuery');
+        const exc = document.getElementById('filterExclude');
+        const all = null;
+        const resetBtn = document.getElementById('resetFilters');
+        let t;
+        const debounced = () => { clearTimeout(t); t = setTimeout(applyFilters, 250); };
+        if (inc) inc.addEventListener('input', debounced);
+        if (exc) exc.addEventListener('input', debounced);
+        if (all) all.addEventListener('change', debounced);
+        if (resetBtn) resetBtn.addEventListener('click', () => {
+          if (inc) inc.value = '';
+          const e = document.getElementById('filterExclude');
+          if (e) e.value = '';
+          // clear chips
+          document.getElementById('includeChips')?.replaceChildren();
+          document.getElementById('excludeChips')?.replaceChildren();
+          applyFilters();
+        });
+      })();
+
+      // Chips for include/exclude
+      (function initChips() {
+        const includeInput = document.getElementById('filterQuery');
+        const excludeInput = document.getElementById('filterExclude');
+        const addIncludeBtn = document.getElementById('addIncludeTerm');
+        const addExcludeBtn = document.getElementById('addExcludeTerm');
+        const includeHost = document.getElementById('includeChips');
+        const excludeHost = document.getElementById('excludeChips');
+        const includeEditBtn = document.getElementById('includeEditBtn');
+        const excludeEditBtn = document.getElementById('excludeEditBtn');
+        const norm = (s) => String(s || '').trim();
+        let includeEdit = false;
+        let excludeEdit = false;
+        function renderChip(text, host, editOn) {
+          const chip = document.createElement('span');
+          const isInclude = host.id === 'includeChips';
+          // Different colors for include vs exclude chips
+          const baseClasses = isInclude 
+            ? 'inline-flex items-center gap-1 rounded-full border border-green-300 bg-green-50 px-2 py-0.5 text-xs text-green-700 dark:border-green-600 dark:bg-green-900/20 dark:text-green-300'
+            : 'inline-flex items-center gap-1 rounded-full border border-red-300 bg-red-50 px-2 py-0.5 text-xs text-red-700 dark:border-red-600 dark:bg-red-900/20 dark:text-red-300';
+          chip.className = baseClasses;
+          chip.dataset.term = text;
+          const label = document.createElement('span');
+          label.textContent = text;
+          chip.appendChild(label);
+          if (editOn) {
+            const del = document.createElement('button');
+            del.type = 'button';
+            del.className = 'text-gray-500 hover:text-rose-600 dark:text-gray-400 dark:hover:text-rose-400';
+            del.textContent = '×';
+            del.addEventListener('click', () => { chip.remove(); applyFilters(); saveServerFilters(); });
+            chip.appendChild(del);
+          }
+          host.appendChild(chip);
+        }
+        function addChip(host, isInclude) {
+          const raw = prompt(isInclude ? 'Включить термин' : 'Исключить термин');
+          const val = norm(raw);
+          if (!val) return;
+          renderChip(val, host, isInclude ? includeEdit : excludeEdit);
+          applyFilters();
+          saveServerFilters();
+        }
+        if (addIncludeBtn && includeHost) addIncludeBtn.addEventListener('click', () => addChip(includeHost, true));
+        if (addExcludeBtn && excludeHost) addExcludeBtn.addEventListener('click', () => addChip(excludeHost, false));
+        if (includeEditBtn && includeHost) includeEditBtn.addEventListener('click', () => {
+          includeEdit = !includeEdit;
+          includeEditBtn.textContent = '✎';
+          includeHost.classList.toggle('ring-1', includeEdit);
+          includeHost.classList.toggle('ring-amber-400', includeEdit);
+          includeHost.querySelectorAll('span[data-term]').forEach((chip) => {
+            // Ensure chip has correct green color
+            chip.className = 'inline-flex items-center gap-1 rounded-full border border-green-300 bg-green-50 px-2 py-0.5 text-xs text-green-700 dark:border-green-600 dark:bg-green-900/20 dark:text-green-300';
+            const hasDel = chip.querySelector('button');
+            if (includeEdit && !hasDel) {
+              const del = document.createElement('button');
+              del.type = 'button';
+              del.className = 'text-gray-500 hover:text-rose-600 dark:text-gray-400 dark:hover:text-rose-400';
+              del.textContent = '×';
+              del.addEventListener('click', () => { chip.remove(); applyFilters(); saveServerFilters(); });
+              chip.appendChild(del);
+            }
+            if (!includeEdit && hasDel) hasDel.remove();
+          });
+        });
+        if (excludeEditBtn && excludeHost) excludeEditBtn.addEventListener('click', () => {
+          excludeEdit = !excludeEdit;
+          excludeEditBtn.textContent = '✎';
+          excludeHost.classList.toggle('ring-1', excludeEdit);
+          excludeHost.classList.toggle('ring-amber-400', excludeEdit);
+          excludeHost.querySelectorAll('span[data-term]').forEach((chip) => {
+            // Ensure chip has correct red color
+            chip.className = 'inline-flex items-center gap-1 rounded-full border border-red-300 bg-red-50 px-2 py-0.5 text-xs text-red-700 dark:border-red-600 dark:bg-red-900/20 dark:text-red-300';
+            const hasDel = chip.querySelector('button');
+            if (excludeEdit && !hasDel) {
+              const del = document.createElement('button');
+              del.type = 'button';
+              del.className = 'text-gray-500 hover:text-rose-600 dark:text-gray-400 dark:hover:text-rose-400';
+              del.textContent = '×';
+              del.addEventListener('click', () => { chip.remove(); applyFilters(); saveServerFilters(); });
+              chip.appendChild(del);
+            }
+            if (!excludeEdit && hasDel) hasDel.remove();
+          });
+        });
+      })();
+
+
+
+      // Toggle filters show/hide with expand/collapse button
+      (function initFiltersToggle() {
+        const toggle = document.getElementById('filtersToggle');
+        const body = document.getElementById('filtersBody');
+        if (!toggle || !body) return;
+        function setState(expanded) {
+          body.classList.toggle('hidden', !expanded);
+          toggle.textContent = expanded ? '▼' : '▶';
+          toggle.title = expanded ? 'Свернуть' : 'Развернуть';
+          toggle.setAttribute('aria-label', expanded ? 'Свернуть' : 'Развернуть');
+        }
+        let isExpanded = true;
+        setState(isExpanded);
+        toggle.addEventListener('click', () => { isExpanded = !isExpanded; setState(isExpanded); });
+        toggle.addEventListener('keydown', (e) => {
+          if (e.key === ' ' || e.key === 'Enter') { e.preventDefault(); isExpanded = !isExpanded; setState(isExpanded); }
+        });
+      })();
+
+      function loadServerFilters() {}
+
+      async function saveServerFilters() {
+        const read = (hostId) => Array.from(document.getElementById(hostId)?.querySelectorAll('span[data-term]')||[]).map(n=>n.dataset.term);
+        const payload = { include: read('includeChips'), exclude: read('excludeChips') };
+        try { await fetch('/api/filters', { method: 'PUT', headers: { 'Content-Type': 'application/json' }, credentials: 'same-origin', body: JSON.stringify({ filters: payload }) }); } catch(_){}
+      }
+
+      // Load shared filters/bookmarks from server on init
+      loadServerFilters();
+
+      // Saving filters globally is disabled; filters live inside bookmarks only
+      function saveServerFilters() {}
+
+      // Load shared filters/bookmarks from server on init
+      (function initEmptyFilters(){
+        document.getElementById('includeChips')?.replaceChildren();
+        document.getElementById('excludeChips')?.replaceChildren();
+        applyFilters();
+      })();
+      
+      // Update existing chips with new colors
+      (function updateExistingChipsColors() {
+        const includeHost = document.getElementById('includeChips');
+        const excludeHost = document.getElementById('excludeChips');
+        
+        if (includeHost) {
+          includeHost.querySelectorAll('span[data-term]').forEach((chip) => {
+            chip.className = 'inline-flex items-center gap-1 rounded-full border border-green-300 bg-green-50 px-2 py-0.5 text-xs text-green-700 dark:border-green-600 dark:bg-green-900/20 dark:text-green-300';
+          });
+        }
+        
+        if (excludeHost) {
+          excludeHost.querySelectorAll('span[data-term]').forEach((chip) => {
+            chip.className = 'inline-flex items-center gap-1 rounded-full border border-red-300 bg-red-50 px-2 py-0.5 text-xs text-red-700 dark:border-red-600 dark:bg-red-900/20 dark:text-red-300';
+          });
+        }
+      })();
     </script>
   </body>
   </html>
+
 
 

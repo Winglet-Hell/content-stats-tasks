@@ -1,0 +1,16 @@
+{
+  "users": [
+    {
+      "username": "Stepin",
+      "usernameLower": "stepin",
+      "hash": "$2a$10$0zMuAT5bq3atPDSb3UEY0.ECGjSnpTD7O2u5hF9ssi.lMFcFvPy0i",
+      "createdAt": 1756197973397
+    },
+    {
+      "username": "Baranova",
+      "usernameLower": "baranova",
+      "hash": "$2a$10$IXlkjvt4HvQTpUS09UMm0eToJNB4q.wEytBq7ER8gOp/RfSS5KJp6",
+      "createdAt": 1756278397703
+    }
+  ]
+}

@@ -1,0 +1,70 @@
+{
+  "bookmarks": [
+    {
+      "id": 1756208675967,
+      "name": "Контент",
+      "config": {
+        "name": "Контент",
+        "query": "",
+        "createdFrom": "",
+        "createdTo": "",
+        "completedFrom": "",
+        "completedTo": "",
+        "createdRange": "",
+        "completedRange": "",
+        "include": [
+          "баранова а.",
+          "рябов ю.",
+          "шабело г.",
+          "степин р.",
+          "милова м."
+        ],
+        "exclude": [
+          "Завершение трансляции",
+          "Дубль"
+        ],
+        "tagsKeywords": [],
+        "tagsMode": "any",
+        "employees": []
+      }
+    }
+  ],
+  "filters": {
+    "include": [
+      "баранова а.",
+      "рябов ю.",
+      "шабело г.",
+      "степин р.",
+      "милова м."
+    ],
+    "exclude": [
+      "Завершение трансляции",
+      "Дубль"
+    ]
+  },
+  "personal": {
+    "stepin": [
+      {
+        "id": 1756278322578,
+        "name": "Дубли",
+        "config": {
+          "name": "Дубли",
+          "query": "",
+          "createdFrom": "",
+          "createdTo": "",
+          "completedFrom": "",
+          "completedTo": "",
+          "createdRange": "",
+          "completedRange": "",
+          "include": [
+            "Дубль"
+          ],
+          "exclude": [],
+          "tagsKeywords": [],
+          "tagsMode": "any",
+          "employees": []
+        }
+      }
+    ]
+  }
+}
