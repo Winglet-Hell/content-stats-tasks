@@ -62,6 +62,16 @@ app.post('/api/auth/register', async (req, res) => {
   const hash = await bcrypt.hash(password, 10);
   db.users.push({ username, usernameLower: String(username).toLowerCase(), hash, createdAt: Date.now() });
   writeUsers(db);
+  
+  // Initialize personal bookmarks for new user
+  const store = readStore();
+  const userKey = String(username).toLowerCase();
+  if (!store.personal) store.personal = {};
+  if (!Array.isArray(store.personal[userKey])) {
+    store.personal[userKey] = [];
+  }
+  writeStore(store);
+  
   req.session.user = { username };
   res.json({ ok: true, username });
 });
@@ -93,7 +103,7 @@ app.get('/api/bookmarks', (req, res) => {
   const store = readStore();
   res.json({ bookmarks: store.bookmarks || [] });
 });
-app.get('/api/bookmarks/shared', (req, res) => {
+app.get('/api/bookmarks/shared', requireAuth, (req, res) => {
   const store = readStore();
   res.json({ bookmarks: store.bookmarks || [] });
 });
@@ -109,13 +119,26 @@ app.post('/api/bookmarks', (req, res) => {
   writeStore(store);
   res.json({ ok: true, id });
 });
-app.post('/api/bookmarks/shared', (req, res) => {
+app.post('/api/bookmarks/shared', requireAuth, (req, res) => {
+  // Only Stepin can create shared bookmarks
+  const username = req.session.user.username;
+  if (String(username).toLowerCase() !== 'stepin') {
+    return res.status(403).send('Only Stepin can create shared bookmarks');
+  }
+  
   const { name, config } = req.body || {};
   if (!name || !config) return res.status(400).send('name/config required');
   const store = readStore();
   const id = Date.now();
   store.bookmarks = (store.bookmarks || []).filter(b => String(b.name || '').toLowerCase() !== String(name).toLowerCase());
-  store.bookmarks.unshift({ id, name, config });
+  
+  // Assign color index for new bookmark
+  const existingColors = store.bookmarks.map(b => b.colorIndex).filter(c => c !== undefined);
+  const availableColors = [0, 1, 2, 3, 4, 5, 6, 7];
+  const usedColors = new Set(existingColors);
+  const availableColor = availableColors.find(c => !usedColors.has(c)) || (store.bookmarks.length % 8);
+  
+  store.bookmarks.unshift({ id, name, config, colorIndex: availableColor });
   writeStore(store);
   res.json({ ok: true, id });
 });
@@ -131,7 +154,13 @@ app.put('/api/bookmarks/:id', (req, res) => {
   writeStore(store);
   res.json({ ok: true });
 });
-app.put('/api/bookmarks/shared/:id', (req, res) => {
+app.put('/api/bookmarks/shared/:id', requireAuth, (req, res) => {
+  // Only Stepin can edit shared bookmarks
+  const username = req.session.user.username;
+  if (String(username).toLowerCase() !== 'stepin') {
+    return res.status(403).send('Only Stepin can edit shared bookmarks');
+  }
+  
   const id = Number(req.params.id);
   const { name, config } = req.body || {};
   const store = readStore();
@@ -150,7 +179,13 @@ app.delete('/api/bookmarks/:id', (req, res) => {
   writeStore(store);
   res.json({ ok: true });
 });
-app.delete('/api/bookmarks/shared/:id', (req, res) => {
+app.delete('/api/bookmarks/shared/:id', requireAuth, (req, res) => {
+  // Only Stepin can delete shared bookmarks
+  const username = req.session.user.username;
+  if (String(username).toLowerCase() !== 'stepin') {
+    return res.status(403).send('Only Stepin can delete shared bookmarks');
+  }
+  
   const id = Number(req.params.id);
   const store = readStore();
   store.bookmarks = (store.bookmarks || []).filter(b => Number(b.id) !== id);
@@ -183,7 +218,14 @@ app.post('/api/bookmarks/personal', requireAuth, (req, res) => {
   if (!Array.isArray(store.personal[key])) store.personal[key] = [];
   const id = Date.now();
   store.personal[key] = store.personal[key].filter(b => String(b.name || '').toLowerCase() !== String(name).toLowerCase());
-  store.personal[key].unshift({ id, name, config });
+  
+  // Assign color index for new personal bookmark
+  const existingColors = store.personal[key].map(b => b.colorIndex).filter(c => c !== undefined);
+  const availableColors = [0, 1, 2, 3, 4, 5, 6, 7];
+  const usedColors = new Set(existingColors);
+  const availableColor = availableColors.find(c => !usedColors.has(c)) || (store.personal[key].length % 8);
+  
+  store.personal[key].unshift({ id, name, config, colorIndex: availableColor });
   writeStore(store);
   res.json({ ok: true, id });
 });

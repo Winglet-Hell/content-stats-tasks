@@ -1,7 +1,52 @@
 {
   "bookmarks": [
     {
-      "id": 1756208675967,
+      "id": 1756283689882,
+      "name": "Дубли",
+      "config": {
+        "name": "Дубли",
+        "query": "",
+        "createdFrom": "",
+        "createdTo": "",
+        "completedFrom": "",
+        "completedTo": "",
+        "createdRange": "",
+        "completedRange": "",
+        "include": [
+          "Дубль",
+          "Повтор"
+        ],
+        "exclude": [],
+        "tagsKeywords": [],
+        "tagsMode": "any",
+        "employees": []
+      },
+      "colorIndex": 2
+    },
+    {
+      "id": 1756283652364,
+      "name": "Завершение",
+      "config": {
+        "name": "Завершение",
+        "query": "",
+        "createdFrom": "",
+        "createdTo": "",
+        "completedFrom": "",
+        "completedTo": "",
+        "createdRange": "",
+        "completedRange": "",
+        "include": [
+          "Заверш*"
+        ],
+        "exclude": [],
+        "tagsKeywords": [],
+        "tagsMode": "any",
+        "employees": []
+      },
+      "colorIndex": 1
+    },
+    {
+      "id": 1756283538263,
       "name": "Контент",
       "config": {
         "name": "Контент",
@@ -26,7 +71,8 @@
         "tagsKeywords": [],
         "tagsMode": "any",
         "employees": []
-      }
+      },
+      "colorIndex": 0
     }
   ],
   "filters": {
@@ -45,10 +91,10 @@
   "personal": {
     "stepin": [
       {
-        "id": 1756278322578,
-        "name": "Дубли",
+        "id": 1756284315099,
+        "name": "Мои",
         "config": {
-          "name": "Дубли",
+          "name": "Мои",
           "query": "",
           "createdFrom": "",
           "createdTo": "",
@@ -57,7 +103,54 @@
           "createdRange": "",
           "completedRange": "",
           "include": [
-            "Дубль"
+            "Степин"
+          ],
+          "exclude": [],
+          "tagsKeywords": [],
+          "tagsMode": "any",
+          "employees": []
+        },
+        "colorIndex": 0
+      }
+    ],
+    "baranova": [
+      {
+        "id": 1756280560759,
+        "name": "Завершение",
+        "colorIndex": 0,
+        "config": {
+          "name": "Завершение",
+          "query": "",
+          "createdFrom": "",
+          "createdTo": "",
+          "completedFrom": "",
+          "completedTo": "",
+          "createdRange": "",
+          "completedRange": "",
+          "include": [
+            "Завершение"
+          ],
+          "exclude": [],
+          "tagsKeywords": [],
+          "tagsMode": "any",
+          "employees": []
+        }
+      },
+      {
+        "id": 1756278397704,
+        "name": "Мои задачи",
+        "colorIndex": 2,
+        "config": {
+          "name": "Мои задачи",
+          "query": "",
+          "createdFrom": "",
+          "createdTo": "",
+          "completedFrom": "",
+          "completedTo": "",
+          "createdRange": "",
+          "completedRange": "",
+          "include": [
+            "баранова а."
           ],
           "exclude": [],
           "tagsKeywords": [],

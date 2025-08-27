@@ -15,10 +15,18 @@
         <div class="flex items-center gap-3">
           <div>
             <h1 class="text-2xl font-semibold tracking-tight">Статистика задач Битрикс 24</h1>
-            <p class="mt-1 text-sm text-gray-600 dark:text-gray-400">Загрузите файл с отчётом — покажем статистику</p>
           </div>
           <div class="ml-auto flex items-center gap-3">
-            <div id="authStatus" class="text-sm text-gray-600 dark:text-gray-400"></div>
+            <div id="authStatus" class="flex items-center gap-2">
+              <div id="userAvatar" class="hidden h-8 w-8 rounded-full bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center text-white font-medium text-sm shadow-sm">
+                <span id="avatarInitials"></span>
+              </div>
+              <div id="userInfo" class="hidden flex items-center gap-2">
+                <span id="username" class="text-sm font-medium text-gray-900 dark:text-gray-100"></span>
+                <div class="h-2 w-2 rounded-full bg-green-500"></div>
+              </div>
+            </div>
+            <button id="newFileBtn" class="inline-flex items-center gap-2 rounded-md bg-blue-600 px-2 py-1.5 text-sm font-medium text-white hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600 hidden">Новый файл</button>
             <button id="logoutBtn" class="inline-flex items-center gap-2 rounded-md border border-gray-300 bg-white px-2 py-1.5 text-sm font-medium hover:bg-gray-50 dark:border-gray-700 dark:bg-gray-900 dark:hover:bg-gray-800 hidden">Выйти</button>
           </div>
         </div>
@@ -107,7 +115,7 @@
             </div>
             <div id="fileMeta" class="text-sm text-gray-600 dark:text-gray-400 bg-gray-50 dark:bg-gray-900/50 p-2 rounded"></div>
             <div class="flex items-center gap-2">
-              <button id="parseFileBtn" disabled class="inline-flex items-center gap-2 rounded-md bg-gray-900 px-3 py-1.5 text-sm font-medium text-white hover:bg-black/80 disabled:cursor-not-allowed disabled:opacity-50 dark:bg-white dark:text-gray-900 dark:hover:bg-white/90">Обработать</button>
+              <button id="parseFileBtn" disabled class="inline-flex items-center gap-2 rounded-md bg-gray-900 px-3 py-1.5 text-sm font-medium text-white hover:bg-black/80 disabled:cursor-not-allowed disabled:opacity-50 dark:bg-white dark:text-gray-900 dark:hover:bg-white/90">Переобработать</button>
               <button id="clearFileBtn" class="inline-flex items-center gap-2 rounded-md border border-gray-300 bg-white px-2 py-1.5 text-sm font-medium hover:bg-gray-50 dark:border-gray-700 dark:bg-gray-900 dark:hover:bg-gray-800">Очистить</button>
             </div>
             <p class="text-xs text-gray-500 dark:text-gray-400">Загрузите отчёт из Битрикс 24.</p>
@@ -176,14 +184,14 @@
           <div id="filters">
           <div class="grid gap-3 sm:grid-cols-2">
             <div>
-              <label for="createdRange" class="mb-1 block text-sm font-medium">Создано (период)</label>
-              <input id="createdRange" type="text" placeholder="дд.мм.гггг — дд.мм.гггг" class="w-full rounded-md border border-gray-300 bg-white p-1.5 text-sm placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-400 dark:border-gray-700 dark:bg-gray-900" />
+              <label for="createdRange" class="mb-1 block text-sm font-medium">Создано за период</label>
+              <input id="createdRange" type="text" placeholder="Выберите период создания задач" class="w-full rounded-md border border-gray-300 bg-white p-1.5 text-sm placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-400 dark:border-gray-700 dark:bg-gray-900" />
               <input id="createdFrom" type="date" class="hidden" />
               <input id="createdTo" type="date" class="hidden" />
             </div>
             <div>
-              <label for="completedRange" class="mb-1 block text-sm font-medium">Завершено (период)</label>
-              <input id="completedRange" type="text" placeholder="дд.мм.гггг — дд.мм.гггг" class="w-full rounded-md border border-gray-300 bg-white p-1.5 text-sm placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-400 dark:border-gray-700 dark:bg-gray-900" />
+              <label for="completedRange" class="mb-1 block text-sm font-medium">Завершено за период</label>
+              <input id="completedRange" type="text" placeholder="Выберите период завершения задач" class="w-full rounded-md border border-gray-300 bg-white p-1.5 text-sm placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-400 dark:border-gray-700 dark:bg-gray-900" />
               <input id="completedFrom" type="date" class="hidden" />
               <input id="completedTo" type="date" class="hidden" />
             </div>
@@ -195,7 +203,7 @@
                 <button id="excludeEditBtn" title="Редактировать" aria-label="Редактировать" class="ml-auto inline-flex h-6 w-6 items-center justify-center rounded-md border border-gray-300 bg-white text-xs font-medium hover:bg-gray-50 dark:border-gray-700 dark:bg-gray-900">✎</button>
                 <button id="addExcludeTerm" class="inline-flex h-6 w-6 items-center justify-center rounded-full border border-gray-300 bg-white text-sm font-medium leading-none hover:bg-gray-50 dark:border-gray-700 dark:bg-gray-900">+</button>
               </div>
-              <div id="excludeChips" class="flex w-full flex-wrap items-center gap-2 rounded-md border border-gray-300 bg-gray-50 p-1.5 min-h-[32px] max-h-32 overflow-y-auto cursor-default select-none dark:border-gray-700 dark:bg-gray-900"></div>
+              <div id="excludeChips" class="flex w-full flex-wrap items-center gap-1 rounded-md border border-gray-300 bg-gray-50 p-2 min-h-[32px] max-h-32 overflow-y-auto cursor-default select-none dark:border-gray-700 dark:bg-gray-900"></div>
               <input id="filterExclude" type="text" placeholder="Исключить: термины" class="hidden w-full rounded-md border border-gray-300 bg-white p-1.5 text-sm placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-400 dark:border-gray-700 dark:bg-gray-900" />
             </div>
             <div>
@@ -204,7 +212,7 @@
                 <button id="includeEditBtn" title="Редактировать" aria-label="Редактировать" class="ml-auto inline-flex h-6 w-6 items-center justify-center rounded-md border border-gray-300 bg-white text-xs font-medium hover:bg-gray-50 dark:border-gray-700 dark:bg-gray-900">✎</button>
                 <button id="addIncludeTerm" class="inline-flex h-6 w-6 items-center justify-center rounded-full border border-gray-300 bg-white text-sm font-medium leading-none hover:bg-gray-50 dark:border-gray-700 dark:bg-gray-900">+</button>
               </div>
-              <div id="includeChips" class="flex w-full flex-wrap items-center gap-2 rounded-md border border-gray-300 bg-gray-50 p-1.5 min-h-[32px] max-h-32 overflow-y-auto cursor-default select-none dark:border-gray-700 dark:bg-gray-900"></div>
+              <div id="includeChips" class="flex w-full flex-wrap items-center gap-1 rounded-md border border-gray-300 bg-gray-50 p-2 min-h-[32px] max-h-32 overflow-y-auto cursor-default select-none dark:border-gray-700 dark:bg-gray-900"></div>
               <input id="filterQuery" type="text" placeholder="Включить: слова, \"точные фразы\", префиксы*" class="hidden w-full rounded-md border border-gray-300 bg-white p-1.5 text-sm placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-400 dark:border-gray-700 dark:bg-gray-900" />
             </div>
           </div>
@@ -215,7 +223,7 @@
                 <button id="personalBookmarkEditBtn" title="Редактировать" aria-label="Редактировать" class="ml-auto inline-flex h-6 w-6 items-center justify-center rounded-md border border-gray-300 bg-white text-xs font-medium hover:bg-gray-50 dark:border-gray-700 dark:bg-gray-900">✎</button>
                 <button id="personalBookmarkAddBtn" class="inline-flex h-6 w-6 items-center justify-center rounded-full border border-gray-300 bg-white text-sm font-medium leading-none hover:bg-gray-50 dark:border-gray-700 dark:bg-gray-900">+</button>
               </div>
-              <div id="personalBookmarksChips" class="flex w-full flex-wrap items-center gap-2 rounded-md border border-gray-300 bg-gray-50 p-1.5 min-h-[32px] max-h-32 overflow-y-auto cursor-default select-none dark:border-gray-700 dark:bg-gray-900"></div>
+              <div id="personalBookmarksChips" class="flex w-full flex-wrap items-center gap-1 rounded-md border border-gray-300 bg-gray-50 p-2 min-h-[32px] max-h-32 overflow-y-auto cursor-default select-none dark:border-gray-700 dark:bg-gray-900"></div>
             </div>
             <div>
               <div class="mb-2 flex items-center gap-2">
@@ -223,7 +231,7 @@
                 <button id="sharedBookmarkEditBtn" title="Редактировать" aria-label="Редактировать" class="ml-auto inline-flex h-6 w-6 items-center justify-center rounded-md border border-gray-300 bg-white text-xs font-medium hover:bg-gray-50 dark:border-gray-700 dark:bg-gray-900">✎</button>
                 <button id="sharedBookmarkAddBtn" class="inline-flex h-6 w-6 items-center justify-center rounded-full border border-gray-300 bg-white text-sm font-medium leading-none hover:bg-gray-50 dark:border-gray-700 dark:bg-gray-900">+</button>
               </div>
-              <div id="sharedBookmarksChips" class="flex w-full flex-wrap items-center gap-2 rounded-md border border-gray-300 bg-gray-50 p-1.5 min-h-[32px] max-h-32 overflow-y-auto cursor-default select-none dark:border-gray-700 dark:bg-gray-900"></div>
+              <div id="sharedBookmarksChips" class="flex w-full flex-wrap items-center gap-1 rounded-md border border-gray-300 bg-gray-50 p-2 min-h-[32px] max-h-32 overflow-y-auto cursor-default select-none dark:border-gray-700 dark:bg-gray-900"></div>
             </div>
             <div class="sm:col-span-2 lg:col-span-3 hidden">
               <input id="bmNameInput" type="text" class="hidden" />
@@ -352,6 +360,7 @@
       const passwordInput = document.getElementById('passwordInput');
       const loginBtn = document.getElementById('loginBtn');
       const logoutBtn = document.getElementById('logoutBtn');
+      const newFileBtn = document.getElementById('newFileBtn');
       const authStatus = document.getElementById('authStatus');
       const resultsCard = document.getElementById('resultsCard');
       const resultsBody = document.getElementById('resultsBody');
@@ -891,11 +900,44 @@
 
       function updateAuthStatus() {
         const loggedIn = isAuthenticated();
-        if (authStatus) {
-          authStatus.textContent = loggedIn ? `Выполнен вход: ${currentAuth.username}` : 'Вход не выполнен';
+        
+        // Get new UI elements
+        const userAvatar = document.getElementById('userAvatar');
+        const avatarInitials = document.getElementById('avatarInitials');
+        const userInfo = document.getElementById('userInfo');
+        const username = document.getElementById('username');
+        
+        if (loggedIn && currentAuth?.username) {
+          // Show user info
+          if (userAvatar) {
+            userAvatar.classList.remove('hidden');
+            // Generate initials from username
+            const initials = currentAuth.username
+              .split(' ')
+              .map(word => word.charAt(0).toUpperCase())
+              .join('')
+              .slice(0, 2);
+            if (avatarInitials) avatarInitials.textContent = initials;
+          }
+          if (userInfo) userInfo.classList.remove('hidden');
+          if (username) username.textContent = currentAuth.username;
+        } else {
+          // Hide user info
+          if (userAvatar) userAvatar.classList.add('hidden');
+          if (userInfo) userInfo.classList.add('hidden');
         }
+        
+        if (newFileBtn) newFileBtn.classList.toggle('hidden', !loggedIn);
         if (logoutBtn) logoutBtn.classList.toggle('hidden', !loggedIn);
         if (loginCard) loginCard.classList.toggle('hidden', loggedIn);
+        
+        // Control shared bookmark buttons visibility - only Stepin can manage shared bookmarks
+        const sharedBookmarkEditBtn = document.getElementById('sharedBookmarkEditBtn');
+        const sharedBookmarkAddBtn = document.getElementById('sharedBookmarkAddBtn');
+        const isStepin = loggedIn && currentAuth?.username && String(currentAuth.username).toLowerCase() === 'stepin';
+        
+        if (sharedBookmarkEditBtn) sharedBookmarkEditBtn.classList.toggle('hidden', !isStepin);
+        if (sharedBookmarkAddBtn) sharedBookmarkAddBtn.classList.toggle('hidden', !isStepin);
       }
 
       function applyAuthGate() {
@@ -1780,6 +1822,10 @@
        }
 
        async function loadBookmarksBoth() {
+         // Reset active bookmark when switching users
+         window.__activeBmId = null;
+         window.__activeBmIdx = -1;
+         
          await Promise.all([loadBookmarksShared(), loadBookmarksPersonal()].map(p => p.catch(() => {})));
          renderBookmarksSelect();
        }
@@ -1954,21 +2000,86 @@
           const activeId = (typeof window.__activeBmId !== 'undefined' && window.__activeBmId !== null)
             ? Number(window.__activeBmId)
             : null;
+          
+          // Accent colors for bookmarks
+          const accentColors = [
+            'bg-blue-100 border-blue-300 text-blue-700 hover:bg-blue-200 dark:bg-blue-900/20 dark:border-blue-600 dark:text-blue-300 dark:hover:bg-blue-900/30',
+            'bg-purple-100 border-purple-300 text-purple-700 hover:bg-purple-200 dark:bg-purple-900/20 dark:border-purple-600 dark:text-purple-300 dark:hover:bg-purple-900/30',
+            'bg-green-100 border-green-300 text-green-700 hover:bg-green-200 dark:bg-green-900/20 dark:border-green-600 dark:text-green-300 dark:hover:bg-green-900/30',
+            'bg-orange-100 border-orange-300 text-orange-700 hover:bg-orange-200 dark:bg-orange-900/20 dark:border-orange-600 dark:text-orange-300 dark:hover:bg-orange-900/30',
+            'bg-pink-100 border-pink-300 text-pink-700 hover:bg-pink-200 dark:bg-pink-900/20 dark:border-pink-600 dark:text-pink-300 dark:hover:bg-pink-900/30',
+            'bg-indigo-100 border-indigo-300 text-indigo-700 hover:bg-indigo-200 dark:bg-indigo-900/20 dark:border-indigo-600 dark:text-indigo-300 dark:hover:bg-indigo-900/30',
+            'bg-teal-100 border-teal-300 text-teal-700 hover:bg-teal-200 dark:bg-teal-900/20 dark:border-teal-600 dark:text-teal-300 dark:hover:bg-teal-900/30',
+            'bg-rose-100 border-rose-300 text-rose-700 hover:bg-rose-200 dark:bg-rose-900/20 dark:border-rose-600 dark:text-rose-300 dark:hover:bg-rose-900/30'
+          ];
+          
+          // Contrast ring colors for active state
+          const contrastRingColors = [
+            'ring-blue-600 dark:ring-blue-400',
+            'ring-purple-600 dark:ring-purple-400',
+            'ring-green-600 dark:ring-green-400',
+            'ring-orange-600 dark:ring-orange-400',
+            'ring-pink-600 dark:ring-pink-400',
+            'ring-indigo-600 dark:ring-indigo-400',
+            'ring-teal-600 dark:ring-teal-400',
+            'ring-rose-600 dark:ring-rose-400'
+          ];
+          
           list.forEach((b, idx) => {
             const btn = document.createElement('button');
             btn.type = 'button';
             btn.dataset.bm = `${scope}:${idx}`;
-            const base = 'inline-flex items-center gap-1 rounded-full border px-2 py-0.5 text-xs';
+            const base = 'inline-flex items-center gap-1 rounded-full border px-2.5 py-1 text-xs font-medium transition-colors';
             const isActive = (activeId !== null && typeof b.id !== 'undefined')
               ? Number(b.id) === activeId
               : idx === activeIdx;
+            
+            // Get or assign color for this bookmark
+            let colorIndex;
+            if (b.colorIndex !== undefined) {
+              // Use saved color
+              colorIndex = b.colorIndex;
+            } else {
+              // Assign new color and save it
+              colorIndex = idx % accentColors.length;
+              b.colorIndex = colorIndex;
+            }
+            const accentColor = accentColors[colorIndex];
+            
             btn.className = isActive
-              ? `${base} border-transparent bg-gray-900 text-white dark:bg-white dark:text-gray-900`
-              : `${base} border-gray-300 bg-white hover:bg-gray-50 dark:border-gray-700 dark:bg-gray-900`;
+              ? `${base} ${accentColor} ring-2 ring-offset-1 ${contrastRingColors[colorIndex]}`
+              : `${base} ${accentColor}`;
+            
             const span = document.createElement('span');
             span.textContent = b.name || `Закладка ${idx + 1}`;
+            
+            // Add selection indicator emoji for active bookmark
+            if (isActive) {
+              const activeIcon = document.createElement('span');
+              activeIcon.className = 'text-xs ml-1';
+              activeIcon.innerHTML = '✅';
+              activeIcon.style.fontSize = '10px';
+              btn.appendChild(activeIcon);
+            }
+            
             btn.appendChild(span);
             btn.addEventListener('click', () => {
+              // Disable edit mode if clicking on bookmark while in edit mode
+              if (scope === 'personal' && window.personalEditMode) {
+                window.personalEditMode = false;
+                const personalEditBtn = document.getElementById('personalBookmarkEditBtn');
+                const personalHost = document.getElementById('personalBookmarksChips');
+                if (personalEditBtn) personalEditBtn.textContent = '✎';
+                if (personalHost) personalHost.classList.remove('ring-1', 'ring-amber-400');
+              }
+              if (scope === 'shared' && window.sharedEditMode) {
+                window.sharedEditMode = false;
+                const sharedEditBtn = document.getElementById('sharedBookmarkEditBtn');
+                const sharedHost = document.getElementById('sharedBookmarksChips');
+                if (sharedEditBtn) sharedEditBtn.textContent = '✎';
+                if (sharedHost) sharedHost.classList.remove('ring-1', 'ring-amber-400');
+              }
+              
               const isActiveNow = (
                 (typeof b.id !== 'undefined' && window.__activeBmId !== null && Number(b.id) === Number(window.__activeBmId)) ||
                 (window.__activeBmId == null && typeof window.__activeBmIdx === 'number' && window.__activeBmIdx === idx)
@@ -2010,6 +2121,71 @@
         };
         renderScope((personalBookmarks||[]), 'personalBookmarksChips', 'personalBookmarkAddBtn', 'personal');
         renderScope((bookmarks||[]), 'sharedBookmarksChips', 'sharedBookmarkAddBtn', 'shared');
+        
+        // Add delete buttons if edit mode is active
+        if (window.personalEditMode) {
+          const personalHost = document.getElementById('personalBookmarksChips');
+          if (personalHost) {
+            personalHost.querySelectorAll('button[data-bm]').forEach((chip) => {
+              const hasDel = chip.querySelector('button[data-delete]');
+              if (!hasDel) {
+                const del = document.createElement('button');
+                del.type = 'button';
+                del.dataset.delete = 'true';
+                del.className = 'text-gray-500 hover:text-rose-600 dark:text-gray-400 dark:hover:text-rose-400';
+                del.textContent = '×';
+                del.addEventListener('click', async (e) => {
+                  e.stopPropagation();
+                  const bmData = chip.dataset.bm;
+                  const [scope, idx] = bmData.split(':');
+                  if (scope === 'personal' && personalBookmarks && personalBookmarks[idx]) {
+                    const bookmark = personalBookmarks[idx];
+                    try {
+                      await deleteBookmarkOnServerPersonal(bookmark.id);
+                      await loadBookmarksBoth();
+                      showMessage('Закладка удалена.', 'info');
+                    } catch (error) {
+                      showMessage('Ошибка при удалении закладки.', 'error');
+                    }
+                  }
+                });
+                chip.appendChild(del);
+              }
+            });
+          }
+        }
+        
+        if (window.sharedEditMode) {
+          const sharedHost = document.getElementById('sharedBookmarksChips');
+          if (sharedHost) {
+            sharedHost.querySelectorAll('button[data-bm]').forEach((chip) => {
+              const hasDel = chip.querySelector('button[data-delete]');
+              if (!hasDel) {
+                const del = document.createElement('button');
+                del.type = 'button';
+                del.dataset.delete = 'true';
+                del.className = 'text-gray-500 hover:text-rose-600 dark:text-gray-400 dark:hover:text-rose-400';
+                del.textContent = '×';
+                del.addEventListener('click', async (e) => {
+                  e.stopPropagation();
+                  const bmData = chip.dataset.bm;
+                  const [scope, idx] = bmData.split(':');
+                  if (scope === 'shared' && bookmarks && bookmarks[idx]) {
+                    const bookmark = bookmarks[idx];
+                    try {
+                      await deleteBookmarkOnServerShared(bookmark.id);
+                      await loadBookmarksBoth();
+                      showMessage('Общая закладка удалена.', 'info');
+                    } catch (error) {
+                      showMessage('Ошибка при удалении общей закладки.', 'error');
+                    }
+                  }
+                });
+                chip.appendChild(del);
+              }
+            });
+          }
+        }
       }
 
       // Chip-based add flow
@@ -2021,69 +2197,81 @@
         if (!personalHost || !personalAddBtn || !sharedHost || !sharedAddBtn) return;
         const personalEditBtn = document.getElementById('personalBookmarkEditBtn');
         const sharedEditBtn = document.getElementById('sharedBookmarkEditBtn');
-        let personalEditMode = false;
-        let sharedEditMode = false;
+        window.personalEditMode = false;
+        window.sharedEditMode = false;
         
         if (personalEditBtn) {
           personalEditBtn.addEventListener('click', () => {
-            personalEditMode = !personalEditMode;
-            personalEditBtn.textContent = '✎';
-            personalHost.classList.toggle('ring-1', personalEditMode);
-            personalHost.classList.toggle('ring-amber-400', personalEditMode);
+            window.personalEditMode = !window.personalEditMode;
+            personalEditBtn.textContent = window.personalEditMode ? '✓' : '✎';
+            personalHost.classList.toggle('ring-1', window.personalEditMode);
+            personalHost.classList.toggle('ring-amber-400', window.personalEditMode);
             // Add/remove delete buttons on chips
             personalHost.querySelectorAll('button[data-bm]').forEach((chip) => {
               const hasDel = chip.querySelector('button[data-delete]');
-              if (personalEditMode && !hasDel) {
+              if (window.personalEditMode && !hasDel) {
                 const del = document.createElement('button');
                 del.type = 'button';
                 del.dataset.delete = 'true';
                 del.className = 'text-gray-500 hover:text-rose-600 dark:text-gray-400 dark:hover:text-rose-400';
                 del.textContent = '×';
-                del.addEventListener('click', (e) => {
+                del.addEventListener('click', async (e) => {
                   e.stopPropagation();
                   const bmData = chip.dataset.bm;
                   const [scope, idx] = bmData.split(':');
                   if (scope === 'personal' && personalBookmarks && personalBookmarks[idx]) {
-                    personalBookmarks.splice(idx, 1);
-                    renderBookmarksSelect();
-                    showMessage('Закладка удалена.', 'info');
+                    const bookmark = personalBookmarks[idx];
+                    try {
+                      await deleteBookmarkOnServerPersonal(bookmark.id);
+                      await loadBookmarksBoth();
+                      // Keep edit mode active after deletion - user must manually disable it
+                      showMessage('Закладка удалена.', 'info');
+                    } catch (error) {
+                      showMessage('Ошибка при удалении закладки.', 'error');
+                    }
                   }
                 });
                 chip.appendChild(del);
               }
-              if (!personalEditMode && hasDel) hasDel.remove();
+              if (!window.personalEditMode && hasDel) hasDel.remove();
             });
           });
         }
         
         if (sharedEditBtn) {
           sharedEditBtn.addEventListener('click', () => {
-            sharedEditMode = !sharedEditMode;
-            sharedEditBtn.textContent = '✎';
-            sharedHost.classList.toggle('ring-1', sharedEditMode);
-            sharedHost.classList.toggle('ring-amber-400', sharedEditMode);
+            window.sharedEditMode = !window.sharedEditMode;
+            sharedEditBtn.textContent = window.sharedEditMode ? '✓' : '✎';
+            sharedHost.classList.toggle('ring-1', window.sharedEditMode);
+            sharedHost.classList.toggle('ring-amber-400', window.sharedEditMode);
             // Add/remove delete buttons on chips
             sharedHost.querySelectorAll('button[data-bm]').forEach((chip) => {
               const hasDel = chip.querySelector('button[data-delete]');
-              if (sharedEditMode && !hasDel) {
+              if (window.sharedEditMode && !hasDel) {
                 const del = document.createElement('button');
                 del.type = 'button';
                 del.dataset.delete = 'true';
                 del.className = 'text-gray-500 hover:text-rose-600 dark:text-gray-400 dark:hover:text-rose-400';
                 del.textContent = '×';
-                del.addEventListener('click', (e) => {
+                del.addEventListener('click', async (e) => {
                   e.stopPropagation();
                   const bmData = chip.dataset.bm;
                   const [scope, idx] = bmData.split(':');
                   if (scope === 'shared' && bookmarks && bookmarks[idx]) {
-                    bookmarks.splice(idx, 1);
-                    renderBookmarksSelect();
-                    showMessage('Общая закладка удалена.', 'info');
+                    const bookmark = bookmarks[idx];
+                    try {
+                      await deleteBookmarkOnServerShared(bookmark.id);
+                      await loadBookmarksBoth();
+                      // Keep edit mode active after deletion - user must manually disable it
+                      showMessage('Общая закладка удалена.', 'info');
+                    } catch (error) {
+                      showMessage('Ошибка при удалении общей закладки.', 'error');
+                    }
                   }
                 });
                 chip.appendChild(del);
               }
-              if (!sharedEditMode && hasDel) hasDel.remove();
+              if (!window.sharedEditMode && hasDel) hasDel.remove();
             });
           });
         }
@@ -2115,7 +2303,7 @@
           showMessage('Общая закладка сохранена.', 'info');
         });
         // expose editMode to renderer
-        window.__isBmEditMode = () => personalEditMode || sharedEditMode;
+        window.__isBmEditMode = () => window.personalEditMode || window.sharedEditMode;
       })();
 
       function showMapping(headersRaw, preset) {
@@ -2183,6 +2371,8 @@
           if (tasks.length > 0) {
             mappingSection.classList.add('hidden');
             setTasks(tasks);
+            // Enable reprocess button after successful processing
+            parseFileBtn.disabled = false;
             if (Object.values(suggestedMapping).some((i) => i < 0)) {
               showMessage('Часть колонок определена неуверенно. При необходимости используйте ручное сопоставление.', 'warn');
             }
@@ -2190,6 +2380,8 @@
             showMessage('Не удалось автоматически сопоставить колонки. Выберите их вручную ниже.', 'warn');
             showMapping(headersRaw, suggestedMapping);
             resultsCard.classList.add('hidden');
+            // Enable reprocess button even if mapping failed
+            parseFileBtn.disabled = false;
           }
         } catch (err) {
           console.error(err);
@@ -2210,14 +2402,38 @@
         const pad = (n) => String(n).padStart(2, '0');
         const meta = `${file.name || 'файл'} • ${sizeKb} КБ • ${pad(d.getDate())}.${pad(d.getMonth() + 1)}.${d.getFullYear()} ${pad(d.getHours())}:${pad(d.getMinutes())}`;
         fileMeta.textContent = meta;
-        parseFileBtn.disabled = false;
+        // Button is disabled initially, will be enabled after processing
+        parseFileBtn.disabled = true;
       }
 
-      function handleFiles(files) {
+      async function handleFiles(files) {
         if (!files || !files.length) return;
         const file = files[0];
         fileInput.files = files;
         setSelectedFileInfo(file);
+        
+        // Automatically process the file
+        hideMessage();
+        try {
+          const text = await file.text();
+          if (!text || !text.trim()) {
+            showMessage('Файл пустой или не удалось прочитать содержимое.', 'error');
+            return;
+          }
+          // persist last source
+          saveLastSource({
+            type: 'file',
+            text,
+            fileName: file.name || '',
+            size: file.size || 0,
+            modified: file.lastModified || Date.now(),
+            savedAt: Date.now()
+          });
+          processHtml(text);
+        } catch (e) {
+          console.error(e);
+          showMessage('Не удалось прочитать файл. Убедитесь, что это HTML или .xls, сохранённый как HTML.', 'error');
+        }
       }
 
       // Dropzone interactions
@@ -2236,15 +2452,15 @@
             dropzone.classList.remove('ring-2', 'ring-gray-400', 'dark:ring-gray-600');
           });
         });
-        dropzone.addEventListener('drop', (e) => {
+        dropzone.addEventListener('drop', async (e) => {
           const dt = e.dataTransfer;
           if (!dt) return;
-          handleFiles(dt.files);
+          await handleFiles(dt.files);
         });
       }
 
       if (fileInput) {
-        fileInput.addEventListener('change', () => handleFiles(fileInput.files));
+        fileInput.addEventListener('change', async () => await handleFiles(fileInput.files));
       }
 
       if (clearFileBtn) {
@@ -2530,6 +2746,8 @@
         if (passwordInput) passwordInput.value = '';
         updateAuthStatus();
         applyAuthGate();
+        clearAllFilters();
+        await loadBookmarksBoth();
         setupPasswordToggles();
       })();
 
@@ -2553,9 +2771,25 @@
           currentAuth = payload;
           updateAuthStatus();
           applyAuthGate();
+          clearAllFilters();
+          await loadBookmarksBoth();
           showMessage('Вы вошли в систему.', 'info');
         });
       }
+      if (newFileBtn) {
+        newFileBtn.addEventListener('click', () => {
+          // Clear current file and show upload card
+          setTasks([]);
+          clearAllFilters();
+          // Reset active bookmark
+          window.__activeBmId = null;
+          window.__activeBmIdx = -1;
+          renderBookmarksSelect();
+          applyAuthGate();
+          showMessage('Готово к загрузке нового файла.', 'info');
+        });
+      }
+      
       if (logoutBtn) {
         logoutBtn.addEventListener('click', async () => {
           await serverLogout();
@@ -2565,6 +2799,8 @@
           setTasks([]);
           updateAuthStatus();
           applyAuthGate();
+          clearAllFilters();
+          await loadBookmarksBoth();
           showMessage('Вы вышли из системы.', 'info');
         });
       }
@@ -2752,15 +2988,15 @@
         const includeEditBtn = document.getElementById('includeEditBtn');
         const excludeEditBtn = document.getElementById('excludeEditBtn');
         const norm = (s) => String(s || '').trim();
-        let includeEdit = false;
-        let excludeEdit = false;
+        window.includeEdit = false;
+        window.excludeEdit = false;
         function renderChip(text, host, editOn) {
           const chip = document.createElement('span');
           const isInclude = host.id === 'includeChips';
           // Different colors for include vs exclude chips
           const baseClasses = isInclude 
-            ? 'inline-flex items-center gap-1 rounded-full border border-green-300 bg-green-50 px-2 py-0.5 text-xs text-green-700 dark:border-green-600 dark:bg-green-900/20 dark:text-green-300'
-            : 'inline-flex items-center gap-1 rounded-full border border-red-300 bg-red-50 px-2 py-0.5 text-xs text-red-700 dark:border-red-600 dark:bg-red-900/20 dark:text-red-300';
+            ? 'inline-flex items-center gap-1 rounded-full border border-green-300 bg-green-50 px-2.5 py-1 text-xs text-green-700 dark:border-green-600 dark:bg-green-900/20 dark:text-green-300'
+            : 'inline-flex items-center gap-1 rounded-full border border-red-300 bg-red-50 px-2.5 py-1 text-xs text-red-700 dark:border-red-600 dark:bg-red-900/20 dark:text-red-300';
           chip.className = baseClasses;
           chip.dataset.term = text;
           const label = document.createElement('span');
@@ -2771,7 +3007,12 @@
             del.type = 'button';
             del.className = 'text-gray-500 hover:text-rose-600 dark:text-gray-400 dark:hover:text-rose-400';
             del.textContent = '×';
-            del.addEventListener('click', () => { chip.remove(); applyFilters(); saveServerFilters(); });
+            del.addEventListener('click', () => { 
+              chip.remove(); 
+              applyFilters(); 
+              saveServerFilters(); 
+              // Keep edit mode active after deletion - user must manually disable it
+            });
             chip.appendChild(del);
           }
           host.appendChild(chip);
@@ -2780,50 +3021,60 @@
           const raw = prompt(isInclude ? 'Включить термин' : 'Исключить термин');
           const val = norm(raw);
           if (!val) return;
-          renderChip(val, host, isInclude ? includeEdit : excludeEdit);
+          renderChip(val, host, isInclude ? window.includeEdit : window.excludeEdit);
           applyFilters();
           saveServerFilters();
         }
         if (addIncludeBtn && includeHost) addIncludeBtn.addEventListener('click', () => addChip(includeHost, true));
         if (addExcludeBtn && excludeHost) addExcludeBtn.addEventListener('click', () => addChip(excludeHost, false));
         if (includeEditBtn && includeHost) includeEditBtn.addEventListener('click', () => {
-          includeEdit = !includeEdit;
-          includeEditBtn.textContent = '✎';
-          includeHost.classList.toggle('ring-1', includeEdit);
-          includeHost.classList.toggle('ring-amber-400', includeEdit);
+          window.includeEdit = !window.includeEdit;
+          includeEditBtn.textContent = window.includeEdit ? '✓' : '✎';
+          includeHost.classList.toggle('ring-1', window.includeEdit);
+          includeHost.classList.toggle('ring-amber-400', window.includeEdit);
           includeHost.querySelectorAll('span[data-term]').forEach((chip) => {
             // Ensure chip has correct green color
-            chip.className = 'inline-flex items-center gap-1 rounded-full border border-green-300 bg-green-50 px-2 py-0.5 text-xs text-green-700 dark:border-green-600 dark:bg-green-900/20 dark:text-green-300';
+            chip.className = 'inline-flex items-center gap-1 rounded-full border border-green-300 bg-green-50 px-2.5 py-1 text-xs text-green-700 dark:border-green-600 dark:bg-green-900/20 dark:text-green-300';
             const hasDel = chip.querySelector('button');
-            if (includeEdit && !hasDel) {
+            if (window.includeEdit && !hasDel) {
               const del = document.createElement('button');
               del.type = 'button';
               del.className = 'text-gray-500 hover:text-rose-600 dark:text-gray-400 dark:hover:text-rose-400';
               del.textContent = '×';
-              del.addEventListener('click', () => { chip.remove(); applyFilters(); saveServerFilters(); });
+              del.addEventListener('click', () => { 
+                chip.remove(); 
+                applyFilters(); 
+                saveServerFilters(); 
+                // Keep edit mode active after deletion - user must manually disable it
+              });
               chip.appendChild(del);
             }
-            if (!includeEdit && hasDel) hasDel.remove();
+            if (!window.includeEdit && hasDel) hasDel.remove();
           });
         });
         if (excludeEditBtn && excludeHost) excludeEditBtn.addEventListener('click', () => {
-          excludeEdit = !excludeEdit;
-          excludeEditBtn.textContent = '✎';
-          excludeHost.classList.toggle('ring-1', excludeEdit);
-          excludeHost.classList.toggle('ring-amber-400', excludeEdit);
+          window.excludeEdit = !window.excludeEdit;
+          excludeEditBtn.textContent = window.excludeEdit ? '✓' : '✎';
+          excludeHost.classList.toggle('ring-1', window.excludeEdit);
+          excludeHost.classList.toggle('ring-amber-400', window.excludeEdit);
           excludeHost.querySelectorAll('span[data-term]').forEach((chip) => {
             // Ensure chip has correct red color
-            chip.className = 'inline-flex items-center gap-1 rounded-full border border-red-300 bg-red-50 px-2 py-0.5 text-xs text-red-700 dark:border-red-600 dark:bg-red-900/20 dark:text-red-300';
+            chip.className = 'inline-flex items-center gap-1 rounded-full border border-red-300 bg-red-50 px-2.5 py-1 text-xs text-red-700 dark:border-red-600 dark:bg-red-900/20 dark:text-red-300';
             const hasDel = chip.querySelector('button');
-            if (excludeEdit && !hasDel) {
+            if (window.excludeEdit && !hasDel) {
               const del = document.createElement('button');
               del.type = 'button';
               del.className = 'text-gray-500 hover:text-rose-600 dark:text-gray-400 dark:hover:text-rose-400';
               del.textContent = '×';
-              del.addEventListener('click', () => { chip.remove(); applyFilters(); saveServerFilters(); });
+              del.addEventListener('click', () => { 
+                chip.remove(); 
+                applyFilters(); 
+                saveServerFilters(); 
+                // Keep edit mode active after deletion - user must manually disable it
+              });
               chip.appendChild(del);
             }
-            if (!excludeEdit && hasDel) hasDel.remove();
+            if (!window.excludeEdit && hasDel) hasDel.remove();
           });
         });
       })();
@@ -2863,11 +3114,108 @@
       // Saving filters globally is disabled; filters live inside bookmarks only
       function saveServerFilters() {}
 
-      // Load shared filters/bookmarks from server on init
-      (function initEmptyFilters(){
+      // Function to clear all filters
+      function clearAllFilters() {
+        // Clear include/exclude chips
         document.getElementById('includeChips')?.replaceChildren();
         document.getElementById('excludeChips')?.replaceChildren();
+        
+        // Clear input fields
+        const filterQuery = document.getElementById('filterQuery');
+        if (filterQuery) filterQuery.value = '';
+        
+        const filterExclude = document.getElementById('filterExclude');
+        if (filterExclude) filterExclude.value = '';
+        
+        // Clear date inputs
+        const createdFromInput = document.getElementById('createdFrom');
+        if (createdFromInput) createdFromInput.value = '';
+        
+        const createdToInput = document.getElementById('createdTo');
+        if (createdToInput) createdToInput.value = '';
+        
+        const completedFromInput = document.getElementById('completedFrom');
+        if (completedFromInput) completedFromInput.value = '';
+        
+        const completedToInput = document.getElementById('completedTo');
+        if (completedToInput) completedToInput.value = '';
+        
+        const createdRangeInput = document.getElementById('createdRange');
+        if (createdRangeInput) createdRangeInput.value = '';
+        
+        const completedRangeInput = document.getElementById('completedRange');
+        if (completedRangeInput) completedRangeInput.value = '';
+        
+        // Clear tags and employees
+        const tagsKeywordsInput = document.getElementById('tagsKeywords');
+        if (tagsKeywordsInput) tagsKeywordsInput.value = '';
+        
+        const tagsModeSelect = document.getElementById('tagsMode');
+        if (tagsModeSelect) tagsModeSelect.value = 'any';
+        
+        // Clear filter settings
+        filterSettings.tagsKeywords = [];
+        filterSettings.tagsMode = 'any';
+        filterSettings.employees = [];
+        
+        // Clear bookmark name input
+        const bmNameInput = document.getElementById('bmNameInput');
+        if (bmNameInput) bmNameInput.value = '';
+        
+        // Reset active bookmark
+        window.__activeBmId = null;
+        window.__activeBmIdx = -1;
+        
+        // Apply filters
         applyFilters();
+        
+        // Restore delete buttons if edit modes are active
+        if (window.includeEdit) {
+          const includeHost = document.getElementById('includeChips');
+          if (includeHost) {
+            includeHost.querySelectorAll('span[data-term]').forEach((chip) => {
+              const hasDel = chip.querySelector('button');
+              if (!hasDel) {
+                const del = document.createElement('button');
+                del.type = 'button';
+                del.className = 'text-gray-500 hover:text-rose-600 dark:text-gray-400 dark:hover:text-rose-400';
+                del.textContent = '×';
+                del.addEventListener('click', () => { 
+                  chip.remove(); 
+                  applyFilters(); 
+                  saveServerFilters(); 
+                });
+                chip.appendChild(del);
+              }
+            });
+          }
+        }
+        
+        if (window.excludeEdit) {
+          const excludeHost = document.getElementById('excludeChips');
+          if (excludeHost) {
+            excludeHost.querySelectorAll('span[data-term]').forEach((chip) => {
+              const hasDel = chip.querySelector('button');
+              if (!hasDel) {
+                const del = document.createElement('button');
+                del.type = 'button';
+                del.className = 'text-gray-500 hover:text-rose-600 dark:text-gray-400 dark:hover:text-rose-400';
+                del.textContent = '×';
+                del.addEventListener('click', () => { 
+                  chip.remove(); 
+                  applyFilters(); 
+                  saveServerFilters(); 
+                });
+                chip.appendChild(del);
+              }
+            });
+          }
+        }
+      }
+
+      // Load shared filters/bookmarks from server on init
+      (function initEmptyFilters(){
+        clearAllFilters();
       })();
       
       // Update existing chips with new colors
@@ -2877,13 +3225,13 @@
         
         if (includeHost) {
           includeHost.querySelectorAll('span[data-term]').forEach((chip) => {
-            chip.className = 'inline-flex items-center gap-1 rounded-full border border-green-300 bg-green-50 px-2 py-0.5 text-xs text-green-700 dark:border-green-600 dark:bg-green-900/20 dark:text-green-300';
+                            chip.className = 'inline-flex items-center gap-1 rounded-full border border-green-300 bg-green-50 px-2.5 py-1 text-xs text-green-700 dark:border-green-600 dark:bg-green-900/20 dark:text-green-300';
           });
         }
         
         if (excludeHost) {
           excludeHost.querySelectorAll('span[data-term]').forEach((chip) => {
-            chip.className = 'inline-flex items-center gap-1 rounded-full border border-red-300 bg-red-50 px-2 py-0.5 text-xs text-red-700 dark:border-red-600 dark:bg-red-900/20 dark:text-red-300';
+                            chip.className = 'inline-flex items-center gap-1 rounded-full border border-red-300 bg-red-50 px-2.5 py-1 text-xs text-red-700 dark:border-red-600 dark:bg-red-900/20 dark:text-red-300';
           });
         }
       })();
